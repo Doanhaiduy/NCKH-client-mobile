@@ -30,20 +30,20 @@ export default function RootLayout() {
     return (
         <Stack>
             <Stack.Screen
-                name='index'
+                name="index"
                 options={{
                     headerShown: false,
                 }}
             />
             <Stack.Screen
-                name='(drawer)'
+                name="(drawer)"
                 options={{
                     headerShown: false,
                 }}
             />
 
             <Stack.Screen
-                name='(auth)'
+                name="(auth)"
                 options={{
                     headerShown: false,
                 }}

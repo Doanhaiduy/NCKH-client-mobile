@@ -9,7 +9,7 @@ const CustomDrawerComponent = (props: any) => {
         <DrawerContentScrollView {...props}>
             <DrawerItem
                 icon={({ color, size }) => <Text>~</Text>}
-                label='Home'
+                label="Home"
                 onPress={() => router.push('/forgot')}
             />
         </DrawerContentScrollView>

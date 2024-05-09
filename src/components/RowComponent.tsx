@@ -9,7 +9,7 @@ interface Props {
 export default function RowComponent(props: Props) {
     const { children, style } = props;
     return (
-        <View className='flex flex-row items-center' style={style}>
+        <View className="flex flex-row items-center" style={style}>
             {children}
         </View>
     );

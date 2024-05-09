@@ -11,12 +11,12 @@ export default function LoginPage() {
         <ContainerComponent
             back
             isScroll
-            title='Login Page'
-            icon={<Ionicons name='search' size={24} color={colors['primary-400']} />}
+            title="Login Page"
+            icon={<Ionicons name="search" size={24} color={colors['primary-400']} />}
         >
-            <StatusBar style='auto' />
+            <StatusBar style="auto" />
             <Stack.Screen />
-            <Text className='font-sans'>LoginPage</Text>
+            <Text className="font-sans">LoginPage</Text>
         </ContainerComponent>
     );
 }

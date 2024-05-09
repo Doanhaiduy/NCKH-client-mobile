@@ -9,17 +9,17 @@ export default function AuthLayout() {
                 headerShown: false,
             }}
         >
-            <Stack.Screen name='sign-in' />
-            <Stack.Screen name='forgot' />
-            <Stack.Screen name='send-otp' />
+            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="forgot" />
+            <Stack.Screen name="send-otp" />
             <Stack.Screen
-                name='verification'
+                name="verification"
                 options={{
                     presentation: 'modal',
                 }}
             />
             <Stack.Screen
-                name='set-password'
+                name="set-password"
                 options={{
                     presentation: 'modal',
                 }}

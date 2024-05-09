@@ -49,7 +49,7 @@ export default function ContainerComponent(props: Props) {
         </ImageBackground>
     ) : (
         <View>
-            <View className={` px-4 border-b-[0.2px]`} style={[style]}>
+            <View className={`px-4 border-b-[0.2px]`} style={[style]}>
                 <RowComponent style={{ justifyContent: 'space-between', paddingTop: heightBar, paddingBottom: 8 }}>
                     {back && (
                         <TouchableOpacity onPress={() => router.back()}>
