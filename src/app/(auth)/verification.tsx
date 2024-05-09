@@ -1,17 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Link, Stack } from 'expo-router';
+import ContainerComponent from '@/components/ContainerComponent';
 
 export default function VerificationPage() {
     return (
-        <View>
+        <ContainerComponent isAuth isScroll isModal back>
             <Stack.Screen
                 options={{
                     presentation: 'modal',
                 }}
             />
             <Text>VerificationPage</Text>
-        </View>
+            <Link href={'/set-password'}>NEXT</Link>
+        </ContainerComponent>
     );
 }
 

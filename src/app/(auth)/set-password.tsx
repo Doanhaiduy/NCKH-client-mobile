@@ -1,17 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Link, Stack, router } from 'expo-router';
+import ContainerComponent from '@/components/ContainerComponent';
 
 export default function SetPassword() {
     return (
-        <View>
+        <ContainerComponent isAuth isScroll isModal back>
             <Stack.Screen
                 options={{
                     presentation: 'modal',
                 }}
             />
             <Text>SetPassword</Text>
-        </View>
+            <Pressable onPress={() => router.dismissAll()}>
+                <Text>ok</Text>
+            </Pressable>
+        </ContainerComponent>
     );
 }
 
