@@ -2,16 +2,16 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Stack } from 'expo-router';
 
-export default function RootLayout() {
+export default function SetPassword() {
     return (
-        <Stack>
+        <View>
             <Stack.Screen
-                name='(tabs)'
                 options={{
-                    headerShown: false,
+                    presentation: 'modal',
                 }}
             />
-        </Stack>
+            <Text>SetPassword</Text>
+        </View>
     );
 }
 
