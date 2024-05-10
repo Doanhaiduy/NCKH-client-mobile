@@ -11,24 +11,8 @@ export default function AuthLayout() {
         >
             <Stack.Screen name='sign-in' />
             <Stack.Screen name='forgot' />
-            <Stack.Screen
-                name='send-otp'
-                options={{
-                    presentation: 'modal',
-                }}
-            />
-            <Stack.Screen
-                name='verification'
-                options={{
-                    presentation: 'modal',
-                }}
-            />
-            <Stack.Screen
-                name='set-password'
-                options={{
-                    presentation: 'modal',
-                }}
-            />
+            <Stack.Screen name='verification' />
+            <Stack.Screen name='set-password' />
         </Stack>
     );
 }

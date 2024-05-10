@@ -3,7 +3,13 @@ import React from 'react';
 import { Stack } from 'expo-router';
 
 export default function HomeLayout() {
-    return <Stack />;
+    return (
+        <Stack
+            screenOptions={{
+                headerShown: false,
+            }}
+        />
+    );
 }
 
 const styles = StyleSheet.create({});

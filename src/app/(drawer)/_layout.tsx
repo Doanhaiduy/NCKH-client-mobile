@@ -9,7 +9,7 @@ const CustomDrawerComponent = (props: any) => {
         <DrawerContentScrollView {...props}>
             <DrawerItem
                 icon={({ color, size }) => <Text>~</Text>}
-                label="Home"
+                label='Home'
                 onPress={() => router.push('/forgot')}
             />
         </DrawerContentScrollView>
@@ -17,7 +17,14 @@ const CustomDrawerComponent = (props: any) => {
 };
 
 export default function DrawerLayout() {
-    return <Drawer drawerContent={(props) => <CustomDrawerComponent {...props} />} />;
+    return (
+        <Drawer
+            screenOptions={{
+                headerShown: false,
+            }}
+            drawerContent={(props) => <CustomDrawerComponent {...props} />}
+        />
+    );
 }
 
 const styles = StyleSheet.create({});

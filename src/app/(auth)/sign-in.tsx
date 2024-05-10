@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
@@ -14,7 +14,7 @@ import {
 } from '@/components';
 import { LoadingModal } from '@/modals';
 import { checkHasErr, sleep } from '@/utils';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Controller, SubmitHandler, set, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { schemasCustom } from '@/utils/zod';
@@ -47,6 +47,12 @@ export default function LoginPage() {
         try {
             console.log(data);
             await sleep(2000);
+            Alert.alert('Đăng nhập thành công!', '', [
+                {
+                    text: 'OK',
+                    onPress: () => router.push('(drawer)'),
+                },
+            ]);
             setIsLoading(false);
         } catch (error) {
             setError('root', {
@@ -57,7 +63,7 @@ export default function LoginPage() {
     };
 
     return (
-        <ContainerComponent isAuth isScroll back title='Login Page' className=''>
+        <ContainerComponent isAuth isScroll className=''>
             {/* <StatusBar style='auto' /> */}
             <SpaceComponent height={147} />
             <SectionComponent align='center'>
@@ -71,7 +77,7 @@ export default function LoginPage() {
                 keyboardVerticalOffset={20}
                 style={{ flex: 1 }}
             >
-                <SectionComponent align='center' className=' px-8'>
+                <SectionComponent align='center' className=' px-12'>
                     <Controller
                         name='username'
                         control={control}
@@ -107,7 +113,7 @@ export default function LoginPage() {
                     </Link>
                 </SectionComponent>
             </KeyboardAvoidingView>
-            <SectionComponent className='px-8'>
+            <SectionComponent className='px-12'>
                 {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
                 <SpaceComponent height={24} />
                 <ButtonComponent
@@ -118,12 +124,12 @@ export default function LoginPage() {
                     disabled={checkHasErr(errors)}
                 />
             </SectionComponent>
-            <SectionComponent align='center' className='mt-[128px]'>
+            {/* <SectionComponent align='center' className='mt-[128px] pb-12'>
                 <RowComponent>
                     <TextComponent text='Tiếng việt' />
                     <Ionicons name='chevron-down' size={24} color={colors['text-800']} />
                 </RowComponent>
-            </SectionComponent>
+            </SectionComponent> */}
             <LoadingModal visible={isLoading} />
         </ContainerComponent>
     );
