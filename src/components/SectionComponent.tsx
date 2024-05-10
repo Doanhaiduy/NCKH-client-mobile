@@ -1,15 +1,25 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import clsx from 'clsx';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
+    align?: 'center' | 'left' | 'right';
 }
 
 export default function SectionComponent(props: Props) {
-    const { children, ...sectionProps } = props;
+    const { children, align, ...sectionProps } = props;
 
     return (
-        <View {...sectionProps} className='px-4 pb-5'>
+        <View
+            {...sectionProps}
+            className={clsx(
+                'px-4 pb-5 items-start flex',
+                align === 'center' && 'items-center',
+                align === 'left' && 'items-start',
+                align === 'right' && 'items-end'
+            )}
+        >
             {children}
         </View>
     );
