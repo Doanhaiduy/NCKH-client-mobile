@@ -1,9 +1,7 @@
-import { ActivityIndicator, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import TextComponent from './TextComponent';
 import clsx from 'clsx';
-import { isLoading } from 'expo-font';
-import { colors } from '@/constants/colors';
 
 interface Props extends React.ComponentProps<typeof Button> {
     title: string;
@@ -33,7 +31,7 @@ const variantText = {
 export default function ButtonComponent(props: Props) {
     const { title, type, size, disabled, onPress, icon, iconFlex } = props;
 
-    const LoadingColor = type === 'primary' || type === 'grey' ? 'white' : colors['primary-400'];
+    // const LoadingColor = type === 'primary' || type === 'grey' ? 'white' : colors['primary-400'];
 
     return (
         <TouchableOpacity

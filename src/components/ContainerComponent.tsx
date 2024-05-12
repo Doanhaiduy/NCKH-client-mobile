@@ -18,7 +18,7 @@ import RowComponent from './RowComponent';
 import { colors } from '@/constants/colors';
 import TextComponent from './TextComponent';
 import SectionComponent from './SectionComponent';
-import { DrawerActions, ParamListBase, useNavigation } from '@react-navigation/native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
@@ -100,7 +100,7 @@ export default function ContainerComponent(props: Props) {
                     {iconRight && <TouchableOpacity onPress={onPress}>{iconRight}</TouchableOpacity>}
                 </RowComponent>
             </View>
-            <ViewWrapper {...containerProps} className='min-h-full flex-1'>
+            <ViewWrapper {...containerProps} className='flex-1'>
                 {children}
             </ViewWrapper>
         </View>

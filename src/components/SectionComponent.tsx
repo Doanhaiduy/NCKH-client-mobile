@@ -14,11 +14,12 @@ export default function SectionComponent(props: Props) {
         <View
             {...sectionProps}
             className={clsx(
-                'px-4 pb-5 items-start flex',
+                'px-4 pb-5 items-start ',
                 align === 'center' && 'items-center',
                 align === 'left' && 'items-start',
                 align === 'right' && 'items-end'
             )}
+            style={sectionProps.style}
         >
             {children}
         </View>
