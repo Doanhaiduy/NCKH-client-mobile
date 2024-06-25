@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { router } from 'expo-router';
@@ -15,11 +15,11 @@ export default function CustomDrawerComponent(props: any) {
                 flex: 1,
             }}
         >
-            <SectionComponent className='bg-primary-800'>
+            <SectionComponent className="bg-primary-800">
                 <SpaceComponent height={20} />
-                <Text className='text-xl text-center font-interMd text-white'>Information Technology</Text>
+                <Text className="text-xl text-center font-interMd text-white">Information Technology</Text>
             </SectionComponent>
-            <ScrollView className='bg-white flex-1 py-3 min-w-[600px] '>
+            <ScrollView className="bg-white flex-1 py-3 min-w-[600px] ">
                 <DropdownItem />
                 <DrawerItem
                     style={{
@@ -32,8 +32,8 @@ export default function CustomDrawerComponent(props: any) {
                         fontWeight: 'normal',
                         fontFamily: 'Inter',
                     }}
-                    icon={({ color, size }) => <Ionicons name='newspaper' size={24} />}
-                    label='Tin tức'
+                    icon={({ color, size }) => <Ionicons name="newspaper" size={24} />}
+                    label="Tin tức"
                     onPress={() => router.push('/tin-tuc')}
                 />
                 <DrawerItem
@@ -47,8 +47,8 @@ export default function CustomDrawerComponent(props: any) {
                         fontWeight: 'normal',
                         fontFamily: 'Inter',
                     }}
-                    icon={({ color, size }) => <FontAwesome5 name='clipboard-check' size={24} color='black' />}
-                    label='Đánh giá rèn luyện'
+                    icon={({ color, size }) => <FontAwesome5 name="clipboard-check" size={24} color="black" />}
+                    label="Đánh giá rèn luyện"
                     onPress={() => router.push('/tin-tuc')}
                 />
 
@@ -63,8 +63,8 @@ export default function CustomDrawerComponent(props: any) {
                         fontWeight: 'normal',
                         fontFamily: 'Inter',
                     }}
-                    icon={({ color, size }) => <FontAwesome5 name='clipboard-list' size={24} color='black' />}
-                    label='Đã điểm danh'
+                    icon={({ color, size }) => <FontAwesome5 name="clipboard-list" size={24} color="black" />}
+                    label="Đã điểm danh"
                     onPress={() => router.push('/tin-tuc')}
                 />
                 <DrawerItem
@@ -78,8 +78,8 @@ export default function CustomDrawerComponent(props: any) {
                         fontWeight: 'normal',
                         fontFamily: 'Inter',
                     }}
-                    icon={({ color, size }) => <Entypo name='lock' size={24} color='black' />}
-                    label='Đổi mật khẩu'
+                    icon={({ color, size }) => <Entypo name="lock" size={24} color="black" />}
+                    label="Đổi mật khẩu"
                     onPress={() => router.push('/tin-tuc')}
                 />
                 <DrawerItem
@@ -93,8 +93,8 @@ export default function CustomDrawerComponent(props: any) {
                         fontWeight: 'normal',
                         fontFamily: 'Inter',
                     }}
-                    icon={({ color, size }) => <Entypo name='message' size={24} color='black' />}
-                    label='Trợ giúp'
+                    icon={({ color, size }) => <Entypo name="message" size={24} color="black" />}
+                    label="Trợ giúp"
                     onPress={() => router.push('/tin-tuc')}
                 />
                 <DrawerItem
@@ -109,9 +109,18 @@ export default function CustomDrawerComponent(props: any) {
                         fontFamily: 'Inter',
                         color: colors.error,
                     }}
-                    icon={({ color, size }) => <FontAwesome name='sign-out' size={24} color='black' />}
-                    label='Đăng xuất'
-                    onPress={() => router.push('/tin-tuc')}
+                    icon={({ color, size }) => <FontAwesome name="sign-out" size={24} color="black" />}
+                    label="Đăng xuất"
+                    onPress={() =>
+                        Alert.alert('Thông báo', 'Bạn có chắc chắn muốn đăng xuất?', [
+                            {
+                                text: 'Hủy',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                            },
+                            { text: 'Đồng ý', onPress: () => router.push('/sign-in') },
+                        ])
+                    }
                 />
                 <SpaceComponent height={70} />
             </ScrollView>

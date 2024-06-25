@@ -15,8 +15,14 @@ export default function TextComponent(props: Props) {
     return (
         <Text
             {...prop}
-            className={clsx('text-base text-black font-inter', title && 'text-2xl font-interMd', className)}
-            style={[{ fontSize: size || 16, color: color || '#000' }, prop.style]}
+            className={clsx('text-base text-black font-inter', title && 'text-2xl font-interMd ', className)}
+            style={[
+                {
+                    fontSize: title ? 24 : size || 16,
+                    color: color || '#000',
+                },
+                prop.style,
+            ]}
         >
             {text}
         </Text>

@@ -65,18 +65,18 @@ export default function ContainerComponent(props: Props) {
     const navigation = useNavigation();
 
     const HeaderAuth = (
-        <ViewWrapper style={{ paddingTop: iconLeft === 'back' || title ? 0 : heightBar }} className='flex-1'>
+        <ViewWrapper style={{ paddingTop: iconLeft === 'back' || title ? 0 : heightBar }} className="flex-1">
             {children}
             <SectionComponent
-                align='center'
-                className='pb-12 w-full'
+                align="center"
+                className="pb-12 w-full"
                 style={{
                     marginTop: iconLeft === 'back' || title ? 170 : 118,
                 }}
             >
                 <RowComponent>
-                    <TextComponent text='Tiếng việt' className='text-center' />
-                    <Ionicons name='chevron-down' size={24} color={colors['text800']} />
+                    <TextComponent text="Tiếng việt" className="text-center" />
+                    <Ionicons name="chevron-down" size={24} color={colors['text800']} />
                 </RowComponent>
             </SectionComponent>
         </ViewWrapper>
@@ -88,7 +88,7 @@ export default function ContainerComponent(props: Props) {
                 <RowComponent style={{ justifyContent: 'space-between', paddingTop: heightBar, paddingBottom: 8 }}>
                     {iconLeft === 'back' && (
                         <TouchableOpacity onPress={() => router.back()}>
-                            <Ionicons name='chevron-back' size={24} color={colors['primary400']} />
+                            <Ionicons name="chevron-back" size={24} color={colors['primary400']} />
                         </TouchableOpacity>
                     )}
                     {iconLeft === 'menu' && (
@@ -97,16 +97,16 @@ export default function ContainerComponent(props: Props) {
                                 navigation.dispatch(DrawerActions.toggleDrawer());
                             }}
                         >
-                            <Ionicons name='menu' size={24} color={colors['primary400']} />
+                            <Ionicons name="menu" size={24} color={colors['primary400']} />
                         </TouchableOpacity>
                     )}
-                    {title && <TextComponent text={title} title className='text-black font-interSemi' />}
+                    {title && <TextComponent text={title} title />}
                     {search ? (
                         <TouchableOpacity>
-                            <Ionicons name='search' size={26} color={colors['primary400']} />
+                            <Ionicons name="search" size={26} color={colors['primary400']} />
                         </TouchableOpacity>
                     ) : (
-                        <Ionicons name='search' size={26} color='transparent' />
+                        <Ionicons name="search" size={26} color="transparent" />
                     )}
                 </RowComponent>
             </View>
@@ -116,7 +116,7 @@ export default function ContainerComponent(props: Props) {
     return isAuth ? (
         <ImageBackground
             source={require('../assets/images/bg-login.png')}
-            className='flex-1 bg-[#EDEDFA]'
+            className="flex-1 bg-[#EDEDFA]"
             imageStyle={{
                 resizeMode: 'cover',
                 flex: 1,
@@ -125,17 +125,17 @@ export default function ContainerComponent(props: Props) {
             {iconLeft === 'back' && (
                 <RowComponent style={{ paddingTop: heightBar, paddingBottom: 8, paddingLeft: 16 }}>
                     <TouchableOpacity onPress={() => router.back()}>
-                        <Ionicons name='chevron-back' size={35} color={'#444'} />
+                        <Ionicons name="chevron-back" size={35} color={'#444'} />
                     </TouchableOpacity>
                 </RowComponent>
             )}
             {HeaderAuth}
         </ImageBackground>
     ) : (
-        <View className='flex-1 bg-white'>
+        <View className="flex-1 bg-white">
             <HeaderMain />
             <ViewWrapper
-                keyboardShouldPersistTaps='handled'
+                keyboardShouldPersistTaps="handled"
                 refreshControl={
                     Platform.OS === 'android' ? (
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -148,7 +148,7 @@ export default function ContainerComponent(props: Props) {
                         />
                     )
                 }
-                className='flex-1'
+                className="flex-1"
             >
                 {children}
             </ViewWrapper>

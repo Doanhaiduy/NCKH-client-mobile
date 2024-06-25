@@ -19,7 +19,7 @@ interface Props {
     color?: string;
 }
 
-export default function InputComponent(props: Props) {
+function InputComponent(props: Props) {
     const [isShowPassword, setIsShowPassword] = React.useState(false);
 
     const inputRef = React.useRef<TextInput>(null);
@@ -46,21 +46,21 @@ export default function InputComponent(props: Props) {
         'w-full max-w-full rounded-[10px] border-[1px] border-primary-400 h-[56px]  min-h-[56px] justify-between  bg-white flex-row items-center',
         {
             'border-error': err,
-        }
+        },
     );
 
     const inputClass = clsx(
-        'flex-1  w-full font-inter text-sm text-black px-5 placeholder:text-base placeholder:text-text-600 placeholder:font-inter'
+        'flex-1  w-full font-inter text-sm text-black px-5 placeholder:text-base placeholder:text-text-600 placeholder:font-inter',
     );
 
     return (
-        <View className='mt-4 w-full'>
+        <View className="mt-4 w-full">
             <Pressable className={containerClass} onPress={() => inputRef.current?.focus()}>
-                <View className='flex-col flex-1'>
-                    {value && <Text className='px-5 pt-2 text-[12px] text-black font-inter'>{placeholder}</Text>}
+                <View className="flex-col flex-1">
+                    {value && <Text className="px-5 pt-2 text-[12px] text-black font-inter">{placeholder}</Text>}
                     <TextInput
                         ref={inputRef}
-                        autoCapitalize='none'
+                        autoCapitalize="none"
                         {...inputProps}
                         placeholder={placeholder ?? ''}
                         value={value}
@@ -81,24 +81,24 @@ export default function InputComponent(props: Props) {
                     />
                 </View>
                 {value && !isPassword && (
-                    <Pressable onPress={() => onChange('')} className='mr-5'>
-                        <Ionicons name='close' size={18} color={color ?? 'black'} />
+                    <Pressable onPress={() => onChange('')} className="mr-5">
+                        <Ionicons name="close" size={18} color={color ?? 'black'} />
                     </Pressable>
                 )}
 
                 {value && isPassword && (
-                    <Pressable onPress={() => setIsShowPassword(!isShowPassword)} className='mr-5'>
+                    <Pressable onPress={() => setIsShowPassword(!isShowPassword)} className="mr-5">
                         {isShowPassword ? (
-                            <Ionicons name='eye' size={18} color={color ?? 'black'} />
+                            <Ionicons name="eye" size={18} color={color ?? 'black'} />
                         ) : (
-                            <Ionicons name='eye-off' size={18} color={color ?? 'black'} />
+                            <Ionicons name="eye-off" size={18} color={color ?? 'black'} />
                         )}
                     </Pressable>
                 )}
             </Pressable>
-            {err && <Text className='px-3 pt-1 text-[12px] text-error font-inter'>{err}</Text>}
+            {err && <Text className="px-3 pt-1 text-[12px] text-error font-inter">{err}</Text>}
         </View>
     );
 }
 
-const styles = StyleSheet.create({});
+export default React.memo(InputComponent);
