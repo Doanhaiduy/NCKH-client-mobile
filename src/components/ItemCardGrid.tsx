@@ -47,7 +47,7 @@ export default function ItemCardGrid(props: Props) {
                     text='Thông báo về việc đăng kí tham gia giải bóng chuyền nam – nữ khoa công nghệ giải bóng chuyền nam – nữ khoa công nghệ thông tin '
                 />
                 <RowComponent>
-                    <Ionicons name='calendar' size={14} color={colors['text-800']} />
+                    <Ionicons name='calendar' size={14} color={colors['text800']} />
                     <TextComponent text='10/10/2021' className='ml-1 text-[13px] text-text-800' />
                 </RowComponent>
             </View>

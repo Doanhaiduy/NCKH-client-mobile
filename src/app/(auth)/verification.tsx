@@ -1,10 +1,9 @@
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
-import { Link, Stack, router } from 'expo-router';
+import { router } from 'expo-router';
 import ContainerComponent from '@/components/ContainerComponent';
 import { ButtonComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
 import { LoadingModal } from '@/modals';
 import { OtpInput } from 'react-native-otp-entry';
 import { sleep } from '@/utils';
@@ -43,14 +42,14 @@ export default function VerificationPage() {
                     <OtpInput
                         numberOfDigits={6}
                         autoFocus
-                        focusColor={colors['primary-400']}
+                        focusColor={colors['primary400']}
                         onTextChange={(text) => setOtp(text)}
                         theme={{
                             pinCodeContainerStyle: {
                                 width: 40,
                                 height: 56,
                                 backgroundColor: colors['white'],
-                                borderColor: colors['primary-400'],
+                                borderColor: colors['primary400'],
                             },
                         }}
                     />
@@ -69,7 +68,6 @@ export default function VerificationPage() {
                             <TextComponent text='Gửi lại' className='text-sm text-primary-400' />
                         </TouchableOpacity>
                     </SectionComponent>
-
                     <LoadingModal visible={isLoading} />
                 </SectionComponent>
             </View>

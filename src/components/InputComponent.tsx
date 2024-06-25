@@ -40,6 +40,7 @@ export default function InputComponent(props: Props) {
         onBlur,
         ...inputProps
     } = props;
+    console.log('InputComponent: value', value);
 
     const containerClass = clsx(
         'w-full max-w-full rounded-[10px] border-[1px] border-primary-400 h-[56px]  min-h-[56px] justify-between  bg-white flex-row items-center',
@@ -75,6 +76,7 @@ export default function InputComponent(props: Props) {
                         className={inputClass}
                         style={{
                             marginBottom: value ? 10 : 0,
+                            color: color ?? 'black',
                         }}
                     />
                 </View>

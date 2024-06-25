@@ -3,18 +3,7 @@ import React from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { router } from 'expo-router';
-
-const CustomDrawerComponent = (props: any) => {
-    return (
-        <DrawerContentScrollView {...props}>
-            <DrawerItem
-                icon={({ color, size }) => <Text>~</Text>}
-                label='Home'
-                onPress={() => router.push('/forgot')}
-            />
-        </DrawerContentScrollView>
-    );
-};
+import { CustomDrawerComponent } from '@/layouts/Components';
 
 export default function DrawerLayout() {
     return (

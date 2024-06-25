@@ -7,6 +7,7 @@ import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import SpaceComponent from './SpaceComponent';
 import TextComponent from './TextComponent';
+import DropdownItem from './DropdownItem';
 
 export {
     ContainerComponent,
@@ -18,4 +19,5 @@ export {
     SectionComponent,
     CardComponent,
     ItemCardGrid,
+    DropdownItem,
 };

@@ -1,13 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Slot, Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
+import { Provider } from 'react-redux';
+import store from '@/stores/store';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
+
+export const unstable_settings = {
+    initialRouteName: '(auth)',
+};
 
 export default function RootLayout() {
     const [fontsLoaded, fontError] = useFonts({
@@ -27,28 +34,16 @@ export default function RootLayout() {
         return null;
     }
 
-    return (
-        <Stack>
-            <Stack.Screen
-                name="index"
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="(drawer)"
-                options={{
-                    headerShown: false,
-                }}
-            />
+    return <RootLayoutNav />;
+}
 
-            <Stack.Screen
-                name="(auth)"
-                options={{
-                    headerShown: false,
-                }}
-            />
-        </Stack>
+function RootLayoutNav() {
+    return (
+        <Provider store={store}>
+            <GestureHandlerRootView className='flex-1'>
+                <Slot />
+            </GestureHandlerRootView>
+        </Provider>
     );
 }
 

@@ -5,6 +5,7 @@ import TextComponent from './TextComponent';
 import RowComponent from './RowComponent';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import ButtonComponent from './ButtonComponent';
 
 type data = {
     title: string;
@@ -17,21 +18,29 @@ interface Props {
     onPress?: () => void;
     isShadow?: boolean;
     isAction?: boolean;
+    onPressButton?: () => void;
 }
 
 export default function ItemCardList(props: Props) {
-    const { data, onPress, isShadow, isAction } = props;
+    const { data, onPress, isShadow, isAction, onPressButton } = props;
 
     return (
         <CardComponent onPress={onPress} isShadow={isShadow} className=' bg-white min-w-full  flex-1 flex-row'>
             <View className='flex-1 pr-3'>
-                <TextComponent
-                    numberOfLines={3}
-                    text='Elon Musk khởi kiện OpenAI và CEO Sam Altman vì đi ngược tôn chỉ ban đầu'
-                />
-                <RowComponent>
-                    <Ionicons name='calendar' size={14} color={colors['text-800']} />
-                    <TextComponent text='10/10/2021' className='text-[13px] text-text-800' />
+                <TextComponent numberOfLines={3} text={data.title} />
+                <RowComponent className='justify-between'>
+                    <RowComponent>
+                        <Ionicons name='calendar' size={14} color={colors['text800']} />
+                        <TextComponent text={data.time} className='text-[13px] text-text-800' />
+                    </RowComponent>
+                    {isAction && (
+                        <ButtonComponent
+                            title='Điểm danh'
+                            size='small'
+                            type='primary'
+                            onPress={() => onPressButton && onPressButton()}
+                        />
+                    )}
                 </RowComponent>
             </View>
             <View className='w-[124px] '>

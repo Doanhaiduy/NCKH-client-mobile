@@ -19,6 +19,7 @@ import { Controller, SubmitHandler, set, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const schema = z.object({
     username: schemasCustom.username,
@@ -50,7 +51,7 @@ export default function LoginPage() {
             Alert.alert('Đăng nhập thành công!', '', [
                 {
                     text: 'OK',
-                    onPress: () => router.push('(drawer)'),
+                    onPress: () => router.replace('(drawer)'),
                 },
             ]);
             setIsLoading(false);
@@ -64,19 +65,15 @@ export default function LoginPage() {
 
     return (
         <ContainerComponent isAuth isScroll className=''>
-            {/* <StatusBar style='auto' /> */}
-            <SpaceComponent height={147} />
-            <SectionComponent align='center'>
-                <Image source={require('../../assets/images/logo-login.png')} width={125} height={125} />
-                <SpaceComponent height={6} />
-                <TextComponent text='Information Technology' title className='text-primary-400' />
-            </SectionComponent>
-            <SpaceComponent height={47} />
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-                keyboardVerticalOffset={20}
-                style={{ flex: 1 }}
-            >
+            <KeyboardAwareScrollView>
+                <SpaceComponent height={147} />
+                <SectionComponent align='center'>
+                    <Image source={require('../../assets/images/logo-login.png')} width={125} height={125} />
+                    <SpaceComponent height={6} />
+                    <TextComponent text='Information Technology' title className='text-primary-400' />
+                </SectionComponent>
+                <SpaceComponent height={47} />
+
                 <SectionComponent align='center' className=' px-12'>
                     <Controller
                         name='username'
@@ -112,24 +109,25 @@ export default function LoginPage() {
                         Quên mật khẩu
                     </Link>
                 </SectionComponent>
-            </KeyboardAvoidingView>
-            <SectionComponent className='px-12'>
-                {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
-                <SpaceComponent height={24} />
-                <ButtonComponent
-                    title='Đăng nhập'
-                    size='large'
-                    type='primary'
-                    onPress={handleSubmit(onSubmit)}
-                    disabled={checkHasErr(errors)}
-                />
-            </SectionComponent>
-            {/* <SectionComponent align='center' className='mt-[128px] pb-12'>
+
+                <SectionComponent className='px-12'>
+                    {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
+                    <SpaceComponent height={24} />
+                    <ButtonComponent
+                        title='Đăng nhập'
+                        size='large'
+                        type='primary'
+                        onPress={handleSubmit(onSubmit)}
+                        disabled={checkHasErr(errors)}
+                    />
+                </SectionComponent>
+                {/* <SectionComponent align='center' className='mt-[128px] pb-12'>
                 <RowComponent>
                     <TextComponent text='Tiếng việt' />
-                    <Ionicons name='chevron-down' size={24} color={colors['text-800']} />
+                    <Ionicons name='chevron-down' size={24} color={colors['text800']} />
                 </RowComponent>
             </SectionComponent> */}
+            </KeyboardAwareScrollView>
             <LoadingModal visible={isLoading} />
         </ContainerComponent>
     );

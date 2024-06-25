@@ -2,14 +2,7 @@ import { Alert, StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
 import ContainerComponent from '@/components/ContainerComponent';
-import {
-    ButtonComponent,
-    InputComponent,
-    RowComponent,
-    SectionComponent,
-    SpaceComponent,
-    TextComponent,
-} from '@/components';
+import { ButtonComponent, InputComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { LoadingModal } from '@/modals';
 import { Regex, sleep } from '@/utils';
 
@@ -24,8 +17,13 @@ export default function SetPassword() {
     };
 
     const handleSetPassword = async () => {
+        handleCheckPassword();
+
         setIsLoading(true);
         try {
+            if (isError) {
+                return;
+            }
             console.log('New password: ', newPassword);
             await sleep(1000);
             console.log('Set password successfully!');
@@ -33,7 +31,7 @@ export default function SetPassword() {
             Alert.alert('Đặt mật khẩu thành công!', 'Vui lòng đăng nhập bằng mật khẩu mới của bạn.', [
                 {
                     text: 'OK',
-                    onPress: () => router.push('/sign-in'),
+                    onPress: () => router.dismissAll(),
                 },
             ]);
         } catch (error) {
@@ -64,7 +62,13 @@ export default function SetPassword() {
                         err={!isError ? undefined : 'Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ cái và số'}
                     />
                     <SpaceComponent height={24} />
-                    <ButtonComponent title='Đặt lại mật khẩu' size='large' type='primary' onPress={handleSetPassword} />
+                    <ButtonComponent
+                        title='Đặt lại mật khẩu'
+                        size='large'
+                        type='primary'
+                        disabled={isError}
+                        onPress={handleSetPassword}
+                    />
                 </SectionComponent>
             </View>
             <LoadingModal visible={isLoading} />

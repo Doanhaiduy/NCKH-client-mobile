@@ -1,8 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Link, router, SplashScreen } from 'expo-router';
+import { Link, Redirect, router, SplashScreen } from 'expo-router';
 
 export default function Home() {
+    // return <Redirect href={'/sign-in'} />;
     return (
         <View className='flex items-center justify-center h-screen'>
             <Link href={'/sign-in'}>go to sign-in</Link>

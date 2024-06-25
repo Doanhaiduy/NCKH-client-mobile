@@ -31,7 +31,7 @@ const variantText = {
 export default function ButtonComponent(props: Props) {
     const { title, type, size, disabled, onPress, icon, iconFlex } = props;
 
-    // const LoadingColor = type === 'primary' || type === 'grey' ? 'white' : colors['primary-400'];
+    // const LoadingColor = type === 'primary' || type === 'grey' ? 'white' : colors['primary400'];
 
     return (
         <TouchableOpacity

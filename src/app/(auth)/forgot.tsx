@@ -5,14 +5,11 @@ import {
     ButtonComponent,
     ContainerComponent,
     InputComponent,
-    RowComponent,
     SectionComponent,
     SpaceComponent,
     TextComponent,
 } from '@/components';
-import { Ionicons } from '@expo/vector-icons';
 import { LoadingModal } from '@/modals';
-import { colors } from '@/constants/colors';
 import { Regex, sleep } from '@/utils';
 
 export default function ForGotPassWord() {
@@ -76,7 +73,7 @@ export default function ForGotPassWord() {
                         title='Đăng nhập'
                         size='large'
                         type='outline'
-                        onPress={() => router.push('/sign-in')}
+                        onPress={() => router.dismissAll()}
                     />
                 </SectionComponent>
             </View>
