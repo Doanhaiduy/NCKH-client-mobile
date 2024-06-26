@@ -18,7 +18,7 @@ export default function verification() {
             await sleep(1000);
             console.log('Verified!');
             setIsLoading(false);
-            router.push('/setting/reset-password/set-password');
+            router.push('/setting/change-password/set-password');
         } catch (error) {
             console.log('Can not verify! ', error);
             setIsLoading(false);

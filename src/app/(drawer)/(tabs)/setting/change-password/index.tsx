@@ -48,7 +48,7 @@ export default function ResetPassword() {
                     isPassword
                     placeholder="Nhập lại mật khẩu mới"
                 />
-                <TouchableOpacity onPress={() => router.push('setting/reset-password/verification')}>
+                <TouchableOpacity onPress={() => router.push('setting/change-password/verification')}>
                     <TextComponent text="Quên mật khẩu?" className="mt-2 ml-5" size={14} />
                 </TouchableOpacity>
             </SectionComponent>
