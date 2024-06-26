@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { ContainerComponent } from '@/components';
 
 export default function FAQ() {
     return (
-        <View>
+        <ContainerComponent isModal>
             <Text>FAQ</Text>
-        </View>
+        </ContainerComponent>
     );
 }
 

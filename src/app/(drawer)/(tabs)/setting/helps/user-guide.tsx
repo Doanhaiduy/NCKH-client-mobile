@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { ContainerComponent } from '@/components';
 
 export default function UserGuide() {
     return (
-        <View>
+        <ContainerComponent isModal>
             <Text>UserGuide</Text>
-        </View>
+        </ContainerComponent>
     );
 }
 

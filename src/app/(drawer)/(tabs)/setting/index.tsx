@@ -40,7 +40,7 @@ export default function SettingPage() {
                 </TouchableOpacity>
                 <TouchableOpacity
                     className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-500"
-                    onPress={() => router.push('setting/reset-password')}
+                    onPress={() => router.push('setting/change-password')}
                 >
                     <Entypo name="lock" size={26} color={colors.primary400} />
                     <TextComponent text="Đổi mật khẩu" className="text-base ml-4 flex-1" />
