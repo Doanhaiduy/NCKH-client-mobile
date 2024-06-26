@@ -1,0 +1,45 @@
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import {
+    ContainerComponent,
+    SectionComponent,
+    SpaceComponent,
+    TableBorderComponent,
+    TextComponent,
+} from '@/components';
+import { router } from 'expo-router';
+import { colors } from '@/constants/colors';
+
+export default function Upload() {
+    return (
+        <ContainerComponent
+            title="Tải lên minh chứng"
+            iconLeft="back"
+            isScroll
+            iconRight={
+                <TouchableOpacity
+                    onPress={() =>
+                        router.push({
+                            pathname: '/training-point/upload',
+                            params: { id: 1 },
+                        })
+                    }
+                >
+                    <TextComponent text="Gửi" size={20} color={colors.primary400} />
+                </TouchableOpacity>
+            }
+        >
+            <SectionComponent className="items-center">
+                <SpaceComponent height={16} />
+                <TextComponent text="Mã sinh viên: 63123456" className="font-interMd" size={20} />
+                <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
+                <TextComponent text="Năm học 2023-2024 | Học Kỳ 2 " color={colors.text600} className="mt-2" size={16} />
+            </SectionComponent>
+            <SectionComponent className="items-center">
+                <TableBorderComponent isUpload />
+            </SectionComponent>
+        </ContainerComponent>
+    );
+}
+
+const styles = StyleSheet.create({});
