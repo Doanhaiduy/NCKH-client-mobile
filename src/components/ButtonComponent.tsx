@@ -45,7 +45,7 @@ export default function ButtonComponent(props: Props) {
             })}
         >
             <>
-                {icon && iconFlex !== 'right' && <View>{icon}</View>}
+                {icon && iconFlex !== 'right' && <View className="mr-[2px]">{icon}</View>}
                 <TextComponent
                     text={title}
                     className={clsx(variantText.default, variantText[type], {
@@ -54,7 +54,7 @@ export default function ButtonComponent(props: Props) {
                         'opacity-70': disabled,
                     })}
                 />
-                {icon && iconFlex === 'right' && <View className=''>{icon}</View>}
+                {icon && iconFlex === 'right' && <View className="">{icon}</View>}
             </>
         </TouchableOpacity>
     );

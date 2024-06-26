@@ -49,7 +49,7 @@ export default function CustomDrawerComponent(props: any) {
                     }}
                     icon={({ color, size }) => <FontAwesome5 name="clipboard-check" size={24} color="black" />}
                     label="Đánh giá rèn luyện"
-                    onPress={() => router.push('/tin-tuc')}
+                    onPress={() => router.push('/training-point')}
                 />
 
                 <DrawerItem
@@ -65,7 +65,7 @@ export default function CustomDrawerComponent(props: any) {
                     }}
                     icon={({ color, size }) => <FontAwesome5 name="clipboard-list" size={24} color="black" />}
                     label="Đã điểm danh"
-                    onPress={() => router.push('/tin-tuc')}
+                    onPress={() => router.push('/attendance/list')}
                 />
                 <DrawerItem
                     style={{
@@ -80,7 +80,7 @@ export default function CustomDrawerComponent(props: any) {
                     }}
                     icon={({ color, size }) => <Entypo name="lock" size={24} color="black" />}
                     label="Đổi mật khẩu"
-                    onPress={() => router.push('/tin-tuc')}
+                    onPress={() => router.push('/setting/change-password')}
                 />
                 <DrawerItem
                     style={{
@@ -95,7 +95,7 @@ export default function CustomDrawerComponent(props: any) {
                     }}
                     icon={({ color, size }) => <Entypo name="message" size={24} color="black" />}
                     label="Trợ giúp"
-                    onPress={() => router.push('/tin-tuc')}
+                    onPress={() => router.push('/setting/helps')}
                 />
                 <DrawerItem
                     style={{

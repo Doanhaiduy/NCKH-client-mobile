@@ -9,6 +9,10 @@ import SpaceComponent from './SpaceComponent';
 import TextComponent from './TextComponent';
 import DropdownItem from './DropdownItem';
 import LanguageCard from './LanguageCard';
+import NotificationCard from './NotificationCard';
+import TableComponent from './TableComponent';
+import DropDownComponent from './DropDownComponent';
+import TableBorderComponent from './TableBorderComponent';
 
 export {
     ContainerComponent,
@@ -22,4 +26,8 @@ export {
     ItemCardGrid,
     DropdownItem,
     LanguageCard,
+    NotificationCard,
+    TableComponent,
+    DropDownComponent,
+    TableBorderComponent,
 };

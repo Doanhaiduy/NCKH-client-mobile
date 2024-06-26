@@ -12,7 +12,7 @@ import {
     View,
     ViewStyle,
 } from 'react-native';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import RowComponent from './RowComponent';
@@ -32,6 +32,7 @@ interface Props extends React.ComponentProps<typeof View> {
     isModal?: boolean;
     handleRefresh?: () => void;
     search?: boolean;
+    iconRight?: ReactNode;
 }
 
 export default function ContainerComponent(props: Props) {
@@ -45,6 +46,7 @@ export default function ContainerComponent(props: Props) {
         isModal,
         iconLeft,
         handleRefresh,
+        iconRight,
         search,
         ...containerProps
     } = props;
@@ -59,7 +61,7 @@ export default function ContainerComponent(props: Props) {
         }, 1000);
     };
 
-    const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 52 : StatusBar.currentHeight || 52) : 0;
+    const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 52 : StatusBar.currentHeight || 52) : 22;
     const ViewWrapper = isScroll ? ScrollView : View;
 
     const navigation = useNavigation();
@@ -105,9 +107,10 @@ export default function ContainerComponent(props: Props) {
                         <TouchableOpacity>
                             <Ionicons name="search" size={26} color={colors['primary400']} />
                         </TouchableOpacity>
-                    ) : (
+                    ) : iconRight ? null : (
                         <Ionicons name="search" size={26} color="transparent" />
                     )}
+                    {iconRight && iconRight}
                 </RowComponent>
             </View>
         );

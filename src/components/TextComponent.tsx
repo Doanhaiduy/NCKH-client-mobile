@@ -1,16 +1,18 @@
 import { StyleSheet, Text } from 'react-native';
 import React from 'react';
 import clsx from 'clsx';
+import { fontFamilies } from '@/constants/fontFamilies';
 
 interface Props extends React.ComponentProps<typeof Text> {
     text: string;
     title?: boolean;
     size?: number;
     color?: string;
+    fontBold?: boolean;
 }
 
 export default function TextComponent(props: Props) {
-    const { text, title, className, size, color, ...prop } = props;
+    const { text, title, className, size, color, fontBold, ...prop } = props;
 
     return (
         <Text
@@ -20,6 +22,7 @@ export default function TextComponent(props: Props) {
                 {
                     fontSize: title ? 24 : size || 16,
                     color: color || '#000',
+                    fontFamily: title ? 'InterMd' : fontBold ? 'InterSemi' : 'Inter',
                 },
                 prop.style,
             ]}

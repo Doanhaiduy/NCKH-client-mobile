@@ -25,29 +25,29 @@ export default function ItemCardList(props: Props) {
     const { data, onPress, isShadow, isAction, onPressButton } = props;
 
     return (
-        <CardComponent onPress={onPress} isShadow={isShadow} className=' bg-white min-w-full  flex-1 flex-row'>
-            <View className='flex-1 pr-3'>
+        <CardComponent onPress={onPress} isShadow={isShadow} className=" bg-white min-w-full  flex-1 flex-row">
+            <View className="flex-1 pr-3">
                 <TextComponent numberOfLines={3} text={data.title} />
-                <RowComponent className='justify-between'>
+                <RowComponent className="justify-between">
                     <RowComponent>
-                        <Ionicons name='calendar' size={14} color={colors['text800']} />
-                        <TextComponent text={data.time} className='text-[13px] text-text-800' />
+                        <Ionicons name="calendar" size={14} color={colors['text800']} />
+                        <TextComponent text={data.time} className="text-[13px] text-text-800 ml-1" />
                     </RowComponent>
                     {isAction && (
                         <ButtonComponent
-                            title='Điểm danh'
-                            size='small'
-                            type='primary'
+                            title="Điểm danh"
+                            size="small"
+                            type="primary"
                             onPress={() => onPressButton && onPressButton()}
                         />
                     )}
                 </RowComponent>
             </View>
-            <View className='w-[124px] '>
+            <View className="w-[124px] ">
                 <Image
                     source={require('../assets/images/TFT.jpg')}
-                    resizeMode='cover'
-                    className='w-full h-full object-cover rounded-[5px]'
+                    resizeMode="cover"
+                    className="w-full h-full object-cover rounded-[5px]"
                 />
             </View>
         </CardComponent>
