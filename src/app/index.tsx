@@ -3,9 +3,9 @@ import React from 'react';
 import { Link, Redirect, router, SplashScreen } from 'expo-router';
 
 export default function Home() {
-    // return <Redirect href={'/sign-in'} />;
+    return <Redirect href={'/(drawer)'} />;
     return (
-        <View className='flex items-center justify-center h-screen'>
+        <View className="flex items-center justify-center h-screen">
             <Link href={'/sign-in'}>go to sign-in</Link>
             <Link href={'/verification'}>go to verification</Link>
             <Link href={'/set-password'}>go to set-password</Link>

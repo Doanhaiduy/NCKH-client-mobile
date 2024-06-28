@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import {
     ContainerComponent,
@@ -19,10 +19,19 @@ export default function Upload() {
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
-                        router.push({
-                            pathname: '/training-point/upload',
-                            params: { id: 1 },
-                        })
+                        Alert.alert('Thông báo', 'Gửi minh chứng?', [
+                            {
+                                text: 'Hủy',
+                                style: 'cancel',
+                            },
+                            {
+                                text: 'Đồng ý',
+                                onPress: () => {
+                                    router.back();
+                                    Alert.alert('Thông báo', 'Gửi thành công');
+                                },
+                            },
+                        ])
                     }
                 >
                     <TextComponent text="Gửi" size={20} color={colors.primary400} />

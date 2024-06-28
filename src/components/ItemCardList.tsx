@@ -43,7 +43,7 @@ export default function ItemCardList(props: Props) {
                     )}
                 </RowComponent>
             </View>
-            <View className="w-[124px] ">
+            <View className="w-[30%] ">
                 <Image
                     source={require('../assets/images/TFT.jpg')}
                     resizeMode="cover"

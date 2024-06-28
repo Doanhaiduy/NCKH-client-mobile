@@ -5,39 +5,45 @@ import { Feather } from '@expo/vector-icons';
 
 export default function TabsLayout() {
     return (
-        <Tabs screenOptions={{ headerShown: false }}>
+        <Tabs screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}>
             <Tabs.Screen
-                name='(home)'
+                name="(home)"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name='home' size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Feather name="home" size={24} color={color} />,
                     headerTitle: 'Trang chủ',
                     title: 'Trang chủ',
                 }}
             />
             <Tabs.Screen
-                name='attendance'
+                name="attendance"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name='check-square' size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Feather name="check-square" size={24} color={color} />,
                     headerTitle: 'Điểm danh',
                     title: 'Điểm danh',
                 }}
             />
             <Tabs.Screen
-                name='notification'
+                name="notification"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name='bell' size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Feather name="bell" size={24} color={color} />,
                     headerTitle: 'Thông báo',
                     title: 'Thông báo',
                 }}
             />
             <Tabs.Screen
-                name='setting'
+                name="setting"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name='user' size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Feather name="user" size={24} color={color} />,
                     headerTitle: 'Cài đặt',
                     title: 'Cài đặt',
                 }}
             />
+            {/* <Tabs.Screen
+                name='search'
+                options={{
+                    href: null,
+                }}
+            /> */}
         </Tabs>
     );
 }

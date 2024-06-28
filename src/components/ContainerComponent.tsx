@@ -104,7 +104,7 @@ export default function ContainerComponent(props: Props) {
                     )}
                     {title && <TextComponent text={title} title />}
                     {search ? (
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => router.push('/search')}>
                             <Ionicons name="search" size={26} color={colors['primary400']} />
                         </TouchableOpacity>
                     ) : iconRight ? null : (

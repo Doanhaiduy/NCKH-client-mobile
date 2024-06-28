@@ -8,10 +8,10 @@ export default function EventList() {
     const { event, typeName } = useLocalSearchParams();
     console.log({ event });
     return (
-        <ContainerComponent iconLeft='back' search title={typeName?.toString()}>
-            <SectionComponent className='flex-1'>
-                <TextComponent text='Tin tức' className='text-[20px] text-primary-400 mt-2 mb-4' />
-                <View className='flex-1'>
+        <ContainerComponent iconLeft="back" search title={typeName?.toString()}>
+            <SectionComponent className="flex-1">
+                <TextComponent text="Tin tức" className="text-[20px] text-primary-400 mt-2 mb-4" />
+                <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={[1, 2, 3, 4]}
@@ -26,7 +26,7 @@ export default function EventList() {
                         renderItem={({ item }) => (
                             <ItemCardList
                                 data={{
-                                    title: 'Event 1',
+                                    title: 'Lịch thi đấu chính thức giải bóng chuyền nam - nữ sinh viên NTU 2024',
                                     time: '2021-10-10',
                                     image: '',
                                 }}

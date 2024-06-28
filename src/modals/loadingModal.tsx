@@ -15,7 +15,7 @@ export default function LoadingModal(props: Props) {
     return (
         <Modal className="flex-1" visible={visible} transparent statusBarTranslucent>
             <View className="flex-1 justify-center items-center bg-black/50">
-                <TextComponent color={colors.white} text="Loading..." />
+                <TextComponent color={colors.white} text={message || 'Đang tải...'} />
                 <ActivityIndicator size={32} color={colors.white} />
             </View>
         </Modal>
