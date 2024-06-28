@@ -1,10 +1,10 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import TextComponent from './TextComponent';
-import RowComponent from './RowComponent';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { FontAwesome5 } from '@expo/vector-icons';
 import clsx from 'clsx';
+import React from 'react';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import RowComponent from './RowComponent';
+import TextComponent from './TextComponent';
 
 interface Props {
     active?: boolean;

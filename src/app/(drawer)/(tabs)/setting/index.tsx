@@ -1,9 +1,9 @@
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
 import { ContainerComponent, SectionComponent, TextComponent } from '@/components';
-import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import React from 'react';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function SettingPage() {
     return (

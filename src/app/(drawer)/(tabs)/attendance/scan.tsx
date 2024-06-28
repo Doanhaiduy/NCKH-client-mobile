@@ -1,17 +1,9 @@
 import { sleep } from '@/utils';
-import {
-    ButtonComponent,
-    ContainerComponent,
-    InputComponent,
-    SectionComponent,
-    SpaceComponent,
-    TextComponent,
-} from '@components/index';
-import { Ionicons } from '@expo/vector-icons';
+import { ButtonComponent, ContainerComponent, SectionComponent } from '@components/index';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, Linking, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 
 export default function ScanQRScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -23,16 +15,16 @@ export default function ScanQRScreen() {
     }
     if (!permission.granted) {
         return (
-            <ContainerComponent iconLeft='back' title='Quét mã QR'>
-                <SectionComponent className='items-center'>
-                    <Text className='text-base font-medium'>
+            <ContainerComponent iconLeft="back" title="Quét mã QR">
+                <SectionComponent className="items-center">
+                    <Text className="text-base font-medium">
                         Ứng dụng cần quyền truy cập máy ảnh để quét mã QR. Vui lòng bật quyền truy cập máy ảnh.
                     </Text>
                     <ButtonComponent
                         onPress={requestPermission}
                         title={'Ứng dụng cần quyền truy cập máy ảnh'}
-                        size='medium'
-                        type='primary'
+                        size="medium"
+                        type="primary"
                     />
                 </SectionComponent>
             </ContainerComponent>
@@ -61,16 +53,16 @@ export default function ScanQRScreen() {
     };
 
     return (
-        <ContainerComponent iconLeft='back' title='Quét mã QR'>
+        <ContainerComponent iconLeft="back" title="Quét mã QR">
             <CameraView
-                facing='back'
-                className='flex-1'
+                facing="back"
+                className="flex-1"
                 barcodeScannerSettings={{
                     barcodeTypes: ['qr', 'pdf417'],
                 }}
                 onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
             >
-                <View className='flex-1 items-center justify-center'>
+                <View className="flex-1 items-center justify-center">
                     <Image
                         source={require('@/assets/images/scanner-action.png')}
                         style={{ width: 350, height: 350, alignSelf: 'center' }}

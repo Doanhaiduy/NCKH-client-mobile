@@ -1,5 +1,3 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
 import {
     ContainerComponent,
     SectionComponent,
@@ -7,8 +5,10 @@ import {
     TableBorderComponent,
     TextComponent,
 } from '@/components';
-import { router } from 'expo-router';
 import { colors } from '@/constants/colors';
+import { router } from 'expo-router';
+import React from 'react';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Upload() {
     return (

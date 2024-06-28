@@ -1,5 +1,3 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -9,9 +7,10 @@ import {
     TextComponent,
 } from '@/components';
 import { sleep } from '@/helpers';
-import { set } from 'zod';
-import { router } from 'expo-router';
 import { LoadingModal } from '@/modals';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function ResetPassword() {
     const [password, setPassword] = useState('');

@@ -1,25 +1,23 @@
+import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
+import React, { ReactNode } from 'react';
 import {
     ImageBackground,
     Platform,
     RefreshControl,
-    SafeAreaView,
     ScrollView,
     StatusBar,
     StyleProp,
     StyleSheet,
-    Text,
     TouchableOpacity,
     View,
     ViewStyle,
 } from 'react-native';
-import React, { ReactNode } from 'react';
-import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import RowComponent from './RowComponent';
-import { colors } from '@/constants/colors';
-import TextComponent from './TextComponent';
 import SectionComponent from './SectionComponent';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import TextComponent from './TextComponent';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;

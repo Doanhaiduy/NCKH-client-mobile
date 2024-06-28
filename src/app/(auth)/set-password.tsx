@@ -1,10 +1,10 @@
-import { Alert, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
-import { router } from 'expo-router';
-import ContainerComponent from '@/components/ContainerComponent';
 import { ButtonComponent, InputComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
+import ContainerComponent from '@/components/ContainerComponent';
 import { LoadingModal } from '@/modals';
 import { Regex, sleep } from '@/utils';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 
 export default function SetPassword() {
     const [isLoading, setIsLoading] = useState(false);
@@ -41,20 +41,20 @@ export default function SetPassword() {
     };
 
     return (
-        <ContainerComponent isAuth isScroll iconLeft='back'>
+        <ContainerComponent isAuth isScroll iconLeft="back">
             <SpaceComponent height={120} />
-            <View className='px-8 pb-4 '>
-                <SectionComponent align='center'>
-                    <TextComponent text='Tạo mật khẩu mới' title className='text-primary-400' />
+            <View className="px-8 pb-4 ">
+                <SectionComponent align="center">
+                    <TextComponent text="Tạo mật khẩu mới" title className="text-primary-400" />
                     <TextComponent
-                        text='Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó.'
-                        className='text-center mt-4'
+                        text="Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó."
+                        className="text-center mt-4"
                     />
                 </SectionComponent>
                 <SectionComponent>
                     <SpaceComponent height={24} />
                     <InputComponent
-                        placeholder='Mật khẩu mới'
+                        placeholder="Mật khẩu mới"
                         value={newPassword}
                         isPassword
                         onChange={(val) => setNewPassword(val)}
@@ -63,9 +63,9 @@ export default function SetPassword() {
                     />
                     <SpaceComponent height={24} />
                     <ButtonComponent
-                        title='Đặt lại mật khẩu'
-                        size='large'
-                        type='primary'
+                        title="Đặt lại mật khẩu"
+                        size="large"
+                        type="primary"
                         disabled={isError}
                         onPress={handleSetPassword}
                     />

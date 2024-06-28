@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Stack } from 'expo-router';
 import { colors } from '@/constants/colors';
+import { Stack } from 'expo-router';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 
 export default function EventLayout() {
     return (

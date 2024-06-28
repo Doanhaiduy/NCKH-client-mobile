@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
 import { globalStyles } from '@/styles';
 import clsx from 'clsx';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface Props extends React.ComponentProps<typeof TouchableOpacity> {
     children: React.ReactNode;

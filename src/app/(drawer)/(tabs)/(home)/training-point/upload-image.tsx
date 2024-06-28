@@ -1,13 +1,13 @@
-import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
 import { ContainerComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
-import { Feather, Ionicons } from '@expo/vector-icons';
 import { globalStyles } from '@/styles';
+import { Feather, Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import * as ImagePicker from 'expo-image-picker';
 import { sleep } from '@/helpers';
 import { LoadingModal } from '@/modals';
+import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 
 export default function UploadImage() {

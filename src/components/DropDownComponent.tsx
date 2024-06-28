@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import TextComponent from './TextComponent';
+import { StyleSheet, Text, View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import RowComponent from './RowComponent';
-import { Ionicons } from '@expo/vector-icons';
-import { colors } from '@/constants/colors';
+import TextComponent from './TextComponent';
 
 type Data = {
     title: string;

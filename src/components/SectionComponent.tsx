@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 import clsx from 'clsx';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
@@ -17,7 +17,7 @@ export default function SectionComponent(props: Props) {
                 'px-4 pb-5 items-start ',
                 align === 'center' && 'items-center',
                 align === 'left' && 'items-start',
-                align === 'right' && 'items-end'
+                align === 'right' && 'items-end',
             )}
             style={sectionProps.style}
         >

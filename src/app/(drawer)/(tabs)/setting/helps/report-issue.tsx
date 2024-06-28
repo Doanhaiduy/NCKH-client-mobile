@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 import { ContainerComponent } from '@/components';
-import { Stack } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
 
 export default function ReportIssue() {
     return (

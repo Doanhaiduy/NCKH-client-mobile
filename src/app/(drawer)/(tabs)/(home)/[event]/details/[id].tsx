@@ -1,5 +1,3 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -8,9 +6,11 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
-import { useLocalSearchParams } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
 export default function Details() {
     const { id, event, eventName } = useLocalSearchParams();

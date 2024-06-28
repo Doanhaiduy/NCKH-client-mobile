@@ -1,36 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 import {
     ContainerComponent,
     DropDownComponent,
     RowComponent,
     SectionComponent,
-    SpaceComponent,
     TableComponent,
     TextComponent,
 } from '@/components';
 import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
-
-const AttendanceData = [
-    {
-        title: 'HK: I, NH: 2021 - 2022',
-        value: 'HK: I, NH: 2021 - 2022',
-    },
-    {
-        title: 'HK: II, NH: 2022 - 2023',
-        value: 'HK: II, NH: 2022 - 2023',
-    },
-
-    {
-        title: 'HK: I, NH: 2023 - 2024',
-        value: 'HK: I, NH: 2023 - 2024',
-    },
-    {
-        title: 'HK: II, NH: 2024 - 2025',
-        value: 'HK: II, NH: 2024 - 2025',
-    },
-];
+import { AttendanceOptionData } from '@/mockData';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 
 export default function ListAttendance() {
     return (
@@ -43,7 +22,7 @@ export default function ListAttendance() {
                     color={colors.primary400}
                 />
                 <RowComponent className="ml-auto mb-4">
-                    <DropDownComponent title="" data={AttendanceData} onSelect={() => {}} width={230} />
+                    <DropDownComponent title="" data={AttendanceOptionData} onSelect={() => {}} width={230} />
                 </RowComponent>
                 <TableComponent />
             </SectionComponent>

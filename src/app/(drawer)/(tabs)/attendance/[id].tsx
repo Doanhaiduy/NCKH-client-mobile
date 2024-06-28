@@ -1,7 +1,7 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { ButtonComponent, ContainerComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
+import { router, useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { Image, StyleSheet } from 'react-native';
 
 export default function Details() {
     const { id, eventName } = useLocalSearchParams();
@@ -20,7 +20,7 @@ export default function Details() {
                     size="large"
                     onPress={() => {
                         router.push({
-                            pathname: '/(drawer)/(tabs)/attendance/scan',
+                            pathname: '/attendance/scan',
                             params: {
                                 id: id,
                             },

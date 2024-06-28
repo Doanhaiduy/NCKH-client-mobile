@@ -1,11 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
 import { ButtonComponent, ContainerComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
-import { sleep } from '@/helpers';
-import { router } from 'expo-router';
-import { OtpInput } from 'react-native-otp-entry';
 import { colors } from '@/constants/colors';
+import { sleep } from '@/helpers';
 import { LoadingModal } from '@/modals';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { OtpInput } from 'react-native-otp-entry';
 
 export default function verification() {
     const [isLoading, setIsLoading] = useState(false);

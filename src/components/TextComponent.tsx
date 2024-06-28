@@ -1,7 +1,6 @@
-import { StyleSheet, Text } from 'react-native';
-import React from 'react';
 import clsx from 'clsx';
-import { fontFamilies } from '@/constants/fontFamilies';
+import React from 'react';
+import { Text } from 'react-native';
 
 interface Props extends React.ComponentProps<typeof Text> {
     text: string;

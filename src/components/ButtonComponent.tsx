@@ -1,7 +1,7 @@
-import { Button, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import TextComponent from './TextComponent';
 import clsx from 'clsx';
+import React from 'react';
+import { Button, StyleSheet, TouchableOpacity, View } from 'react-native';
+import TextComponent from './TextComponent';
 
 interface Props extends React.ComponentProps<typeof Button> {
     title: string;

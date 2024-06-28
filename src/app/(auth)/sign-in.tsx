@@ -1,25 +1,21 @@
-import { Alert, Image, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-import { colors } from '@/constants/colors';
 import {
     ButtonComponent,
     ContainerComponent,
     InputComponent,
-    RowComponent,
     SectionComponent,
     SpaceComponent,
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
 import { checkHasErr, sleep } from '@/utils';
-import { Link, router } from 'expo-router';
-import { Controller, SubmitHandler, set, useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, router } from 'expo-router';
+import React, { useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Alert, Image, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { z } from 'zod';
 
 const schema = z.object({
     username: schemasCustom.username,
@@ -64,25 +60,25 @@ export default function LoginPage() {
     };
 
     return (
-        <ContainerComponent isAuth isScroll className=''>
+        <ContainerComponent isAuth isScroll className="">
             <KeyboardAwareScrollView>
                 <SpaceComponent height={147} />
-                <SectionComponent align='center'>
+                <SectionComponent align="center">
                     <Image source={require('../../assets/images/logo-login.png')} width={125} height={125} />
                     <SpaceComponent height={6} />
-                    <TextComponent text='Information Technology' title className='text-primary-400' />
+                    <TextComponent text="Information Technology" title className="text-primary-400" />
                 </SectionComponent>
                 <SpaceComponent height={47} />
 
-                <SectionComponent align='center' className=' px-12'>
+                <SectionComponent align="center" className=" px-12">
                     <Controller
-                        name='username'
+                        name="username"
                         control={control}
                         render={({ field: { value, onBlur, onChange } }) => (
                             <InputComponent
-                                placeholder='Mã số sinh viên'
+                                placeholder="Mã số sinh viên"
                                 value={value}
-                                type='number-pad'
+                                type="number-pad"
                                 onChange={onChange}
                                 onBlur={onBlur}
                                 err={errors.username?.message}
@@ -90,13 +86,13 @@ export default function LoginPage() {
                         )}
                     />
                     <Controller
-                        name='password'
+                        name="password"
                         control={control}
                         render={({ field: { value, onBlur, onChange } }) => (
                             <InputComponent
-                                placeholder='Mật khẩu'
+                                placeholder="Mật khẩu"
                                 value={value}
-                                type='default'
+                                type="default"
                                 onChange={onChange}
                                 isPassword
                                 onBlur={onBlur}
@@ -105,18 +101,18 @@ export default function LoginPage() {
                         )}
                     />
 
-                    <Link className='self-start ml-4 mt-2' href={'/forgot'}>
+                    <Link className="self-start ml-4 mt-2" href={'/forgot'}>
                         Quên mật khẩu
                     </Link>
                 </SectionComponent>
 
-                <SectionComponent className='px-12'>
-                    {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
+                <SectionComponent className="px-12">
+                    {errors.root && <TextComponent text={`${errors.root.message}`} className="text-error" />}
                     <SpaceComponent height={24} />
                     <ButtonComponent
-                        title='Đăng nhập'
-                        size='large'
-                        type='primary'
+                        title="Đăng nhập"
+                        size="large"
+                        type="primary"
                         onPress={handleSubmit(onSubmit)}
                         disabled={checkHasErr(errors)}
                     />

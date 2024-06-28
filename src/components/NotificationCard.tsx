@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import TextComponent from './TextComponent';
-import RowComponent from './RowComponent';
 import { colors } from '@/constants/colors';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import RowComponent from './RowComponent';
+import TextComponent from './TextComponent';
 
 type Data = {
     title: String;

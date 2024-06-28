@@ -1,12 +1,12 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
-import { router } from 'expo-router';
+import { ButtonComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import ContainerComponent from '@/components/ContainerComponent';
-import { ButtonComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { LoadingModal } from '@/modals';
-import { OtpInput } from 'react-native-otp-entry';
 import { sleep } from '@/utils';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { OtpInput } from 'react-native-otp-entry';
 
 export default function VerificationPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -27,14 +27,14 @@ export default function VerificationPage() {
     };
 
     return (
-        <ContainerComponent isAuth isScroll iconLeft='back'>
+        <ContainerComponent isAuth isScroll iconLeft="back">
             <SpaceComponent height={120} />
-            <View className='px-8 pb-4 '>
-                <SectionComponent align='center'>
-                    <TextComponent text='Xác minh email' title className='text-primary-400' />
+            <View className="px-8 pb-4 ">
+                <SectionComponent align="center">
+                    <TextComponent text="Xác minh email" title className="text-primary-400" />
                     <TextComponent
-                        text='Một mã OTP 6 chữ số đã được gửi đến email. Vui lòng kiểm tra và nhập mã.'
-                        className='text-center mt-4'
+                        text="Một mã OTP 6 chữ số đã được gửi đến email. Vui lòng kiểm tra và nhập mã."
+                        className="text-center mt-4"
                     />
                 </SectionComponent>
                 <SectionComponent>
@@ -55,17 +55,17 @@ export default function VerificationPage() {
                     />
                     <SpaceComponent height={24} />
                     <ButtonComponent
-                        title='Xác minh'
+                        title="Xác minh"
                         disabled={otp.length < 6}
-                        size='large'
-                        type='primary'
+                        size="large"
+                        type="primary"
                         onPress={handleVerification}
                     />
                     <SpaceComponent height={24} />
-                    <SectionComponent align='center' className='w-full'>
-                        <TextComponent text='Chưa nhận được mã OTP?' className='text-sm' />
+                    <SectionComponent align="center" className="w-full">
+                        <TextComponent text="Chưa nhận được mã OTP?" className="text-sm" />
                         <TouchableOpacity>
-                            <TextComponent text='Gửi lại' className='text-sm text-primary-400' />
+                            <TextComponent text="Gửi lại" className="text-sm text-primary-400" />
                         </TouchableOpacity>
                     </SectionComponent>
                     <LoadingModal visible={isLoading} />

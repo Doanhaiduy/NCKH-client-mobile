@@ -1,11 +1,11 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import CardComponent from './CardComponent';
-import TextComponent from './TextComponent';
-import RowComponent from './RowComponent';
-import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 import ButtonComponent from './ButtonComponent';
+import CardComponent from './CardComponent';
+import RowComponent from './RowComponent';
+import TextComponent from './TextComponent';
 
 type data = {
     title: string;

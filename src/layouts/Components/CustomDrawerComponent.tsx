@@ -1,10 +1,10 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { router } from 'expo-router';
 import { DropdownItem, SectionComponent, SpaceComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { Entypo, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { router } from 'expo-router';
+import React from 'react';
+import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 
 export default function CustomDrawerComponent(props: any) {
     return (
@@ -34,7 +34,14 @@ export default function CustomDrawerComponent(props: any) {
                     }}
                     icon={({ color, size }) => <Ionicons name="newspaper" size={24} />}
                     label="Tin tức"
-                    onPress={() => router.push('/tin-tuc')}
+                    onPress={() =>
+                        router.push({
+                            pathname: '/news2',
+                            params: {
+                                typeName: 'Tin tức',
+                            },
+                        })
+                    }
                 />
                 <DrawerItem
                     style={{

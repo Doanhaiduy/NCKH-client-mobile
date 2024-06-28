@@ -1,5 +1,3 @@
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -9,6 +7,8 @@ import {
     TextComponent,
 } from '@/components';
 import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, StyleSheet } from 'react-native';
 
 export default function SetPassword() {
     const [password, setPassword] = useState('');

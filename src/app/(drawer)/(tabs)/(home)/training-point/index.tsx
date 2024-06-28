@@ -1,5 +1,3 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -9,22 +7,12 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
-import SelectDropdown from 'react-native-select-dropdown';
-import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { SemesterData, YearData } from '@/mockData';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-
-const YearData = [
-    { title: '2021-2022', value: '2021-2022' },
-    { title: '2022-2023', value: '2022-2023' },
-    { title: '2023-2024', value: '2023-2024' },
-    { title: '2024-2025', value: '2024-2025' },
-];
-
-const SemesterData = [
-    { title: '1', value: '1' },
-    { title: '2', value: '2' },
-];
+import React, { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 
 export default function TrainingPoint() {
     const [selectedYear, setSelectedYear] = useState<String>(YearData[0].value.toString());

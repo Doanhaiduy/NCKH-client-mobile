@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Slot, Stack } from 'expo-router';
-import { useFonts } from 'expo-font';
+import store from '@/stores/store';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import { useFonts } from 'expo-font';
+import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { Provider } from 'react-redux';
-import store from '@/stores/store';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,7 +40,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
     return (
         <Provider store={store}>
-            <GestureHandlerRootView className='flex-1'>
+            <GestureHandlerRootView className="flex-1">
                 <Slot />
             </GestureHandlerRootView>
         </Provider>

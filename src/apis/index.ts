@@ -1,8 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { router } from 'expo-router';
 import queryString from 'query-string';
-import { Alert } from 'react-native';
 
 // const getAccessToken = async () => {
 //     const res = await AsyncStorage.getItem('auth');

@@ -1,9 +1,9 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
 import { ContainerComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HelpsPage() {
     return (
