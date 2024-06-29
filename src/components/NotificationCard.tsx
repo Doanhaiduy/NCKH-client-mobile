@@ -4,15 +4,8 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 
-type Data = {
-    title: String;
-    description: String;
-    time: String;
-    id: String;
-};
-
 interface Props {
-    data: Data;
+    data: CardItemData;
     isNew?: boolean;
 }
 
@@ -30,7 +23,7 @@ export default function NotificationCard(props: Props) {
                 <TextComponent text={data?.title?.toString()} size={20} className="font-interMd" />
                 {isNew && <View className="w-2 h-2 rounded-full bg-primary-400"></View>}
             </RowComponent>
-            <TextComponent text={data?.description?.toString()} numberOfLines={1} className="pr-5 py-1" />
+            <TextComponent text={data?.description?.toString() || ''} numberOfLines={1} className="pr-5 py-1" />
             <RowComponent className="justify-between pr-5">
                 <TextComponent text={data?.time?.toString()} color={colors.text600} />
                 <TextComponent text="Xem chi tiết" color={colors.primary400} />

@@ -8,3 +8,12 @@ type FormChangePassword = {
     newPassword: string;
     confirmPassword: string;
 };
+
+type CardItemData = {
+    id: number;
+    title: string;
+    time: string;
+    image: string;
+    description?: string;
+    type?: string;
+};

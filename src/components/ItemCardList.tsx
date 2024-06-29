@@ -7,14 +7,8 @@ import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 
-type data = {
-    title: string;
-    time: string;
-    image: string;
-};
-
 interface Props {
-    data: data;
+    data: CardItemData;
     onPress?: () => void;
     isShadow?: boolean;
     isAction?: boolean;
@@ -26,7 +20,7 @@ export default function ItemCardList(props: Props) {
 
     return (
         <CardComponent onPress={onPress} isShadow={isShadow} className=" bg-white min-w-full  flex-1 flex-row">
-            <View className="flex-1 pr-3">
+            <View className="flex-1 pr-3 min-h-[100px] justify-between">
                 <TextComponent numberOfLines={3} text={data.title} />
                 <RowComponent className="justify-between">
                     <RowComponent>

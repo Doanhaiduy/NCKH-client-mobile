@@ -2,8 +2,7 @@ import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, Te
 import { FinishedActivityData, OngoingActivityData } from '@/mockData';
 import { router } from 'expo-router';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 export default function Attendance() {
     return (
@@ -18,14 +17,13 @@ export default function Attendance() {
                         scrollEnabled={false}
                         renderItem={({ item }) => (
                             <ItemCardList
-                                data={item as any}
+                                data={item}
                                 onPress={() => {}}
                                 onPressButton={() => {
                                     router.push({
-                                        pathname: '/attendance/1',
+                                        pathname: `/attendance/${item.id}`,
                                         params: {
-                                            eventName:
-                                                'Khảo sát về việc tham gia cổ vũ chung kết giải đấu trường chân lý IT Champion Cup...',
+                                            eventName: item.title,
                                         },
                                     });
                                 }}
@@ -45,16 +43,15 @@ export default function Attendance() {
                         scrollEnabled={false}
                         renderItem={({ item }) => (
                             <ItemCardList
-                                data={item as any}
-                                onPressButton={() => {
-                                    router.push({
-                                        pathname: '/attendance/1',
-                                        params: {
-                                            eventName:
-                                                'Khảo sát về việc tham gia cổ vũ chung kết giải đấu trường chân lý IT Champion Cup...',
-                                        },
-                                    });
-                                }}
+                                data={item}
+                                // onPressButton={() => {
+                                //     router.push({
+                                //         pathname: `/attendance/${item.id}`,
+                                //         params: {
+                                //             eventName: item.title,
+                                //         },
+                                //     });
+                                // }}
                             />
                         )}
                     />

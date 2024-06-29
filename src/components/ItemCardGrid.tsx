@@ -7,14 +7,8 @@ import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 
-type data = {
-    title: string;
-    time: string;
-    image: string;
-};
-
 interface Props {
-    data: data;
+    data: CardItemData;
     size: 'medium' | 'large';
     onPress?: () => void;
     isShadow?: boolean;

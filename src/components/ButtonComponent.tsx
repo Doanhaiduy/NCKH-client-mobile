@@ -11,7 +11,6 @@ interface Props extends React.ComponentProps<typeof Button> {
     onPress: () => void;
     icon?: React.ReactNode;
     iconFlex?: 'left' | 'right';
-    // isLoading?: boolean;
 }
 
 const variantContainer = {
@@ -30,8 +29,6 @@ const variantText = {
 
 export default function ButtonComponent(props: Props) {
     const { title, type, size, disabled, onPress, icon, iconFlex } = props;
-
-    // const LoadingColor = type === 'primary' || type === 'grey' ? 'white' : colors['primary400'];
 
     return (
         <TouchableOpacity
