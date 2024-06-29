@@ -22,5 +22,7 @@ export const schemasCustom: {
         });
     },
 
-    confirmPassword: z.string().min(8),
+    confirmPassword: z.string().min(8, {
+        message: 'Mật khẩu không khớp',
+    }),
 };

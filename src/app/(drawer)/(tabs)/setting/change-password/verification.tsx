@@ -1,6 +1,6 @@
 import { ButtonComponent, ContainerComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
-import { sleep } from '@/helpers';
+import { sleep } from '@/utils';
 import { LoadingModal } from '@/modals';
 import { router } from 'expo-router';
 import React, { useState } from 'react';

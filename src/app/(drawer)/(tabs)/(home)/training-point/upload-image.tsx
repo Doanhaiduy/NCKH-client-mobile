@@ -5,7 +5,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { sleep } from '@/helpers';
+import { sleep } from '@/utils';
 import { LoadingModal } from '@/modals';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
