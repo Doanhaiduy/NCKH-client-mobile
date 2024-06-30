@@ -35,7 +35,7 @@ export default function TrainingPointDetails() {
                 <SpaceComponent height={16} />
                 <TextComponent text="Mã sinh viên: 63123456" className="font-interMd" size={20} />
                 <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
-                <TextComponent text="Năm học 2023-2024 | Học Kỳ 2 " color={colors.text600} className="mt-2" size={16} />
+                <TextComponent text="Năm học 2023-2024 | Học Kỳ 2 " color={colors.text400} className="mt-2" size={16} />
             </SectionComponent>
             <SectionComponent className="items-center">
                 <TableBorderComponent />

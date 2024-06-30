@@ -26,12 +26,12 @@ export default function SettingPage() {
                     <TextComponent text="Nguyễn Trà My" className="text-xl" />
                     <TextComponent text="MSSV: 63123456" className="text-base text-gray-400" />
                 </View>
-                <Feather name="edit" size={24} color={colors.primary600} />
+                <Feather name="edit" size={24} color={colors.primary300} />
             </SectionComponent>
 
             <SectionComponent className="mt-4">
                 <TouchableOpacity
-                    className="flex-row flex-1 items-center py-6 border-y-[1px] border-y-text-500"
+                    className="flex-row flex-1 items-center py-6 border-y-[1px] border-y-text-200"
                     onPress={() => router.push('setting/language')}
                 >
                     <Ionicons name="earth-outline" size={26} color={colors.primary400} />
@@ -39,7 +39,7 @@ export default function SettingPage() {
                     <Ionicons name="chevron-forward" size={26} color={colors.text500} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-500"
+                    className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-200"
                     onPress={() => router.push('setting/change-password')}
                 >
                     <Entypo name="lock" size={26} color={colors.primary400} />
@@ -47,7 +47,7 @@ export default function SettingPage() {
                     <Ionicons name="chevron-forward" size={26} color={colors.text500} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-500"
+                    className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-200"
                     onPress={() => router.push('setting/helps')}
                 >
                     <Feather name="info" size={26} color={colors.primary400} />
@@ -55,7 +55,7 @@ export default function SettingPage() {
                     <Ionicons name="chevron-forward" size={26} color={colors.text500} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-500"
+                    className="flex-row flex-1 items-center py-6 border-b-[1px] border-b-text-200"
                     onPress={() => {
                         Alert.alert('Thông báo', 'Bạn có chắc chắn muốn đăng xuất?', [
                             {

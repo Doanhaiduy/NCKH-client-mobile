@@ -18,7 +18,7 @@ export default function ItemCardGrid(props: Props) {
     const { data, onPress, size, isShadow } = props;
 
     const containerClass = clsx(
-        size === 'medium' ? 'bg-white max-w-[48%] min-h-[184px] ' : 'bg-text-600 min-w-full min-h-[228px] flex-1',
+        size === 'medium' ? 'bg-white max-w-[48%] min-h-[184px] ' : 'bg-text-100 min-w-full min-h-[228px] flex-1',
     );
     const imageClass = clsx(
         'rounded-t-[10px] w-full object-cover',
@@ -36,8 +36,8 @@ export default function ItemCardGrid(props: Props) {
             <View className={containerTextClass}>
                 <TextComponent className={textClass} numberOfLines={2} text={data.title} />
                 <RowComponent>
-                    <Ionicons name="calendar" size={14} color={colors['text800']} />
-                    <TextComponent text={data.time} className="ml-1 text-[13px] text-text-800" />
+                    <Ionicons name="calendar" size={14} color={colors.black} />
+                    <TextComponent text={data.time} className="ml-1 text-[13px] text-text-400" />
                 </RowComponent>
             </View>
         </CardComponent>

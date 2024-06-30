@@ -83,7 +83,7 @@ export default function UploadImage() {
                 <SpaceComponent height={16} />
                 <TextComponent text="Mã sinh viên: 63123456" className="font-interMd" size={20} />
                 <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
-                <TextComponent text="Tải lên minh chứng mục 1.2" color={colors.text600} className="mt-2" size={16} />
+                <TextComponent text="Tải lên minh chứng mục 1.2" color={colors.text400} className="mt-2" size={16} />
             </SectionComponent>
             {images.length <= 0 ? (
                 <SectionComponent>

@@ -17,7 +17,7 @@ const variantContainer = {
     default: 'rounded-[30px] shadow-md flex flex-row items-center justify-center min-h-[48px]',
     primary: 'bg-primary-400',
     outline: 'bg-white border-[1px] border-primary-400',
-    grey: 'bg-text-800',
+    grey: 'bg-text-400',
 };
 
 const variantText = {

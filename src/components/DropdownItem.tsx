@@ -25,7 +25,7 @@ export default function DropdownItem() {
                             fontFamily: 'Inter',
                         }}
                         key={index}
-                        icon={({ color, size }) => <Ionicons name="chevron-forward" color={colors.text400} />}
+                        icon={({ color, size }) => <Ionicons name="chevron-forward" color={colors.text200} />}
                         label={item.name}
                         onPress={() =>
                             router.push({

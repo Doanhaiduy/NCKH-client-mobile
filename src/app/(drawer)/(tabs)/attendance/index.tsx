@@ -33,7 +33,7 @@ export default function Attendance() {
                     />
                 </View>
             </SectionComponent>
-            <SectionComponent className="border-t-[1px] border-text-500">
+            <SectionComponent className="border-t-[1px] border-text-200">
                 <TextComponent text="Hoạt động đã diễn ra" className="text-[20px] text-primary-400 mt-2 mb-4" />
                 <View className="flex-1">
                     <FlatList

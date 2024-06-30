@@ -21,22 +21,22 @@ export default function TableBorderComponent(props: Props) {
     const { numOfColumns = 3, isUpload } = props;
     return (
         <View className="min-w-full flex-1 px-2">
-            <View className="flex-row flex-nowrap flex-1 border-text-500 border-y-[1px] ">
-                <View className="w-[60%] items-start border-text-500 py-3 px-1 border-x-[1px]">
+            <View className="flex-row flex-nowrap flex-1 border-text-200 border-y-[1px] ">
+                <View className="w-[60%] items-start border-text-200 py-3 px-1 border-x-[1px]">
                     <TextComponent text="Tên tiêu chí" fontBold />
                 </View>
                 {isUpload ? (
                     <>
-                        <View className="flex-1 items-start  py-3 px-1 border-text-500 border-r-[1px]">
+                        <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px]">
                             <TextComponent text="Tải lên minh chứng" fontBold />
                         </View>
                     </>
                 ) : (
                     <>
-                        <View className="flex-1 items-start  py-3 px-1 border-text-500 border-r-[1px]">
+                        <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px]">
                             <TextComponent text="Điểm tối đa" fontBold />
                         </View>
-                        <View className="flex-1 items-start  py-3 px-1 border-text-500 border-r-[1px]">
+                        <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px]">
                             <TextComponent text="Điểm hiện tại" fontBold />
                         </View>
                     </>
@@ -47,17 +47,17 @@ export default function TableBorderComponent(props: Props) {
                 {ActiveDataTrainingPoint.map((item, index) => (
                     <View
                         key={index}
-                        className="flex-row flex-nowrap flex-1 border-text-500 border-b-[1px]"
+                        className="flex-row flex-nowrap flex-1 border-text-200 border-b-[1px]"
                         style={{
                             backgroundColor: index % 2 === 0 ? '#F3F4F6' : '#fff',
                         }}
                     >
-                        <View className="w-[60%] items-start py-3 px-1 border-text-500 border-x-[1px]">
+                        <View className="w-[60%] items-start py-3 px-1 border-text-200 border-x-[1px]">
                             <TextComponent text={item.name} />
                         </View>
 
                         {isUpload ? (
-                            <View className="flex-1 py-3 px-1 border-text-500 border-r-[1px] items-center justify-center">
+                            <View className="flex-1 py-3 px-1 border-text-200 border-r-[1px] items-center justify-center">
                                 {item.require && (
                                     <ButtonComponent
                                         onPress={() => {
@@ -102,16 +102,16 @@ export default function TableBorderComponent(props: Props) {
                                         type='grey'
                                         size='small'
                                         disabled
-                                        icon={<Feather name='check-circle' disabled size={18} color={colors.text200} />}
+                                        icon={<Feather name='check-circle' disabled size={18} color={colors.text100} />}
                                     />
                                 )} */}
                             </View>
                         ) : (
                             <>
-                                <View className="flex-1 py-3 px-1 border-text-500 items-center border-r-[1px] ">
+                                <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
                                     <TextComponent text={item.maxPoint.toString()} />
                                 </View>
-                                <View className="flex-1 py-3 px-1 border-text-500 items-center border-r-[1px] ">
+                                <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
                                     <TextComponent text={item.currentPoint.toString()} />
                                 </View>
                             </>

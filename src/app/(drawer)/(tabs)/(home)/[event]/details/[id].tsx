@@ -21,8 +21,8 @@ export default function Details() {
             <SectionComponent className="flex-1 py-2">
                 <RowComponent className="justify-between w-full">
                     <RowComponent>
-                        <Ionicons name="calendar" size={14} color={colors['text800']} />
-                        <TextComponent text="10/10/2021" className="text-[13px] text-text-800" />
+                        <Ionicons name="calendar" size={14} color={colors.black} />
+                        <TextComponent text="10/10/2021" className="text-[13px] text-text-400" />
                     </RowComponent>
                     {event === 'Đang diễn ra' && (
                         <ButtonComponent
@@ -37,7 +37,7 @@ export default function Details() {
                 </RowComponent>
                 <SpaceComponent height={16} />
                 <TextComponent
-                    color={colors.primary600}
+                    color={colors.primary300}
                     size={20}
                     text="THÔNG BÁO VỀ VIỆC ĐĂNG KÍ THAM GIA GIẢI BÓNG CHUYỀN NAM – NỮ khoa Công nghệ thông tin năm 2024"
                 />

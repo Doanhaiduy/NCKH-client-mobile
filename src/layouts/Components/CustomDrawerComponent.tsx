@@ -11,11 +11,11 @@ export default function CustomDrawerComponent(props: any) {
         <DrawerContentScrollView
             scrollEnabled={false}
             contentContainerStyle={{
-                backgroundColor: colors.primary600,
+                backgroundColor: colors.primary300,
                 flex: 1,
             }}
         >
-            <SectionComponent className="bg-primary-800">
+            <SectionComponent className="bg-primary-300">
                 <SpaceComponent height={20} />
                 <Text className="text-xl text-center font-interMd text-white">Information Technology</Text>
             </SectionComponent>

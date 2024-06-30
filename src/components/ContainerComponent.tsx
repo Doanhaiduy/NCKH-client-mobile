@@ -76,7 +76,7 @@ export default function ContainerComponent(props: Props) {
             >
                 <RowComponent>
                     <TextComponent text="Tiếng việt" className="text-center" />
-                    <Ionicons name="chevron-down" size={24} color={colors['text800']} />
+                    <Ionicons name="chevron-down" size={24} color={colors.black} />
                 </RowComponent>
             </SectionComponent>
         </ViewWrapper>
@@ -117,7 +117,7 @@ export default function ContainerComponent(props: Props) {
     return isAuth ? (
         <ImageBackground
             source={require('../assets/images/bg-login.png')}
-            className="flex-1 bg-[#EDEDFA]"
+            className="flex-1 bg-primary-100"
             imageStyle={{
                 resizeMode: 'cover',
                 flex: 1,

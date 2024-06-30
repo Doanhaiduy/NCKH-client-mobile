@@ -50,7 +50,7 @@ function InputComponent(props: Props) {
     );
 
     const inputClass = clsx(
-        'flex-1  w-full font-inter text-sm text-black px-5 placeholder:text-base placeholder:text-text-600 placeholder:font-inter',
+        'flex-1  w-full font-inter text-sm text-black px-5 placeholder:text-base placeholder:text-text-100 placeholder:font-inter',
     );
 
     return (

@@ -14,7 +14,7 @@ export default function NotificationCard(props: Props) {
 
     return (
         <TouchableOpacity
-            className="px-4 py-2 border-b-[1px] border-text-500"
+            className="px-4 py-2 border-b-[1px] border-text-200"
             style={{
                 backgroundColor: isNew ? '#235DF408' : '#fff',
             }}
@@ -25,7 +25,7 @@ export default function NotificationCard(props: Props) {
             </RowComponent>
             <TextComponent text={data?.description?.toString() || ''} numberOfLines={1} className="pr-5 py-1" />
             <RowComponent className="justify-between pr-5">
-                <TextComponent text={data?.time?.toString()} color={colors.text600} />
+                <TextComponent text={data?.time?.toString()} color={colors.text400} />
                 <TextComponent text="Xem chi tiết" color={colors.primary400} />
             </RowComponent>
         </TouchableOpacity>

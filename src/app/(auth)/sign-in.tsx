@@ -120,7 +120,7 @@ export default function LoginPage() {
                 {/* <SectionComponent align='center' className='mt-[128px] pb-12'>
                 <RowComponent>
                     <TextComponent text='Tiếng việt' />
-                    <Ionicons name='chevron-down' size={24} color={colors['text800']} />
+                    <Ionicons name='chevron-down' size={24} color={colors.black} />
                 </RowComponent>
             </SectionComponent> */}
             </KeyboardAwareScrollView>

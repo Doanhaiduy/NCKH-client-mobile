@@ -50,7 +50,7 @@ export default function TrainingPoint() {
                 <ButtonComponent title="Xem kết quả" onPress={() => {}} type="primary" size="medium" />
 
                 <TouchableOpacity
-                    className="flex-row px-2 py-4 bg-text-600 rounded-[10px] mt-4 items-center"
+                    className="flex-row px-2 py-4 bg-text-100 rounded-[10px] mt-4 items-center"
                     onPress={() => router.push('training-point/2')}
                 >
                     <RowComponent className="flex-1 gap-2">
@@ -58,7 +58,7 @@ export default function TrainingPoint() {
                         <TextComponent text="Điểm rèn luyện hiện tại" />
                     </RowComponent>
                     <TextComponent text="75" />
-                    <Ionicons name="chevron-forward" size={24} color={colors.text400} />
+                    <Ionicons name="chevron-forward" size={24} color={colors.text200} />
                 </TouchableOpacity>
             </SectionComponent>
         </ContainerComponent>

@@ -24,8 +24,8 @@ export default function ItemCardList(props: Props) {
                 <TextComponent numberOfLines={3} text={data.title} />
                 <RowComponent className="justify-between">
                     <RowComponent>
-                        <Ionicons name="calendar" size={14} color={colors['text800']} />
-                        <TextComponent text={data.time} className="text-[13px] text-text-800 ml-1" />
+                        <Ionicons name="calendar" size={14} color={colors.black} />
+                        <TextComponent text={data.time} className="text-[13px] text-text-400 ml-1" />
                     </RowComponent>
                     {isAction && (
                         <ButtonComponent
