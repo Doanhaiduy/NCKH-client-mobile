@@ -8,6 +8,9 @@ export default function DrawerLayout() {
         <Drawer
             screenOptions={{
                 headerShown: false,
+                drawerContentStyle: {
+                    backgroundColor: '#fff',
+                },
             }}
             drawerContent={(props) => <CustomDrawerComponent {...props} />}
         />

@@ -40,7 +40,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
     return (
         <Provider store={store}>
-            <GestureHandlerRootView className="flex-1">
+            <GestureHandlerRootView className="flex-1 bg-white">
                 <Slot />
             </GestureHandlerRootView>
         </Provider>

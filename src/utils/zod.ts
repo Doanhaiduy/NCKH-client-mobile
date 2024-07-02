@@ -11,7 +11,7 @@ export const schemasCustom: {
     username: z
         .string()
         .min(1, { message: 'Mã số sinh viên là bắt buộc' })
-        .max(8, { message: 'Mã số sinh viên không hợp lệ' }),
+        .min(8, { message: 'Mã số sinh viên không hợp lệ' }),
 
     password: (type: passwordType) => {
         if (type === 'Login') {

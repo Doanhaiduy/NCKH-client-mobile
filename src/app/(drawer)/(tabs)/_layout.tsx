@@ -5,7 +5,12 @@ import { StyleSheet } from 'react-native';
 
 export default function TabsLayout() {
     return (
-        <Tabs screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}>
+        <Tabs
+            screenOptions={{
+                headerShown: false,
+                tabBarHideOnKeyboard: true,
+            }}
+        >
             <Tabs.Screen
                 name="(home)"
                 options={{
