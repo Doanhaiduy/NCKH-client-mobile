@@ -47,7 +47,7 @@ export default function LoginPage() {
             Alert.alert('Đăng nhập thành công!', '', [
                 {
                     text: 'OK',
-                    onPress: () => router.replace('(drawer)'),
+                    onPress: () => router.replace('(home)'),
                 },
             ]);
             setIsLoading(false);
@@ -66,7 +66,7 @@ export default function LoginPage() {
                 <SectionComponent align="center">
                     <Image source={require('../../assets/images/logo-login.png')} width={125} height={125} />
                     <SpaceComponent height={6} />
-                    <TextComponent text="Information Technology" title className="text-primary-400" />
+                    <TextComponent text="Information Technology" title className="text-primary-500 font-interSemi" />
                 </SectionComponent>
                 <SpaceComponent height={47} />
 

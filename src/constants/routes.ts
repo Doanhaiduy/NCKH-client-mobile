@@ -15,22 +15,29 @@ const RoutesDrawerDropDown = [
     },
 ];
 
-const RoutesCategories = [
+const RoutesCategories: {
+    name: string;
+    route: string;
+}[] = [
     {
         name: 'Tất cả',
-        route: '/home-backup',
+        route: '/(home)/',
     },
     {
         name: 'Đang diễn ra',
-        route: '/home-backup/sukien',
+        route: '/ongoing-events/',
+    },
+    {
+        name: 'Đã đăng ký',
+        route: '/registered-events/',
     },
     {
         name: 'Đã diễn ra',
-        route: '/home-backup/sukien2',
+        route: '/finished-events/',
     },
     {
         name: 'Tin tức',
-        route: '/home-backup/tintuc',
+        route: '/news/',
     },
 ];
 export { RoutesDrawerDropDown, RoutesCategories };

@@ -1,12 +1,11 @@
 import { Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { DrawerActions } from '@react-navigation/native';
 import { RowComponent, SectionComponent, TextComponent } from '@/components';
 import { Ionicons } from '@expo/vector-icons';
-import { CategoriesList } from '@/layouts/Components';
 import { colors } from '@/constants/colors';
+import CategoriesList from './CategoriesList';
 
 export default function CustomTopTabComponent({
     navigation,
@@ -18,7 +17,8 @@ export default function CustomTopTabComponent({
     options: any;
 }) {
     const heightBar: number = Platform.OS === 'ios' ? 52 : StatusBar.currentHeight || 52;
-    return (
+
+    return route.name !== 'training-point' ? (
         <View className="flex-1 bg-white">
             <LinearGradient
                 start={[0.0, 0.5]}
@@ -38,12 +38,8 @@ export default function CustomTopTabComponent({
                 <StatusBar barStyle="light-content" />
                 <SectionComponent>
                     <RowComponent className="justify-between w-full">
-                        <TouchableOpacity
-                            onPress={() => {
-                                navigation.dispatch(DrawerActions.toggleDrawer());
-                            }}
-                        >
-                            <Ionicons name="menu" size={24} color={colors.white} />
+                        <TouchableOpacity>
+                            <Ionicons name="logo-react" size={24} color={colors.white} />
                         </TouchableOpacity>
                         <TextComponent text="Trang chủ" title color={colors.white} />
                         <TouchableOpacity onPress={() => router.push('/search')}>
@@ -56,7 +52,7 @@ export default function CustomTopTabComponent({
                 </SectionComponent>
             </LinearGradient>
         </View>
-    );
+    ) : null;
 }
 
 const styles = StyleSheet.create({});

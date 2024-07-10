@@ -9,6 +9,7 @@ import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { Provider } from 'react-redux';
+import '../../global.css';
 
 SplashScreen.preventAutoHideAsync();
 

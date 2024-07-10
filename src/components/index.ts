@@ -1,3 +1,4 @@
+import ActionListComponents from './ActionListComponents';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
 import ContainerComponent from './ContainerComponent';
@@ -10,6 +11,7 @@ import LanguageCard from './LanguageCard';
 import NotificationCard from './NotificationCard';
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
+import SlideCardComponent from './SlideCardComponent';
 import SpaceComponent from './SpaceComponent';
 import TableBorderComponent from './TableBorderComponent';
 import TableComponent from './TableComponent';
@@ -32,4 +34,6 @@ export {
     TableBorderComponent,
     TableComponent,
     TextComponent,
+    SlideCardComponent,
+    ActionListComponents,
 };

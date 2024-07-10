@@ -13,7 +13,7 @@ type CardItemData = {
     id: number;
     title: string;
     time: string;
-    image: string;
+    image?: string;
     description?: string;
     type?: string;
 };

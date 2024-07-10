@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { router } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { TextComponent } from '@/components';
@@ -13,7 +13,6 @@ interface Props {
 
 export default function CategoriesList(props: Props) {
     const { routeName } = props;
-
     return (
         <ScrollView
             horizontal
@@ -45,7 +44,7 @@ export default function CategoriesList(props: Props) {
                             backgroundColor:
                                 routeName === 'index' && item.name === 'Tất cả'
                                     ? '#FFD000'
-                                    : routeName === item.route.split('/home-backup/')[1]
+                                    : routeName === item.route.split('/')[1]
                                       ? '#FFD000'
                                       : 'transparent',
                             marginTop: 6,

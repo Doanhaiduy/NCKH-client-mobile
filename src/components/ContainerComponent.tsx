@@ -22,7 +22,7 @@ import TextComponent from './TextComponent';
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
     isAuth?: boolean;
-    iconLeft?: 'back' | 'menu';
+    iconLeft?: 'back' | 'logo';
     title?: string;
     isScroll?: boolean;
     onPress?: () => void;
@@ -62,8 +62,6 @@ export default function ContainerComponent(props: Props) {
     const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 52 : StatusBar.currentHeight || 52) : 22;
     const ViewWrapper = isScroll ? ScrollView : View;
 
-    const navigation = useNavigation();
-
     const HeaderAuth = (
         <ViewWrapper style={{ paddingTop: iconLeft === 'back' || title ? 0 : heightBar }} className="flex-1">
             {children}
@@ -91,13 +89,9 @@ export default function ContainerComponent(props: Props) {
                             <Ionicons name="chevron-back" size={24} color={colors['primary400']} />
                         </TouchableOpacity>
                     )}
-                    {iconLeft === 'menu' && (
-                        <TouchableOpacity
-                            onPress={() => {
-                                navigation.dispatch(DrawerActions.toggleDrawer());
-                            }}
-                        >
-                            <Ionicons name="menu" size={24} color={colors['primary400']} />
+                    {iconLeft === 'logo' && (
+                        <TouchableOpacity onPress={() => {}}>
+                            <Ionicons name="logo-react" size={24} color={colors['primary400']} />
                         </TouchableOpacity>
                     )}
                     {title && <TextComponent text={title} title />}
@@ -137,6 +131,7 @@ export default function ContainerComponent(props: Props) {
             <HeaderMain />
             <ViewWrapper
                 keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
                 refreshControl={
                     Platform.OS === 'android' ? (
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

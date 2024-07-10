@@ -14,7 +14,7 @@ export default function SectionComponent(props: Props) {
         <View
             {...sectionProps}
             className={clsx(
-                'px-4 pb-5 items-start ',
+                'px-4 pb-5 items-start w-full',
                 align === 'center' && 'items-center',
                 align === 'left' && 'items-start',
                 align === 'right' && 'items-end',

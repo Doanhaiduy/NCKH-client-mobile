@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import React from 'react';
 import { Button, StyleSheet, TouchableOpacity, View } from 'react-native';
 import TextComponent from './TextComponent';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/constants/colors';
 
 interface Props extends React.ComponentProps<typeof Button> {
     title: string;
@@ -31,28 +33,38 @@ export default function ButtonComponent(props: Props) {
     const { title, type, size, disabled, onPress, icon, iconFlex } = props;
 
     return (
-        <TouchableOpacity
-            disabled={disabled}
-            onPress={onPress}
-            className={clsx(variantContainer.default, variantContainer[type], {
-                'w-full min-h-[48px]': size === 'large',
-                'max-w-[168px] min-h-[38px] px-8': size === 'medium',
-                'max-w-[115px] min-h-[32px] px-5': size === 'small',
-                'opacity-70': disabled,
-            })}
-        >
-            <>
-                {icon && iconFlex !== 'right' && <View className="mr-[2px]">{icon}</View>}
-                <TextComponent
-                    text={title}
-                    className={clsx(variantText.default, variantText[type], {
-                        'text-[13px]': size === 'small',
-                        'text-base': size === 'medium',
-                        'opacity-70': disabled,
-                    })}
-                />
-                {icon && iconFlex === 'right' && <View className="">{icon}</View>}
-            </>
+        <TouchableOpacity disabled={disabled} onPress={onPress} className="flex-1 w-full justify-center items-center">
+            <LinearGradient
+                start={[0.0, 0.5]}
+                end={[1.0, 0.5]}
+                locations={[0.0, 1.0]}
+                colors={
+                    type === 'primary'
+                        ? [colors.primary400, colors.primary500]
+                        : type === 'grey'
+                          ? [colors.text400, colors.text400]
+                          : [colors.white, colors.white]
+                }
+                className={clsx(variantContainer.default, variantContainer[type], {
+                    'w-full min-h-[48px]': size === 'large',
+                    'max-w-[168px] min-h-[38px] px-8': size === 'medium',
+                    'max-w-[115px] min-h-[32px] px-5': size === 'small',
+                    'opacity-70': disabled,
+                })}
+            >
+                <>
+                    {icon && iconFlex !== 'right' && <View className="mr-[2px]">{icon}</View>}
+                    <TextComponent
+                        text={title}
+                        className={clsx(variantText.default, variantText[type], {
+                            'text-[13px]': size === 'small',
+                            'text-base': size === 'medium',
+                            'opacity-70': disabled,
+                        })}
+                    />
+                    {icon && iconFlex === 'right' && <View className="">{icon}</View>}
+                </>
+            </LinearGradient>
         </TouchableOpacity>
     );
 }

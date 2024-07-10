@@ -20,7 +20,6 @@ interface Props {
 
 export default function DropDownComponent(props: Props) {
     const { title, data, onSelect, width = 140 } = props;
-    console.log(1);
     return (
         <RowComponent className="mt-2">
             {title && <TextComponent text={`${title}: `} />}

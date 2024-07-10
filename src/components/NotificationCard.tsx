@@ -14,7 +14,7 @@ export default function NotificationCard(props: Props) {
 
     return (
         <TouchableOpacity
-            className="px-4 py-2 border-b-[1px] border-text-200"
+            className="px-4 py-2 flex-1 border-b-[1px] border-text-200"
             style={{
                 backgroundColor: isNew ? '#235DF408' : '#fff',
             }}
