@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { Provider } from 'react-redux';
 import '../../global.css';
+import { Host } from 'react-native-portalize';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,7 +43,9 @@ function RootLayoutNav() {
     return (
         <Provider store={store}>
             <GestureHandlerRootView className="flex-1 bg-white">
-                <Slot />
+                <Host>
+                    <Slot />
+                </Host>
             </GestureHandlerRootView>
         </Provider>
     );

@@ -28,7 +28,7 @@ const ActionData: {
     {
         icon: 'check-to-slot',
         text: 'Tài khoản',
-        path: 'Account',
+        path: '/setting',
     },
 ];
 

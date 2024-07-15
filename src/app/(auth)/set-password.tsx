@@ -42,7 +42,7 @@ export default function SetPassword() {
 
     return (
         <ContainerComponent isAuth isScroll iconLeft="back">
-            <SpaceComponent height={120} />
+            <SpaceComponent height={110} />
             <View className="px-8 pb-4 ">
                 <SectionComponent align="center">
                     <TextComponent text="Tạo mật khẩu mới" title className="text-primary-400" />

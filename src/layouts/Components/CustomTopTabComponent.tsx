@@ -17,7 +17,6 @@ export default function CustomTopTabComponent({
     options: any;
 }) {
     const heightBar: number = Platform.OS === 'ios' ? 52 : StatusBar.currentHeight || 52;
-
     return route.name !== 'training-point' ? (
         <View className="flex-1 bg-white">
             <LinearGradient
@@ -47,7 +46,7 @@ export default function CustomTopTabComponent({
                         </TouchableOpacity>
                     </RowComponent>
                     <View className="mt-8">
-                        <CategoriesList routeName={route.name} />
+                        <CategoriesList routeName={route.name} index={route.params.index} />
                     </View>
                 </SectionComponent>
             </LinearGradient>

@@ -18,26 +18,16 @@ const RoutesDrawerDropDown = [
 const RoutesCategories: {
     name: string;
     route: string;
+    index: number;
 }[] = [
     {
+        index: 0,
         name: 'Tất cả',
         route: '/(home)/',
     },
-    {
-        name: 'Đang diễn ra',
-        route: '/ongoing-events/',
-    },
-    {
-        name: 'Đã đăng ký',
-        route: '/registered-events/',
-    },
-    {
-        name: 'Đã diễn ra',
-        route: '/finished-events/',
-    },
-    {
-        name: 'Tin tức',
-        route: '/news/',
-    },
+    { index: 1, name: 'Đang diễn ra', route: '/ongoing-events/' },
+    { index: 2, name: 'Đã đăng ký', route: '/registered-events/' },
+    { index: 3, name: 'Đã diễn ra', route: '/finished-events/' },
+    { index: 4, name: 'Tin tức', route: '/news/' },
 ];
 export { RoutesDrawerDropDown, RoutesCategories };

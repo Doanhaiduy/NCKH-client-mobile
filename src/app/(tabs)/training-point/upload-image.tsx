@@ -1,18 +1,21 @@
-import { ContainerComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
+import { ContainerComponent, PortalizeComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { globalStyles } from '@/styles';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-
+import { Alert, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import mime from 'mime';
 import { sleep } from '@/utils';
 import { LoadingModal } from '@/modals';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import userAPI from '@/apis/userApi';
+import { Modalize } from 'react-native-modalize';
 
 export default function UploadImage() {
-    const [images, setImages] = useState<any>([]);
+    const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const modalizeRef = React.useRef<Modalize>(null);
 
     const pickImage = async (option: 'camera' | 'library') => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -29,14 +32,15 @@ export default function UploadImage() {
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 // allowsEditing: true,
                 // aspect: [4, 3],
-                quality: 1,
+                quality: 0.5,
             });
         } else {
             result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                // aspect: [1, 1],
-                quality: 1,
+                allowsMultipleSelection: true,
+                // allowsEditing: true,
+                // aspect: [4, 3],
+                quality: 0.5,
             });
         }
 
@@ -44,15 +48,46 @@ export default function UploadImage() {
 
         if (!result.canceled) {
             setIsLoading(true);
-            // handleUploadAvatar(result.assets[0]);
-            await sleep(1000);
-            setImages([...images, result.assets[0]]);
+            await sleep(200);
+            setImages([...images, ...result.assets]);
             setIsLoading(false);
             console.log('upload avatar');
         }
         setIsLoading(false);
     };
 
+    const handleUploadImages = async () => {
+        setIsLoading(true);
+        try {
+            const formData = new FormData();
+            images.forEach(async (image: any) => {
+                const newImageUri = image.uri;
+                console.log(newImageUri);
+
+                const postData = {
+                    name: newImageUri.split('/').pop(),
+                    uri: newImageUri,
+                    type: (await mime.getType(newImageUri)) || '',
+                };
+                formData.append('images', postData as any);
+                console.log(mime.getType(newImageUri));
+                console.log(postData);
+            });
+
+            const res = await userAPI.HandleUser('/upload-multiple', formData, 'post');
+            if (res.data) {
+                Alert.alert('Thông báo', 'Tải ảnh lên thành công');
+                console.log(res.data);
+                setIsLoading(false);
+                router.back();
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.log('error ~ ', error);
+            Alert.alert('Lỗi', 'Tải ảnh lên thất bại');
+            setIsLoading(false);
+        }
+    };
     return (
         <ContainerComponent
             title="Tải lên ảnh minh chứng"
@@ -60,6 +95,10 @@ export default function UploadImage() {
             iconRight={
                 <TouchableOpacity
                     onPress={() => {
+                        if (images.length <= 0) {
+                            Alert.alert('Lỗi', 'Vui lòng chọn ảnh để tải lên');
+                            return;
+                        }
                         Alert.alert('Lưu', 'Bạn có chắc chắn muốn lưu minh chứng này?', [
                             {
                                 text: 'Hủy',
@@ -68,8 +107,7 @@ export default function UploadImage() {
                             {
                                 text: 'Lưu',
                                 onPress: () => {
-                                    router.back();
-                                    Alert.alert('Thông báo', 'Lưu thành công');
+                                    handleUploadImages();
                                 },
                             },
                         ]);
@@ -89,22 +127,7 @@ export default function UploadImage() {
                 <SectionComponent>
                     <TouchableOpacity
                         className="w-full h-[128px] border-[1px] border-dotted border-primary-400 rounded-[10px] items-center justify-center"
-                        onPress={() =>
-                            Alert.alert('Tải ảnh lên', 'Chọn ảnh từ', [
-                                {
-                                    text: 'Thư viện ảnh',
-                                    onPress: () => pickImage('library'),
-                                },
-                                {
-                                    text: 'Máy ảnh',
-                                    onPress: () => pickImage('camera'),
-                                },
-                                {
-                                    text: 'Hủy',
-                                    style: 'cancel',
-                                },
-                            ])
-                        }
+                        onPress={() => modalizeRef.current?.open()}
                     >
                         <Feather name="image" size={32} color={colors.primary400} />
                         <TextComponent text="Tải ảnh lên" size={20} />
@@ -130,22 +153,7 @@ export default function UploadImage() {
 
                         <TouchableOpacity
                             className="w-[80px] h-[80px] border-[1px] border-dotted border-primary-400"
-                            onPress={() =>
-                                Alert.alert('Tải ảnh lên', 'Chọn ảnh từ', [
-                                    {
-                                        text: 'Thư viện ảnh',
-                                        onPress: () => pickImage('library'),
-                                    },
-                                    {
-                                        text: 'Máy ảnh',
-                                        onPress: () => pickImage('camera'),
-                                    },
-                                    {
-                                        text: 'Hủy',
-                                        style: 'cancel',
-                                    },
-                                ])
-                            }
+                            onPress={() => modalizeRef.current?.open()}
                         >
                             <View className="" style={[globalStyles.centerAbsolute]}>
                                 <Ionicons name="add" size={24} color={colors.primary400} />
@@ -154,6 +162,34 @@ export default function UploadImage() {
                     </View>
                 </SectionComponent>
             )}
+
+            <PortalizeComponent
+                ref={modalizeRef}
+                children={
+                    <View className=" shadow-xl  gap-3 p-3">
+                        <TouchableOpacity
+                            className="flex-row  items-center"
+                            onPress={() => {
+                                pickImage('library');
+                                modalizeRef.current?.close();
+                            }}
+                        >
+                            <Ionicons name="image" size={22} color="black" />
+                            <TextComponent text="Chọn từ thư viện" className="ml-2 font-medium" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            className="flex-row py-2 items-center"
+                            onPress={() => {
+                                pickImage('camera');
+                                modalizeRef.current?.close();
+                            }}
+                        >
+                            <Ionicons name="camera" size={24} color="black" />
+                            <TextComponent text="Chụp ảnh" className="ml-2 font-medium" />
+                        </TouchableOpacity>
+                    </View>
+                }
+            />
             <LoadingModal visible={isLoading} message="Đang tải ảnh lên" />
         </ContainerComponent>
     );

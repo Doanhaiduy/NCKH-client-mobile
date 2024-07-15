@@ -33,8 +33,8 @@ export default function LoginPage() {
         formState: { errors },
     } = useForm<FormFields>({
         defaultValues: {
-            username: '',
-            password: '',
+            username: '63130260',
+            password: 'doanhaiduy03',
         },
         resolver: zodResolver(schema),
     });
@@ -62,7 +62,7 @@ export default function LoginPage() {
     return (
         <ContainerComponent isAuth isScroll className="">
             <KeyboardAwareScrollView>
-                <SpaceComponent height={147} />
+                <SpaceComponent height={137} />
                 <SectionComponent align="center">
                     <Image source={require('../../assets/images/logo-login.png')} width={125} height={125} />
                     <SpaceComponent height={6} />
@@ -117,12 +117,6 @@ export default function LoginPage() {
                         disabled={checkHasErr(errors)}
                     />
                 </SectionComponent>
-                {/* <SectionComponent align='center' className='mt-[128px] pb-12'>
-                <RowComponent>
-                    <TextComponent text='Tiếng việt' />
-                    <Ionicons name='chevron-down' size={24} color={colors.black} />
-                </RowComponent>
-            </SectionComponent> */}
             </KeyboardAwareScrollView>
             <LoadingModal visible={isLoading} />
         </ContainerComponent>

@@ -25,7 +25,7 @@ const variantContainer = {
 const variantText = {
     default: 'text-white',
     primary: 'text-white',
-    outline: 'text-primary-400',
+    outline: 'text-black',
     grey: 'text-white',
 };
 

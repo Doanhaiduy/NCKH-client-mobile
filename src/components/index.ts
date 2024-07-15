@@ -9,6 +9,7 @@ import ItemCardGrid from './ItemCardGrid';
 import ItemCardList from './ItemCardList';
 import LanguageCard from './LanguageCard';
 import NotificationCard from './NotificationCard';
+import PortalizeComponent from './PortalizeComponent';
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import SlideCardComponent from './SlideCardComponent';
@@ -36,4 +37,5 @@ export {
     TextComponent,
     SlideCardComponent,
     ActionListComponents,
+    PortalizeComponent,
 };

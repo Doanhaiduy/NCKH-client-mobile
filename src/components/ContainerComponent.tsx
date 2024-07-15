@@ -18,6 +18,7 @@ import {
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import TextComponent from './TextComponent';
+import SpaceComponent from './SpaceComponent';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
@@ -67,11 +68,12 @@ export default function ContainerComponent(props: Props) {
             {children}
             <SectionComponent
                 align="center"
-                className="pb-12 w-full"
+                className="pb-12 w-full "
                 style={{
                     marginTop: iconLeft === 'back' || title ? 170 : 118,
                 }}
             >
+                <SpaceComponent height={10} />
                 <RowComponent>
                     <TextComponent text="Tiếng việt" className="text-center" />
                     <Ionicons name="chevron-down" size={24} color={colors.black} />

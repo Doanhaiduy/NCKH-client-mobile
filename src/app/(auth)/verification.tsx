@@ -69,6 +69,7 @@ export default function VerificationPage() {
                         </TouchableOpacity>
                     </SectionComponent>
                     <LoadingModal visible={isLoading} />
+                    <SpaceComponent height={50} />
                 </SectionComponent>
             </View>
         </ContainerComponent>

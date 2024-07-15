@@ -9,16 +9,36 @@ import {
 import { colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+import WebView from 'react-native-webview';
 
 export default function Details() {
     const { id, event, eventName } = useLocalSearchParams();
 
+    const [post, setPost] = useState<any>();
+
+    const FetchPost = () => {
+        fetch('http://192.168.1.42:3000/api/v1/posts/6691410fddb4640e8d47212d')
+            .then((response) => response.text())
+            .then((result) => {
+                if (result) {
+                    const data = JSON.parse(result).data;
+                    setPost(data.content);
+                }
+            })
+            .catch((error) => console.error(error));
+    };
+
+    useEffect(() => {
+        FetchPost();
+    }, []);
+    console.log('post :', post);
+
     return (
-        <ContainerComponent iconLeft="back" title={eventName?.toString()} isScroll>
-            <Image source={require('@/assets/images/TFT.jpg')} resizeMode="cover" className="w-full h-[260px]" />
-            <SectionComponent className="flex-1 py-2">
+        <ContainerComponent iconLeft="back" title={eventName?.toString()}>
+            {/* <Image source={require('@/assets/images/TFT.jpg')} resizeMode='cover' className='w-full h-[260px]' /> */}
+            {/* <SectionComponent className="flex-1 py-2">
                 <RowComponent className="justify-between w-full">
                     <RowComponent>
                         <Ionicons name="calendar" size={14} color={colors.black} />
@@ -53,7 +73,60 @@ export default function Details() {
                             - 04 giải Ba (04 giải x 500.000đ/giải)"
                     />
                 </View>
-            </SectionComponent>
+            </SectionComponent> */}
+            <WebView
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                style={{
+                    flex: 1,
+                    width: '100%',
+                    height: '100%',
+                }}
+                originWhitelist={['*']}
+                source={{
+                    html: `<html><head><meta name="viewport" content="width=device-width" initial-scale="1.00" maximum-scale="1.0">
+                        <style>
+                            body {
+                                font-family: 'Inter', sans-serif;
+                                font-size: 14px;
+                                padding: 0;
+                                margin: 0;
+                                box-sizing: border-box;
+                            }
+                            img {
+                                width: 100%;
+                                height: auto;
+                            }
+
+                            .container{
+                                padding: 16px;
+                            }
+
+                            .time{
+                                font-size: 12px;
+                                display: flex; items: center;
+                                padding: 16px;
+                                justify-content: space-between;
+                            }
+
+                            button{
+                                background-color: ${colors.primary400};
+                                color: #fff;
+                                padding: 8px 16px;
+                                border-radius: 30px;
+                                margin-left: 16px;
+                            }
+                        </style>
+                    </head><body>
+                    <img src="https://cdn.tgdd.vn/Files/2022/03/06/1418798/so2-100423-010123.jpg" />
+                    <div class="time">
+                        <span>10/10/2021</span>
+                        <button>Đăng ký</button>
+                    </div>
+                    <div class="container">${post}</div>
+                    </body></html>`,
+                }}
+            />
         </ContainerComponent>
     );
 }
