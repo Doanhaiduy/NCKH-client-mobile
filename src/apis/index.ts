@@ -27,11 +27,11 @@ const HandleExpiredToken = async () => {
 
 const axiosClient = axios.create({
     paramsSerializer: (params) => queryString.stringify(params),
+    timeout: 10000,
 });
 
 axiosClient.interceptors.request.use(async (config: any) => {
     const accessToken = await getAccessToken();
-    // console.log(`Bearer ${accessToken}`);
     config.headers = {
         Authorization: accessToken ? `Bearer ${accessToken}` : '',
         Accept: 'application/json',

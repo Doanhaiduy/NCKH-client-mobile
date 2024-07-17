@@ -6,5 +6,4 @@ export const appInfo = {
         HEIGHT: Dimensions.get('window').height,
     },
     headerHomeBar: Platform.OS === 'android' ? 130 : 150,
-    BASE_URL: 'http://192.168.1.18:3000/api/v1',
 };

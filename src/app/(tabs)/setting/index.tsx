@@ -1,18 +1,25 @@
 import { ContainerComponent, SectionComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
+import { authSelector, logout } from '@/stores/reducers/authReducer';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function SettingPage() {
+    const { userInfo } = useSelector(authSelector);
+
+    const dispatch = useDispatch();
+
     return (
         <ContainerComponent isScroll title="Cài đặt" iconLeft="logo" search>
             <SectionComponent className="flex-row flex-1 items-center mt-4">
                 <View className="border-1 border rounded-full border-primary-400 p-[2px]">
                     <Image
                         source={{
-                            uri: 'https://s3-alpha-sig.figma.com/img/ac9e/333b/78f77c3ee3d9cf7d68381921d292808d?Expires=1719792000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=BQ~Na75ONesiM0JCrsxbr3pvhka8Hb0vSSkMPGnrpivp8ey3l55AseGsL4dzbRjZ3FA3kHM3zdL1u1jQY0vYgtkyJUq8J9Civ61UuN0o1iqHrK1m4nv9FEHThm64RF4hWiKet3UCRkzXE5JOo5YiRFVx65gkOnzg5hyLzKMAZDVgCsTCKTOnfBDBsocTFsk5IEyOgEyAinrAmBsPEnkDcrFL7zU2hWYGrqUrB4NEoe6dEM3xbT7wjLo3dHIG88ilbuML7jePx1xmcxv4szaGd0mLyAqVDAfM5Hw5szAHZlJ~KhTwqWfRvLZVvwNAVXtQGuhcVcngEDnaAEO1hASOeg__',
+                            uri: userInfo?.avatar,
+                            headers: { Accept: 'image/*' },
                         }}
                         style={{
                             width: 80,
@@ -23,8 +30,8 @@ export default function SettingPage() {
                     />
                 </View>
                 <View className="ml-4 flex-1">
-                    <TextComponent text="Nguyễn Trà My" className="text-xl" />
-                    <TextComponent text="MSSV: 63123456" className="text-base text-gray-400" />
+                    <TextComponent text={userInfo?.fullName || ''} className="text-xl" />
+                    <TextComponent text={`MSSV: ${userInfo?.username}`} className="text-base text-gray-400" />
                 </View>
                 <Feather name="edit" size={24} color={colors.primary300} />
             </SectionComponent>
@@ -64,7 +71,10 @@ export default function SettingPage() {
                             },
                             {
                                 text: 'Đồng ý',
-                                onPress: () => router.navigate('/sign-in'),
+                                onPress: () => {
+                                    dispatch(logout());
+                                    router.navigate('/sign-in');
+                                },
                             },
                         ]);
                     }}

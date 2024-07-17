@@ -11,10 +11,18 @@ import {
 import { appInfo } from '@/constants/appInfo';
 import { colors } from '@/constants/colors';
 import { EventData } from '@/mockData';
-import React from 'react';
+import { authSelector } from '@/stores/reducers/authReducer';
+import React, { useEffect } from 'react';
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
+    const { userInfo } = useSelector(authSelector);
+
+    useEffect(() => {
+        console.log(userInfo);
+    }, []);
+
     return (
         <ScrollView
             style={{

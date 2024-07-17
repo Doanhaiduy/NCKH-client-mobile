@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function Home() {
-    return <Redirect href={'/(home)'} />;
+    return <Redirect href={'/sign-in'} />;
     return (
         <View className="flex items-center justify-center h-screen">
             <Link href={'/sign-in'}>go to sign-in</Link>

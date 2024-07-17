@@ -1,3 +1,4 @@
+import authAPI from '@/apis/authApi';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -7,14 +8,18 @@ import {
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
-import { checkHasErr, sleep } from '@/utils';
+import { login } from '@/stores/actions/authAction';
+import { authSelector } from '@/stores/reducers/authReducer';
+// import { authErrorSelector, authLoadingSelector, authSelector } from '@/stores/reducers/authReducer';
+import { checkHasErr } from '@/utils';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Alert, Image, StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -24,7 +29,16 @@ const schema = z.object({
 type FormFields = z.infer<typeof schema>;
 
 export default function LoginPage() {
-    const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch<any>();
+    const { isLoading, authData } = useSelector(authSelector);
+
+    useEffect(() => {
+        console.log('authData', authData);
+        if (authData) {
+            router.navigate('(home)/');
+            Alert.alert('Đăng nhập thành công');
+        }
+    }, [authData]);
 
     const {
         handleSubmit,
@@ -33,29 +47,23 @@ export default function LoginPage() {
         formState: { errors },
     } = useForm<FormFields>({
         defaultValues: {
-            username: '63130260',
-            password: 'doanhaiduy03',
+            username: '63130261',
+            password: 'haiduy10',
         },
         resolver: zodResolver(schema),
     });
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
-        setIsLoading(true);
-        try {
-            console.log(data);
-            await sleep(2000);
-            Alert.alert('Đăng nhập thành công!', '', [
-                {
-                    text: 'OK',
-                    onPress: () => router.replace('(home)'),
-                },
-            ]);
-            setIsLoading(false);
-        } catch (error) {
+        const { username, password } = data;
+        const { payload } = await dispatch(login({ username, password }));
+        console.log('payload', payload);
+        if (payload.authData) {
+            router.navigate('(home)/');
+        } else {
             setError('root', {
-                message: 'Mã số sinh viên hoặc mật khẩu không chính xác',
+                type: 'manual',
+                message: payload,
             });
-            setIsLoading(false);
         }
     };
 
@@ -80,6 +88,13 @@ export default function LoginPage() {
                                 value={value}
                                 type="number-pad"
                                 onChange={onChange}
+                                onFocus={() =>
+                                    errors.root &&
+                                    setError('root', {
+                                        type: 'manual',
+                                        message: '',
+                                    })
+                                }
                                 onBlur={onBlur}
                                 err={errors.username?.message}
                             />
@@ -95,6 +110,13 @@ export default function LoginPage() {
                                 type="default"
                                 onChange={onChange}
                                 isPassword
+                                onFocus={() =>
+                                    errors.root &&
+                                    setError('root', {
+                                        type: 'manual',
+                                        message: '',
+                                    })
+                                }
                                 onBlur={onBlur}
                                 err={errors.password?.message}
                             />

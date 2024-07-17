@@ -5,6 +5,7 @@ type passwordType = 'Login' | 'SignUp';
 
 export const schemasCustom: {
     username: z.ZodString;
+    email: z.ZodString;
     password: (type: passwordType) => z.ZodString;
     confirmPassword: z.ZodString;
 } = {
@@ -13,6 +14,7 @@ export const schemasCustom: {
         .min(1, { message: 'Mã số sinh viên là bắt buộc' })
         .min(8, { message: 'Mã số sinh viên không hợp lệ' }),
 
+    email: z.string().min(1, { message: 'Email là bắt buộc' }).email({ message: 'Email không hợp lệ' }),
     password: (type: passwordType) => {
         if (type === 'Login') {
             return z.string().min(1, { message: 'Mật khẩu là bắt buộc' });

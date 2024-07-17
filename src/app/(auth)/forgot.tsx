@@ -7,31 +7,49 @@ import {
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
-import { Regex, sleep } from '@/utils';
+import { sendOTP } from '@/stores/actions/authAction';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { checkHasErr, Regex, sleep } from '@/utils';
+import { schemasCustom } from '@/utils/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { z } from 'zod';
+
+const schema = z.object({
+    email: schemasCustom.email,
+});
+
+type FormFields = z.infer<typeof schema>;
 
 export default function ForGotPassWord() {
-    const [email, setEmail] = useState('haiduy@gmai.com');
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
+    const dispatch = useDispatch<any>();
+    const { errorMessage, isLoading, OTP } = useSelector(authSelector);
+    const {
+        handleSubmit,
+        setError,
+        control,
+        formState: { errors },
+    } = useForm<FormFields>({
+        defaultValues: {
+            email: 'haiduytbt2k3@gmail.com',
+        },
+        resolver: zodResolver(schema),
+    });
 
-    const handleCheckEmail = () => {
-        const isValidEmail = Regex.email.test(email);
-        setIsError(!isValidEmail);
-    };
-
-    const handleSendOTP = async () => {
-        setIsLoading(true);
-        try {
-            await sleep(1000);
-            console.log('Send OTP to email: ', email);
-            setIsLoading(false);
+    const onSubmit: SubmitHandler<FormFields> = async (data) => {
+        const { email } = data;
+        const { payload } = await dispatch(sendOTP({ email }));
+        if (payload.otp) {
             router.push('/verification');
-        } catch (error) {
-            console.log('Can not send email! ', error);
-            setIsLoading(false);
+        } else {
+            setError('root', {
+                type: 'manual',
+                message: payload,
+            });
         }
     };
 
@@ -49,20 +67,30 @@ export default function ForGotPassWord() {
                 </SectionComponent>
                 <SectionComponent>
                     <SpaceComponent height={24} />
-                    <InputComponent
-                        placeholder="Email"
-                        onEnd={handleCheckEmail}
-                        value={email}
-                        err={!isError ? undefined : 'Invalid email'}
-                        onChange={(val) => setEmail(val)}
+                    <Controller
+                        name="email"
+                        control={control}
+                        render={({ field: { value, onBlur, onChange } }) => (
+                            <InputComponent
+                                placeholder="Email"
+                                value={value}
+                                onChange={onChange}
+                                onBlur={onBlur}
+                                err={errors.email?.message}
+                                onFocus={() => errors.root && setError('root', { type: 'manual', message: '' })}
+                            />
+                        )}
                     />
-                    <SpaceComponent height={24} />
+                    <SpaceComponent height={12} />
+                    {errors.root && <TextComponent text={`${errors.root.message}`} className="text-error" />}
+                    <SpaceComponent height={12} />
+
                     <ButtonComponent
                         title="Gửi mã OTP"
                         size="large"
                         type="primary"
-                        disabled={isError || !email}
-                        onPress={handleSendOTP}
+                        disabled={checkHasErr(errors)}
+                        onPress={handleSubmit(onSubmit)}
                     />
                     <View className="flex-row justify-center items-center gap-1 my-4">
                         <View className="flex-1 h-[0.5px] bg-black" />

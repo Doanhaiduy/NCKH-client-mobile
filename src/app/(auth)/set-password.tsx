@@ -1,16 +1,21 @@
+import authAPI from '@/apis/authApi';
 import { ButtonComponent, InputComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import ContainerComponent from '@/components/ContainerComponent';
 import { LoadingModal } from '@/modals';
+import { authSelector, removeOTP } from '@/stores/reducers/authReducer';
 import { Regex, sleep } from '@/utils';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function SetPassword() {
     const [isLoading, setIsLoading] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [isError, setIsError] = useState(false);
+    const dispatch = useDispatch<any>();
 
+    const { OTP } = useSelector(authSelector);
     const handleCheckPassword = () => {
         const isValidEmail = Regex.password.test(newPassword);
         setIsError(!isValidEmail);
@@ -18,25 +23,27 @@ export default function SetPassword() {
 
     const handleSetPassword = async () => {
         handleCheckPassword();
-
-        setIsLoading(true);
-        try {
-            if (isError) {
-                return;
+        if (isError) {
+            return;
+        }
+        if (OTP?.done && OTP?.email) {
+            setIsLoading(true);
+            try {
+                const res = await authAPI.HandleAuth('/reset-password', { email: OTP.email, newPassword }, 'post');
+                if (res.data) {
+                    await dispatch(removeOTP());
+                    setIsLoading(false);
+                    Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!', [
+                        {
+                            text: 'Đăng nhập',
+                            onPress: () => router.push('/sign-in'),
+                        },
+                    ]);
+                }
+            } catch (error: string | any) {
+                Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
+                setIsLoading(false);
             }
-            console.log('New password: ', newPassword);
-            await sleep(1000);
-            console.log('Set password successfully!');
-            setIsLoading(false);
-            Alert.alert('Đặt mật khẩu thành công!', 'Vui lòng đăng nhập bằng mật khẩu mới của bạn.', [
-                {
-                    text: 'OK',
-                    onPress: () => router.dismissAll(),
-                },
-            ]);
-        } catch (error) {
-            console.log('Can not set password! ', error);
-            setIsLoading(false);
         }
     };
 
