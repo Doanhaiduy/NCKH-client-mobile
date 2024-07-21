@@ -55,7 +55,6 @@ axiosClient.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             HandleExpiredToken();
-            console.log('Token expired');
         }
 
         throw error?.response?.data?.message || error.message;

@@ -8,7 +8,7 @@ import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function SettingPage() {
-    const { userInfo } = useSelector(authSelector);
+    const { authData } = useSelector(authSelector);
 
     const dispatch = useDispatch();
 
@@ -18,7 +18,7 @@ export default function SettingPage() {
                 <View className="border-1 border rounded-full border-primary-400 p-[2px]">
                     <Image
                         source={{
-                            uri: userInfo?.avatar,
+                            uri: authData?.avatar,
                             headers: { Accept: 'image/*' },
                         }}
                         style={{
@@ -30,8 +30,8 @@ export default function SettingPage() {
                     />
                 </View>
                 <View className="ml-4 flex-1">
-                    <TextComponent text={userInfo?.fullName || ''} className="text-xl" />
-                    <TextComponent text={`MSSV: ${userInfo?.username}`} className="text-base text-gray-400" />
+                    <TextComponent text={authData?.fullName || ''} className="text-xl" />
+                    <TextComponent text={`MSSV: ${authData?.username}`} className="text-base text-gray-400" />
                 </View>
                 <Feather name="edit" size={24} color={colors.primary300} />
             </SectionComponent>

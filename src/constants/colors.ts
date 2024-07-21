@@ -1,4 +1,4 @@
-export const colors = {
+export const colors = Object.freeze({
     black: '#000000',
     white: '#ffffff',
     transparent: 'transparent',
@@ -13,4 +13,4 @@ export const colors = {
     text500: '#999999',
     error: '#FF0000',
     success: '#00FF00',
-};
+});

@@ -11,8 +11,22 @@ import 'react-native-reanimated';
 import { Provider } from 'react-redux';
 import '../../global.css';
 import { Host } from 'react-native-portalize';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+            retry: false,
+            staleTime: 5 * 60 * 1000,
+        },
+    },
+});
 
 export const unstable_settings = {
     initialRouteName: '(auth)',
@@ -41,14 +55,17 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
     return (
-        <Provider store={store}>
-            <GestureHandlerRootView className="flex-1 bg-white">
-                <Host>
-                    <Slot />
-                </Host>
-            </GestureHandlerRootView>
-        </Provider>
+        <QueryClientProvider client={queryClient}>
+            <Provider store={store}>
+                <GestureHandlerRootView className="flex-1 bg-white">
+                    <Host>
+                        <Slot />
+                    </Host>
+                </GestureHandlerRootView>
+            </Provider>
+        </QueryClientProvider>
     );
 }
+// <ReactQueryDevtools initialIsOpen={true} />
 
 const styles = StyleSheet.create({});

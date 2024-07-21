@@ -1,3 +1,4 @@
+import postAPI from '@/apis/postApi';
 import {
     ActionListComponents,
     ButtonComponent,
@@ -12,16 +13,23 @@ import { appInfo } from '@/constants/appInfo';
 import { colors } from '@/constants/colors';
 import { EventData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';
+import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
-    const { userInfo } = useSelector(authSelector);
+    const { authData } = useSelector(authSelector);
+
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: ['posts'],
+        queryFn: () => postAPI.getPosts({ page: 1, size: 4 }),
+    });
 
     useEffect(() => {
-        console.log(userInfo);
-    }, []);
+        console.log(data);
+        console.log(error);
+    }, [data]);
 
     return (
         <ScrollView
@@ -34,8 +42,15 @@ export default function Home() {
             showsVerticalScrollIndicator={false}
         >
             <View className="pt-4">
-                <SlideCardComponent data={EventData} autoPlay duration={4000} />
+                <SlideCardComponent data={data?.data || []} autoPlay duration={4000} />
             </View>
+            <TouchableOpacity
+                onPress={() => {
+                    refetch();
+                }}
+            >
+                <TextComponent text="refetch" />
+            </TouchableOpacity>
             <SectionComponent className="border-b-[0.4px]">
                 <ActionListComponents />
                 <TextComponent
@@ -46,7 +61,7 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={EventData.slice(1)}
+                        data={data?.data || []}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}

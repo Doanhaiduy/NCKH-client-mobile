@@ -3,14 +3,14 @@ import { ButtonComponent, InputComponent, SectionComponent, SpaceComponent, Text
 import ContainerComponent from '@/components/ContainerComponent';
 import { LoadingModal } from '@/modals';
 import { authSelector, removeOTP } from '@/stores/reducers/authReducer';
-import { Regex, sleep } from '@/utils';
+import { Regex } from '@/utils';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function SetPassword() {
-    const [isLoading, setIsLoading] = useState(false);
     const [newPassword, setNewPassword] = useState('');
     const [isError, setIsError] = useState(false);
     const dispatch = useDispatch<any>();
@@ -21,29 +21,29 @@ export default function SetPassword() {
         setIsError(!isValidEmail);
     };
 
+    const { mutate, isPending } = useMutation({
+        mutationFn: (variables: { email: string; newPassword: string }) => authAPI.resetPassword(variables),
+        onSuccess: async (data) => {
+            await dispatch(removeOTP());
+            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!', [
+                {
+                    text: 'Đăng nhập',
+                    onPress: () => router.push('/sign-in'),
+                },
+            ]);
+        },
+        onError: (error: string) => {
+            Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
+        },
+    });
+
     const handleSetPassword = async () => {
         handleCheckPassword();
         if (isError) {
             return;
         }
         if (OTP?.done && OTP?.email) {
-            setIsLoading(true);
-            try {
-                const res = await authAPI.HandleAuth('/reset-password', { email: OTP.email, newPassword }, 'post');
-                if (res.data) {
-                    await dispatch(removeOTP());
-                    setIsLoading(false);
-                    Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!', [
-                        {
-                            text: 'Đăng nhập',
-                            onPress: () => router.push('/sign-in'),
-                        },
-                    ]);
-                }
-            } catch (error: string | any) {
-                Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
-                setIsLoading(false);
-            }
+            mutate({ email: OTP.email, newPassword });
         }
     };
 
@@ -78,7 +78,7 @@ export default function SetPassword() {
                     />
                 </SectionComponent>
             </View>
-            <LoadingModal visible={isLoading} />
+            <LoadingModal visible={isPending} />
         </ContainerComponent>
     );
 }

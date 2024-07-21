@@ -1,10 +1,11 @@
+import authAPI from '@/apis/authApi';
 import { ButtonComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import ContainerComponent from '@/components/ContainerComponent';
 import { colors } from '@/constants/colors';
 import { LoadingModal } from '@/modals';
-import { sendOTP } from '@/stores/actions/authAction';
-import { authSelector, setDoneVerify } from '@/stores/reducers/authReducer';
+import { authSelector, setDoneVerify, setOtpValue } from '@/stores/reducers/authReducer';
 import { checkExpiredTime, getSecondTimeLimit, obfuscateEmail, sleep } from '@/utils';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -17,7 +18,7 @@ export default function VerificationPage() {
     const [error, setError] = useState('');
     const [expiredTime, setExpiredTime] = useState(0);
     const { OTP } = useSelector(authSelector);
-
+    console.log('OTP VALUE: ', OTP);
     const dispatch = useDispatch<any>();
 
     useEffect(() => {
@@ -59,12 +60,20 @@ export default function VerificationPage() {
         }
     };
 
+    const { mutate, isPending } = useMutation({
+        mutationFn: (variables: { email: string }) => authAPI.sendOTP(variables),
+        onSuccess: (data) => {
+            dispatch(setOtpValue(data));
+        },
+        onError: (error: string) => {
+            setError(error);
+        },
+    });
+
     const handleResendOTP = async () => {
-        setIsLoading(true);
-        if (OTP?.email) {
-            await dispatch(sendOTP({ email: OTP?.email || '' }));
-        }
-        setIsLoading(false);
+        mutate({
+            email: OTP?.email || '',
+        });
     };
 
     return (
@@ -126,7 +135,7 @@ export default function VerificationPage() {
 
                     <SpaceComponent height={12} />
 
-                    <LoadingModal visible={isLoading} />
+                    <LoadingModal visible={isPending || isLoading} />
                     <SpaceComponent height={50} />
                 </SectionComponent>
             </View>

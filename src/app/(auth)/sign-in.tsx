@@ -8,12 +8,11 @@ import {
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
-import { login } from '@/stores/actions/authAction';
-import { authSelector } from '@/stores/reducers/authReducer';
-// import { authErrorSelector, authLoadingSelector, authSelector } from '@/stores/reducers/authReducer';
+import { authSelector, login } from '@/stores/reducers/authReducer';
 import { checkHasErr } from '@/utils';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { Link, router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -30,7 +29,7 @@ type FormFields = z.infer<typeof schema>;
 
 export default function LoginPage() {
     const dispatch = useDispatch<any>();
-    const { isLoading, authData } = useSelector(authSelector);
+    const { authData } = useSelector(authSelector);
 
     useEffect(() => {
         console.log('authData', authData);
@@ -53,18 +52,21 @@ export default function LoginPage() {
         resolver: zodResolver(schema),
     });
 
-    const onSubmit: SubmitHandler<FormFields> = async (data) => {
-        const { username, password } = data;
-        const { payload } = await dispatch(login({ username, password }));
-        console.log('payload', payload);
-        if (payload.authData) {
-            router.navigate('(home)/');
-        } else {
+    const { mutate, isPending } = useMutation({
+        mutationFn: (variables: FormLogin) => authAPI.login(variables),
+        onSuccess: (data) => {
+            dispatch(login(data));
+        },
+        onError: (error: string) => {
             setError('root', {
                 type: 'manual',
-                message: payload,
+                message: error,
             });
-        }
+        },
+    });
+
+    const onSubmit: SubmitHandler<FormFields> = async (data) => {
+        mutate(data);
     };
 
     return (
@@ -140,7 +142,7 @@ export default function LoginPage() {
                     />
                 </SectionComponent>
             </KeyboardAwareScrollView>
-            <LoadingModal visible={isLoading} />
+            <LoadingModal visible={isPending} />
         </ContainerComponent>
     );
 }

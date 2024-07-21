@@ -3,36 +3,41 @@ const EventData: CardItemData[] = [
         type: '1',
         id: 1,
         title: 'THÔNG BÁO VỀ VIỆC ĐĂNG KÍ THAM GIA GIẢI BÓNG CHUYỀN NAM – NỮ khoa Công nghệ thông tin',
-        time: '2021-10-10',
-        image: 'https://www.figma.com/file/Ix1fNQ0ITUpH1aMgvMuqMi/image/2bbad7c63ca898a3f93d6aa30042784238ecbaa5',
+        createdAt: '2021-10-10',
+        thumbnail:
+            'https://www.figma.com/file/Ix1fNQ0ITUpH1aMgvMuqMi/thumbnail/2bbad7c63ca898a3f93d6aa30042784238ecbaa5',
     },
     {
         type: '1',
         id: 2,
         title: 'Thông báo về việc tham gia lễ ra quân đội tuyển bóng đá nam khoa Công nghệ thông tin',
-        time: '2021-10-10',
-        image: 'https://s3-alpha-sig.figma.com/img/9add/494b/3a5e105a9afeccd26320610ca5f4ddbb?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PxIPLN6hd4gGzo~hPNV5Y-6d7DeDuRrcnYVdGineT1RQ4uAtLzqDpPKM13Gw2CBjdGiYtlw-jCdIwUbwQy6dBHTkTMmB5NGz8TjtpMFoFn8yap1hzBDSycq57UOoDwXi83D26EklrBOycuwb3fbOB50toFOb6OK9pYP-Cq7SoMBxDfry36O82ZzFQxQ2ZRJVcPfah6rg1TYIrzMrzu9-vSHdV37-9Xglx2YFfImyJ8CgKj1vRhyFq8~A6AYvl1yas6a-o52nSvBonCZ0Y86xXkehs51d0LGHZ1eRg4U0Fqmxzi0IlN4BNNcmUoYD~ts7nYbmM97Ctlk1BHZf-sKj0g__',
+        createdAt: '2021-10-10',
+        thumbnail:
+            'https://s3-alpha-sig.figma.com/img/9add/494b/3a5e105a9afeccd26320610ca5f4ddbb?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PxIPLN6hd4gGzo~hPNV5Y-6d7DeDuRrcnYVdGineT1RQ4uAtLzqDpPKM13Gw2CBjdGiYtlw-jCdIwUbwQy6dBHTkTMmB5NGz8TjtpMFoFn8yap1hzBDSycq57UOoDwXi83D26EklrBOycuwb3fbOB50toFOb6OK9pYP-Cq7SoMBxDfry36O82ZzFQxQ2ZRJVcPfah6rg1TYIrzMrzu9-vSHdV37-9Xglx2YFfImyJ8CgKj1vRhyFq8~A6AYvl1yas6a-o52nSvBonCZ0Y86xXkehs51d0LGHZ1eRg4U0Fqmxzi0IlN4BNNcmUoYD~ts7nYbmM97Ctlk1BHZf-sKj0g__',
     },
     {
         type: '1',
         id: 3,
         title: 'Ngày hội hiến máu tình nguyện 2024',
-        time: '2021-10-10',
-        image: 'https://s3-alpha-sig.figma.com/img/c050/2492/9e6a3882bd55bde41a270b7a12077320?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=p7YDi53xGOnaz5nZ0IyaNxRCX1xU~MFdRd2ys2LUviocnEZG3loNjYiimrrnYlUemlZLIFu08i9h1Lmqmjkw8d96NOp2xLA6rxZuZ~dUk9iUSOHtlKUPFIMpaVMePEyMj7iSOLkgAoC8OKGrDMPR0uWxKZRRAkgcGlv~RN7RC2x2X2C76s0qFpEjPk~~TnHF-s2FBm1HRM3jgarnnXHSQiiZoTwkkmoFCooydyg6xPwRgYYPmzxsdagUgyo01zAbwd3kJkk8w9vKMxlLOPC-uF8wrmoATPOOyxEqhS4zR~X87ZqbIHqDy6ErfuVDOrqlqn-aElNZ9U01KLNqcDcJnA__',
+        createdAt: '2021-10-10',
+        thumbnail:
+            'https://s3-alpha-sig.figma.com/img/c050/2492/9e6a3882bd55bde41a270b7a12077320?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=p7YDi53xGOnaz5nZ0IyaNxRCX1xU~MFdRd2ys2LUviocnEZG3loNjYiimrrnYlUemlZLIFu08i9h1Lmqmjkw8d96NOp2xLA6rxZuZ~dUk9iUSOHtlKUPFIMpaVMePEyMj7iSOLkgAoC8OKGrDMPR0uWxKZRRAkgcGlv~RN7RC2x2X2C76s0qFpEjPk~~TnHF-s2FBm1HRM3jgarnnXHSQiiZoTwkkmoFCooydyg6xPwRgYYPmzxsdagUgyo01zAbwd3kJkk8w9vKMxlLOPC-uF8wrmoATPOOyxEqhS4zR~X87ZqbIHqDy6ErfuVDOrqlqn-aElNZ9U01KLNqcDcJnA__',
     },
     {
         type: '1',
         id: 4,
         title: 'Khảo sát về việc tham gia cổ vũ chung kết giải đấu trường chân lý IT Champion Cup',
-        time: '2021-10-10',
-        image: 'https://s3-alpha-sig.figma.com/img/a416/1a53/b2845c28e8feeb8d07b660fd43e611d2?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=TL1kC6vBW7A4RM7v2LhadlpV43CoT4AcboRNMHY2Uy-3pYP~vDrQzpGTk9WtySrm4PTG6WhYz1zw-Ds1Jb8f2ekpOA2AcNh6HP9-7DetYbCDnguvIQ47CURbbYxBSr1k~9-bwvgZzUalwF9X~W5GyEQI9qlxxpm-C4NaJy-GJF-0EPGVcMJBB9k-1WJQf~tvM6D7lwv2hitf~2tfB5Ys-eV9sTieb-30Z1qfeG4477XZP8ocY7VTzUPdFnINVxe0OJuC9gT9VFwyukCur8nU-QqB5eHir5nQWYBG1Iu7Mo1sZoLeay~mFa2aN7qj0oUxUXL8YVkicXYnYuFWL0Rowg__',
+        createdAt: '2021-10-10',
+        thumbnail:
+            'https://s3-alpha-sig.figma.com/img/a416/1a53/b2845c28e8feeb8d07b660fd43e611d2?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=TL1kC6vBW7A4RM7v2LhadlpV43CoT4AcboRNMHY2Uy-3pYP~vDrQzpGTk9WtySrm4PTG6WhYz1zw-Ds1Jb8f2ekpOA2AcNh6HP9-7DetYbCDnguvIQ47CURbbYxBSr1k~9-bwvgZzUalwF9X~W5GyEQI9qlxxpm-C4NaJy-GJF-0EPGVcMJBB9k-1WJQf~tvM6D7lwv2hitf~2tfB5Ys-eV9sTieb-30Z1qfeG4477XZP8ocY7VTzUPdFnINVxe0OJuC9gT9VFwyukCur8nU-QqB5eHir5nQWYBG1Iu7Mo1sZoLeay~mFa2aN7qj0oUxUXL8YVkicXYnYuFWL0Rowg__',
     },
     {
         type: '1',
         id: 5,
         title: 'Thông báo về việc tham gia lễ ra quân đội tuyển bóng đá nam khoa Công nghệ thông tin',
-        time: '2021-10-10',
-        image: 'https://s3-alpha-sig.figma.com/img/9add/494b/3a5e105a9afeccd26320610ca5f4ddbb?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PxIPLN6hd4gGzo~hPNV5Y-6d7DeDuRrcnYVdGineT1RQ4uAtLzqDpPKM13Gw2CBjdGiYtlw-jCdIwUbwQy6dBHTkTMmB5NGz8TjtpMFoFn8yap1hzBDSycq57UOoDwXi83D26EklrBOycuwb3fbOB50toFOb6OK9pYP-Cq7SoMBxDfry36O82ZzFQxQ2ZRJVcPfah6rg1TYIrzMrzu9-vSHdV37-9Xglx2YFfImyJ8CgKj1vRhyFq8~A6AYvl1yas6a-o52nSvBonCZ0Y86xXkehs51d0LGHZ1eRg4U0Fqmxzi0IlN4BNNcmUoYD~ts7nYbmM97Ctlk1BHZf-sKj0g__',
+        createdAt: '2021-10-10',
+        thumbnail:
+            'https://s3-alpha-sig.figma.com/img/9add/494b/3a5e105a9afeccd26320610ca5f4ddbb?Expires=1720396800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=PxIPLN6hd4gGzo~hPNV5Y-6d7DeDuRrcnYVdGineT1RQ4uAtLzqDpPKM13Gw2CBjdGiYtlw-jCdIwUbwQy6dBHTkTMmB5NGz8TjtpMFoFn8yap1hzBDSycq57UOoDwXi83D26EklrBOycuwb3fbOB50toFOb6OK9pYP-Cq7SoMBxDfry36O82ZzFQxQ2ZRJVcPfah6rg1TYIrzMrzu9-vSHdV37-9Xglx2YFfImyJ8CgKj1vRhyFq8~A6AYvl1yas6a-o52nSvBonCZ0Y86xXkehs51d0LGHZ1eRg4U0Fqmxzi0IlN4BNNcmUoYD~ts7nYbmM97Ctlk1BHZf-sKj0g__',
     },
 ];
 
@@ -197,53 +202,57 @@ const ActiveAttendanceData = [
     },
 ];
 
-const NotificationData: CardItemData[] = [
+interface NotificationData extends CardItemData {
+    description: string;
+}
+
+const NotificationData: NotificationData[] = [
     {
         title: 'Tin tức',
         description: 'Lịch thi đấu chính thức giải Bóng chuyền Lịch thi đấu chính thức giải Bóng chuyền...',
-        time: 'Hôm nay, 07:02',
+        createdAt: '2021-10-10',
         id: 1,
     },
     {
         title: 'Điểm danh',
         description: 'Chào cờ khoa Công nghệ thông tin ngày Chào cờ khoa Công nghệ thông tin ngày...',
-        time: '4 ngày, 17:30',
+        createdAt: '2021-10-10',
         id: 1,
     },
     {
         title: 'Hoạt động ngoại khóa',
         description: 'Hưởng ứng cuộc thi trực tuyến tìm hiểu về Hưởng ứng cuộc thi trực tuyến tìm hiểu về...',
-        time: '2 tuần, 17:30',
+        createdAt: '2021-10-10',
         id: 2,
     },
     {
         title: 'Hệ thống',
         description: 'Minh chứng bổ sung đã được duyệt',
-        time: '1 tháng, 17:30',
+        createdAt: '2021-10-10',
         id: 1,
     },
     {
         title: 'Tin tức',
         description: 'Lịch thi đấu chính thức giải Bóng chuyền Lịch thi đấu chính thức giải Bóng chuyền...',
-        time: 'Hôm nay, 07:02',
+        createdAt: '2021-10-10',
         id: 2,
     },
     {
         title: 'Điểm danh',
         description: 'Chào cờ khoa Công nghệ thông tin ngày Chào cờ khoa Công nghệ thông tin ngày...',
-        time: '4 ngày, 17:30',
+        createdAt: '2021-10-10',
         id: 1,
     },
     {
         title: 'Hoạt động ngoại khóa',
         description: 'Hưởng ứng cuộc thi trực tuyến tìm hiểu về Hưởng ứng cuộc thi trực tuyến tìm hiểu về...',
-        time: '2 tuần, 17:30',
+        createdAt: '2021-10-10',
         id: 2,
     },
     {
         title: 'Hệ thống',
         description: 'Minh chứng bổ sung đã được duyệt',
-        time: '1 tháng, 17:30',
+        createdAt: '2021-10-10',
         id: 2,
     },
 ];

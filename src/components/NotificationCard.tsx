@@ -3,9 +3,11 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
+import { NotificationData } from '@/mockData';
+import { timeFormat } from '@/utils';
 
 interface Props {
-    data: CardItemData;
+    data: NotificationData;
     isNew?: boolean;
 }
 
@@ -25,7 +27,7 @@ export default function NotificationCard(props: Props) {
             </RowComponent>
             <TextComponent text={data?.description?.toString() || ''} numberOfLines={1} className="pr-5 py-1" />
             <RowComponent className="justify-between pr-5">
-                <TextComponent text={data?.time?.toString()} color={colors.text400} />
+                <TextComponent text={timeFormat(data.createdAt)} color={colors.text400} />
                 <TextComponent text="Xem chi tiết" color={colors.primary400} />
             </RowComponent>
         </TouchableOpacity>

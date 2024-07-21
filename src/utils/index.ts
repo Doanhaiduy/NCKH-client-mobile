@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { vi } from 'date-fns/locale';
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const checkHasErr = (data: object) => {
@@ -26,4 +28,10 @@ export const Regex = {
 
 export const obfuscateEmail = (email: string): string => {
     return email.replace(/^(.)(.*)(.@.*)$/, (_, a, b, c) => a + b.replace(/./g, '*') + c);
+};
+
+export const timeFormat = (time: string) => {
+    return format(new Date(time), 'dd, MMM, yyyy', {
+        locale: vi,
+    });
 };

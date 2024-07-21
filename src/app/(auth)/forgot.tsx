@@ -1,3 +1,4 @@
+import authAPI from '@/apis/authApi';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -8,10 +9,11 @@ import {
 } from '@/components';
 import { LoadingModal } from '@/modals';
 import { sendOTP } from '@/stores/actions/authAction';
-import { authSelector } from '@/stores/reducers/authReducer';
+import { authSelector, setOtpValue } from '@/stores/reducers/authReducer';
 import { checkHasErr, Regex, sleep } from '@/utils';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -27,7 +29,6 @@ type FormFields = z.infer<typeof schema>;
 
 export default function ForGotPassWord() {
     const dispatch = useDispatch<any>();
-    const { errorMessage, isLoading, OTP } = useSelector(authSelector);
     const {
         handleSubmit,
         setError,
@@ -40,17 +41,17 @@ export default function ForGotPassWord() {
         resolver: zodResolver(schema),
     });
 
-    const onSubmit: SubmitHandler<FormFields> = async (data) => {
-        const { email } = data;
-        const { payload } = await dispatch(sendOTP({ email }));
-        if (payload.otp) {
+    const { mutate, isPending } = useMutation({
+        mutationFn: (variables: FormFields) => authAPI.sendOTP(variables),
+        onSuccess: (data) => {
+            console.log('data', data);
+            dispatch(setOtpValue(data));
             router.push('/verification');
-        } else {
-            setError('root', {
-                type: 'manual',
-                message: payload,
-            });
-        }
+        },
+    });
+
+    const onSubmit: SubmitHandler<FormFields> = async (data) => {
+        mutate(data);
     };
 
     return (
@@ -105,7 +106,7 @@ export default function ForGotPassWord() {
                     />
                 </SectionComponent>
             </View>
-            <LoadingModal visible={isLoading} />
+            <LoadingModal visible={isPending} />
         </ContainerComponent>
     );
 }

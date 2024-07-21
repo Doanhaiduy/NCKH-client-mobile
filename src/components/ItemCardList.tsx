@@ -6,6 +6,7 @@ import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
+import { timeFormat } from '@/utils';
 
 interface Props {
     data: CardItemData;
@@ -25,7 +26,7 @@ export default function ItemCardList(props: Props) {
                 <RowComponent className="justify-between">
                     <RowComponent>
                         <Ionicons name="calendar" size={14} color={colors.black} />
-                        <TextComponent text={data.time} className="text-[13px] text-text-400 ml-1" />
+                        <TextComponent text={timeFormat(data.createdAt)} className="text-[13px] text-text-400 ml-1" />
                     </RowComponent>
                     {isAction && (
                         <ButtonComponent
@@ -39,7 +40,9 @@ export default function ItemCardList(props: Props) {
             </View>
             <View className="w-[30%] ">
                 <Image
-                    source={require('../assets/images/TFT.jpg')}
+                    source={{
+                        uri: data.thumbnail || 'https://via.placeholder.com/150',
+                    }}
                     resizeMode="cover"
                     className="w-full h-full object-cover rounded-[5px]"
                 />
