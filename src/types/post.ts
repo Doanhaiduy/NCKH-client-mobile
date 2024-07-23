@@ -32,8 +32,8 @@ type PostsParams = {
     size?: number;
     category?: 'news' | 'activity';
 };
-interface Author {
+type Author = {
     id: string;
     email: string;
     fullName: string;
-}
+};

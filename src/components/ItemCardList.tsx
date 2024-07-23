@@ -20,7 +20,7 @@ export default function ItemCardList(props: Props) {
     const { data, onPress, isShadow, isAction, onPressButton } = props;
 
     return (
-        <CardComponent onPress={onPress} isShadow={isShadow} className=" bg-white min-w-full  flex-1 flex-row">
+        <CardComponent onPress={onPress} isShadow={isShadow} className=" bg-white min-w-full flex-row">
             <View className="flex-1 pr-3 min-h-[100px] justify-between">
                 <TextComponent numberOfLines={3} text={data.title} />
                 <RowComponent className="justify-between">
@@ -38,7 +38,7 @@ export default function ItemCardList(props: Props) {
                     )}
                 </RowComponent>
             </View>
-            <View className="w-[30%] ">
+            <View className="w-[30%] aspect-square">
                 <Image
                     source={{
                         uri: data.thumbnail || 'https://via.placeholder.com/150',

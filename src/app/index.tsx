@@ -24,11 +24,7 @@ export default function Home() {
         checkAuth();
     }, []);
 
-    return (
-        <View>
-            <Text>Home</Text>
-        </View>
-    );
+    return <View />;
 }
 
 const styles = StyleSheet.create({});

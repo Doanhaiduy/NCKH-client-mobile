@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import axiosClient from './index';
 import { API_URL } from '@/constants/apiUrl';
 import QueryString from 'qs';
+import { Platform } from 'react-native';
 
 class PostAPI {
     HandlePost = async <T>(
@@ -19,6 +20,17 @@ class PostAPI {
     };
 
     getPosts = async (data?: PostsParams, option: AxiosRequestConfig = {}): Promise<Posts> => {
+        if (Platform.OS === 'ios') {
+            return await this.HandlePost(
+                `/get-all?${QueryString.stringify({
+                    ...data,
+                })}`,
+                undefined,
+                'get',
+                option,
+            );
+        }
+
         return await this.HandlePost(
             `${API_URL.post.getPosts}`,
             {

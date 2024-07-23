@@ -16,7 +16,7 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
@@ -45,10 +45,21 @@ export default function Home() {
         ],
     });
 
+    console.log('posts :', posts);
+
     return (
         <ScrollView
+            refreshControl={
+                <RefreshControl
+                    refreshing={posts.isLoading || news.isLoading}
+                    onRefresh={() => {
+                        posts.refetch();
+                        news.refetch();
+                    }}
+                />
+            }
             style={{
-                paddingTop: appInfo.headerHomeBar,
+                marginTop: appInfo.headerHomeBar,
                 backgroundColor: colors.white,
                 flex: 1,
             }}

@@ -5,7 +5,6 @@ import { colors } from '@/constants/colors';
 import { TextComponent } from '@/components';
 import { RoutesCategories } from '@/constants/routes';
 import { ScrollView } from 'react-native-gesture-handler';
-import { sleep } from '@/utils';
 
 interface Props {
     routeName?: string;

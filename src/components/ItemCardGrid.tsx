@@ -19,7 +19,7 @@ export default function ItemCardGrid(props: Props) {
     const { data, onPress, size, isShadow } = props;
 
     const containerClass = clsx(
-        size === 'medium' ? 'bg-white max-w-[48%] min-h-[184px] ' : 'bg-text-100 min-w-full min-h-[248px] flex-1',
+        size === 'medium' ? 'bg-white max-w-[48%] min-h-[184px] ' : 'bg-text-100 min-w-full min-h-[248px]',
     );
     const imageClass = clsx(
         'rounded-t-[10px] w-full object-cover',

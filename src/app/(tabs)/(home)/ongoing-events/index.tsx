@@ -2,28 +2,30 @@ import postAPI from '@/apis/postApi';
 import { ContainerComponent, ItemCardGrid, ItemCardList, SectionComponent, TextComponent } from '@/components';
 import { appInfo } from '@/constants/appInfo';
 import { EventData } from '@/mockData';
+import { sleep } from '@/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function OngoingEventList() {
-    const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } = useInfiniteQuery({
-        queryKey: ['ongoing-events'],
-        initialPageParam: 1,
-        queryFn: ({ pageParam }) =>
-            postAPI.getPosts({
-                page: pageParam,
-                size: 10,
-                category: 'activity',
-            }),
-        getNextPageParam: (lastPage, pages) => {
-            const nextPage = parseInt(lastPage.page) + 1;
-            if (lastPage.next > 0) {
-                return lastPage.next > 0 ? nextPage : undefined;
-            }
-        },
-    });
+    const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
+        useInfiniteQuery({
+            queryKey: ['ongoing-events'],
+            initialPageParam: 1,
+            queryFn: ({ pageParam }) =>
+                postAPI.getPosts({
+                    page: pageParam,
+                    size: 10,
+                    category: 'activity',
+                }),
+            getNextPageParam: (lastPage, pages) => {
+                const nextPage = parseInt(lastPage.page) + 1;
+                if (lastPage.next > 0) {
+                    return lastPage.next > 0 ? nextPage : undefined;
+                }
+            },
+        });
 
     // console.log('PAGE', data?.pages[0]);
     const loadMore = () => {
@@ -53,6 +55,15 @@ export default function OngoingEventList() {
                             />
                         )}
                         ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isFetching}
+                                onRefresh={async () => {
+                                    await sleep(500);
+                                    refetch();
+                                }}
+                            />
+                        }
                         onEndReachedThreshold={0.3}
                         onEndReached={loadMore}
                         renderItem={({ item }) => (

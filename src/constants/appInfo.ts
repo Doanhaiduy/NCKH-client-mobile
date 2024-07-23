@@ -5,5 +5,5 @@ export const appInfo = Object.freeze({
         WIDTH: Dimensions.get('window').width,
         HEIGHT: Dimensions.get('window').height,
     },
-    headerHomeBar: Platform.OS === 'android' ? 130 : 150,
+    headerHomeBar: 0,
 });
