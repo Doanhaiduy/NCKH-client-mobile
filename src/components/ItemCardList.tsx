@@ -6,7 +6,7 @@ import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import { timeFormat } from '@/utils';
+import { dateFormat } from '@/utils';
 
 interface Props {
     data: CardItemData;
@@ -26,7 +26,7 @@ export default function ItemCardList(props: Props) {
                 <RowComponent className="justify-between">
                     <RowComponent>
                         <Ionicons name="calendar" size={14} color={colors.black} />
-                        <TextComponent text={timeFormat(data.createdAt)} className="text-[13px] text-text-400 ml-1" />
+                        <TextComponent text={dateFormat(data.createdAt)} className="text-[13px] text-text-400 ml-1" />
                     </RowComponent>
                     {isAction && (
                         <ButtonComponent

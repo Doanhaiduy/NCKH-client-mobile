@@ -27,10 +27,10 @@ type CardItemData = {
     type?: string;
 };
 
-type PostParams = {
+type PostsParams = {
     page?: number;
     size?: number;
-    type?: string;
+    category?: 'news' | 'activity';
 };
 interface Author {
     id: string;

@@ -11,8 +11,11 @@ export default function DetailsLayout() {
                 contentStyle: {
                     backgroundColor: colors.white,
                 },
+                presentation: 'modal',
             }}
-        />
+        >
+            <Stack.Screen name="[id]" />
+        </Stack>
     );
 }
 

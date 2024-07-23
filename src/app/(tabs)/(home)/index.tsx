@@ -13,7 +13,8 @@ import { appInfo } from '@/constants/appInfo';
 import { colors } from '@/constants/colors';
 import { EventData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -21,15 +22,28 @@ import { useSelector } from 'react-redux';
 export default function Home() {
     const { authData } = useSelector(authSelector);
 
-    const { data, isLoading, error, refetch } = useQuery({
-        queryKey: ['posts'],
-        queryFn: () => postAPI.getPosts({ page: 1, size: 4 }),
+    const [posts, news] = useQueries({
+        queries: [
+            {
+                queryKey: ['posts-activity'],
+                queryFn: () =>
+                    postAPI.getPosts({
+                        page: 1,
+                        size: 4,
+                        category: 'activity',
+                    }),
+            },
+            {
+                queryKey: ['posts-news'],
+                queryFn: () =>
+                    postAPI.getPosts({
+                        page: 1,
+                        size: 6,
+                        category: 'news',
+                    }),
+            },
+        ],
     });
-
-    useEffect(() => {
-        console.log(data);
-        console.log(error);
-    }, [data]);
 
     return (
         <ScrollView
@@ -42,11 +56,11 @@ export default function Home() {
             showsVerticalScrollIndicator={false}
         >
             <View className="pt-4">
-                <SlideCardComponent data={data?.data || []} autoPlay duration={4000} />
+                <SlideCardComponent data={posts?.data?.data || []} autoPlay duration={4000} />
             </View>
             <TouchableOpacity
                 onPress={() => {
-                    refetch();
+                    posts.refetch();
                 }}
             >
                 <TextComponent text="refetch" />
@@ -61,7 +75,7 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={data?.data || []}
+                        data={posts?.data?.data || []}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -73,7 +87,14 @@ export default function Home() {
                             </View>
                         )}
                         renderItem={({ item }) => (
-                            <ItemCardGrid size="medium" isShadow data={item} onPress={() => {}} />
+                            <ItemCardGrid
+                                size="medium"
+                                isShadow
+                                data={item}
+                                onPress={() => {
+                                    router.push(`/events/${item.id}`);
+                                }}
+                            />
                         )}
                     />
                 </View>
@@ -83,13 +104,20 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={EventData}
+                        data={news?.data?.data}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         ListFooterComponent={() => (
                             <View className="items-center">
                                 <SpaceComponent height={16} />
-                                <ButtonComponent title="Xem thêm" size="small" type="primary" onPress={() => {}} />
+                                <ButtonComponent
+                                    title="Xem thêm"
+                                    size="small"
+                                    type="primary"
+                                    onPress={() => {
+                                        router.push('/news');
+                                    }}
+                                />
                             </View>
                         )}
                         renderItem={({ item }) => <ItemCardList data={item} onPress={() => {}} />}
@@ -101,11 +129,11 @@ export default function Home() {
                     text="Hoạt động đang diễn ra"
                     className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
                 />
-                <ItemCardGrid size="large" data={EventData[0]} onPress={() => {}} />
+                <ItemCardGrid size="large" data={posts?.data?.data[0] || EventData[0]} onPress={() => {}} />
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={EventData.slice(1)}
+                        data={posts?.data?.data}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -113,7 +141,14 @@ export default function Home() {
                         ListFooterComponent={() => (
                             <View className="items-center">
                                 <SpaceComponent height={16} />
-                                <ButtonComponent title="Xem thêm" size="small" type="primary" onPress={() => {}} />
+                                <ButtonComponent
+                                    title="Xem thêm"
+                                    size="small"
+                                    type="primary"
+                                    onPress={() => {
+                                        router.push('/ongoing-events');
+                                    }}
+                                />
                             </View>
                         )}
                         renderItem={({ item }) => (
@@ -130,13 +165,20 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={EventData.slice(1)}
+                        data={posts?.data?.data}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         ListFooterComponent={() => (
                             <View className="items-center">
                                 <SpaceComponent height={16} />
-                                <ButtonComponent title="Xem thêm" size="small" type="primary" onPress={() => {}} />
+                                <ButtonComponent
+                                    title="Xem thêm"
+                                    size="small"
+                                    type="primary"
+                                    onPress={() => {
+                                        router.push('/finished-events');
+                                    }}
+                                />
                             </View>
                         )}
                         renderItem={({ item }) => <ItemCardList data={item} onPress={() => {}} />}

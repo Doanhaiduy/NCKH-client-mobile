@@ -62,54 +62,6 @@ export default function CategoriesList(props: Props) {
                 </TouchableOpacity>
             ))}
         </ScrollView>
-        // <View>
-        //     <FlatList
-        //         data={RoutesCategories}
-        //         ref={flatListRef}
-        //         horizontal
-        //         style={{ paddingHorizontal: 16, flex: 1, maxHeight: 40 }}
-        //         showsHorizontalScrollIndicator={false}
-        //         keyExtractor={(item, index) => index.toString()}
-        //         initialScrollIndex={0}
-        //         onScrollToIndexFailed={async (info) => {
-        //             flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
-        //         }}
-        //         renderItem={({ item, index }) => (
-        //             <TouchableOpacity
-        //                 onPress={() => {
-        //                     router.navigate({
-        //                         pathname: item.route,
-        //                         params: {
-        //                             typeName: item.name,
-        //                             index: item.index,
-        //                         },
-        //                     });
-        //                 }}
-        //                 style={{
-        //                     marginRight: index === RoutesCategories.length - 1 ? 30 : 20,
-        //                     minWidth: 53,
-        //                 }}
-        //                 key={index}
-        //             >
-        //                 <TextComponent text={item.name} color={routeName === item.name ? '#FFD000' : colors.white} />
-        //                 <View
-        //                     style={{
-        //                         width: '100%',
-        //                         height: 4,
-        //                         borderRadius: 5,
-        //                         backgroundColor:
-        //                             routeName === 'index' && item.name === 'Tất cả'
-        //                                 ? '#FFD000'
-        //                                 : routeName === item.route.split('/')[1]
-        //                                   ? '#FFD000'
-        //                                   : 'transparent',
-        //                         marginTop: 6,
-        //                     }}
-        //                 />
-        //             </TouchableOpacity>
-        //         )}
-        //     />
-        // </View>
     );
 }
 

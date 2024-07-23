@@ -8,10 +8,11 @@ import {
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
-import { authSelector, login } from '@/stores/reducers/authReducer';
+import { authSelector, login, setAuth } from '@/stores/reducers/authReducer';
 import { checkHasErr } from '@/utils';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation } from '@tanstack/react-query';
 import { Link, router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -31,12 +32,18 @@ export default function LoginPage() {
     const dispatch = useDispatch<any>();
     const { authData } = useSelector(authSelector);
 
-    useEffect(() => {
-        console.log('authData', authData);
-        if (authData) {
+    const checkAuth = async () => {
+        const auth = await AsyncStorage.getItem('auth');
+        console.log('auth', auth);
+        if (auth && authData) {
             router.navigate('(home)/');
-            Alert.alert('Đăng nhập thành công');
+        } else {
+            return;
         }
+    };
+
+    useEffect(() => {
+        checkAuth();
     }, [authData]);
 
     const {
@@ -56,6 +63,8 @@ export default function LoginPage() {
         mutationFn: (variables: FormLogin) => authAPI.login(variables),
         onSuccess: (data) => {
             dispatch(login(data));
+            router.navigate('(home)/');
+            Alert.alert('Đăng nhập thành công');
         },
         onError: (error: string) => {
             setError('root', {

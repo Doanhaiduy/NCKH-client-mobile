@@ -12,14 +12,7 @@ export default function EventLayout() {
                     backgroundColor: colors.white,
                 },
             }}
-        >
-            <Stack.Screen
-                name="details"
-                options={{
-                    presentation: 'fullScreenModal',
-                }}
-            />
-        </Stack>
+        />
     );
 }
 

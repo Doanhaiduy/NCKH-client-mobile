@@ -30,8 +30,8 @@ export const obfuscateEmail = (email: string): string => {
     return email.replace(/^(.)(.*)(.@.*)$/, (_, a, b, c) => a + b.replace(/./g, '*') + c);
 };
 
-export const timeFormat = (time: string) => {
-    return format(new Date(time), 'dd, MMM, yyyy', {
+export const dateFormat = (time: string) => {
+    return format(new Date(time), 'dd MMM, yyyy', {
         locale: vi,
     });
 };

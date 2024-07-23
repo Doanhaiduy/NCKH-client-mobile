@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 export const unstable_settings = {
-    initialRouteName: '(auth)',
+    initialRouteName: '',
 };
 
 export default function RootLayout() {

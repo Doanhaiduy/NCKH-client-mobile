@@ -1,3 +1,4 @@
+import { logout } from '@/stores/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -10,17 +11,13 @@ const getAccessToken = async () => {
 };
 
 const HandleExpiredToken = async () => {
-    await AsyncStorage.setItem(
-        'auth',
-        JSON.stringify({
-            accessToken: 'TokenExpired',
-        }),
-    );
-
+    await AsyncStorage.removeItem('auth');
     Alert.alert('Token expired!!', 'Your token has expired, please login again', [
         {
             text: 'OK',
-            onPress: () => router.navigate('/sign-in'),
+            onPress: () => {
+                router.navigate('/sign-in');
+            },
         },
     ]);
 };
@@ -43,11 +40,7 @@ axiosClient.interceptors.request.use(async (config: any) => {
 
 axiosClient.interceptors.response.use(
     (response) => {
-        if (
-            (response.status === 200 || response.status === 201) &&
-            response.data
-            // response.data.status === 'success'
-        ) {
+        if ((response.status === 200 || response.status === 201) && response.data) {
             return response.data;
         }
         throw new Error('Something went wrong');

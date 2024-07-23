@@ -19,6 +19,9 @@ const authSlice = createSlice({
             state.authData = action.payload;
             AsyncStorage.setItem('auth', JSON.stringify(action.payload));
         },
+        setAuth: (state, action) => {
+            state.authData = action.payload;
+        },
         logout: (state) => {
             AsyncStorage.removeItem('auth');
             state.authData = null;
@@ -38,6 +41,6 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { login, logout, removeOTP, setOtpValue, setDoneVerify } = authSlice.actions;
+export const { login, setAuth, logout, removeOTP, setOtpValue, setDoneVerify } = authSlice.actions;
 
 export const authSelector = (state: any): AuthState => state.auth;

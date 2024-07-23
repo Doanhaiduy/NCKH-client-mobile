@@ -64,9 +64,9 @@ export default function SlideCardComponent(props: Props) {
                 ]}
             >
                 <AnimatedDotsCarousel
-                    length={EventData.length}
+                    length={EventData.length - 1}
                     currentIndex={index}
-                    maxIndicators={EventData.length}
+                    maxIndicators={EventData.length - 1}
                     interpolateOpacityAndColor={true}
                     activeIndicatorConfig={{
                         color: '#FFD000',

@@ -7,7 +7,7 @@ export const API_URL = Object.freeze({
         register: '/register',
     },
     post: {
-        getPosts: '/posts',
+        getPosts: '/get-all',
         createPost: '/posts',
         updatePost: '/posts',
         deletePost: '/posts',

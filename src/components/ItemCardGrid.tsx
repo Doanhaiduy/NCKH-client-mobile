@@ -6,7 +6,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import { timeFormat } from '@/utils';
+import { dateFormat } from '@/utils';
 
 interface Props {
     data: CardItemData;
@@ -44,7 +44,7 @@ export default function ItemCardGrid(props: Props) {
                 <TextComponent className={textClass} numberOfLines={2} text={data.title} />
                 <RowComponent className="">
                     <Ionicons name="calendar" size={14} color={colors.black} />
-                    <TextComponent text={timeFormat(data.createdAt)} className="ml-1 text-[13px] text-text-400" />
+                    <TextComponent text={dateFormat(data.createdAt)} className="ml-1 text-[13px] text-text-400" />
                 </RowComponent>
             </View>
         </CardComponent>
