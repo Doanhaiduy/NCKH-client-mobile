@@ -6,4 +6,8 @@ export const appInfo = Object.freeze({
         HEIGHT: Dimensions.get('window').height,
     },
     headerHomeBar: 0,
+    headerHeight: {
+        default: Platform.OS === 'android' ? 122 : 150,
+        onScroll: Platform.OS === 'android' ? 80 : 102,
+    },
 });

@@ -1,6 +1,7 @@
 import postAPI from '@/apis/postApi';
 import { ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
 import { appInfo } from '@/constants/appInfo';
+import useScrollAnimation from '@/hooks/useScrollAnimation';
 import { EventData } from '@/mockData';
 import { sleep } from '@/utils';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -9,6 +10,8 @@ import React, { useEffect } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function NewsList() {
+    const { handleScroll } = useScrollAnimation();
+
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
             queryKey: ['news-events'],
@@ -27,10 +30,8 @@ export default function NewsList() {
             },
         });
 
-    // console.log('PAGE', data?.pages[0]);
     const loadMore = () => {
         if (hasNextPage) {
-            console.log('LOAD MORE', data?.pageParams);
             fetchNextPage();
         }
     };
@@ -45,6 +46,7 @@ export default function NewsList() {
             <SectionComponent className="flex-1">
                 <View className="flex-1">
                     <FlatList
+                        onScroll={handleScroll}
                         keyExtractor={(item, index) => index.toString()}
                         data={data?.pages.map((page) => page.data).flat()}
                         showsVerticalScrollIndicator={false}
@@ -54,15 +56,7 @@ export default function NewsList() {
                                 className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
                             />
                         }
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={isFetching}
-                                onRefresh={async () => {
-                                    await sleep(500);
-                                    refetch();
-                                }}
-                            />
-                        }
+                        refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
                         removeClippedSubviews={true}
                         initialNumToRender={10}
                         ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}

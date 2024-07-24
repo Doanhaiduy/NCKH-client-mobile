@@ -48,7 +48,6 @@ export default function VerificationPage() {
                 setIsLoading(false);
                 return;
             } else {
-                await sleep(500);
                 dispatch(setDoneVerify());
                 router.push('/set-password');
                 setError('');

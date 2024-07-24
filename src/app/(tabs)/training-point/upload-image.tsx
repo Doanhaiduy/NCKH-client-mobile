@@ -48,7 +48,6 @@ export default function UploadImage() {
 
         if (!result.canceled) {
             setIsLoading(true);
-            await sleep(200);
             setImages([...images, ...result.assets]);
             setIsLoading(false);
             console.log('upload avatar');

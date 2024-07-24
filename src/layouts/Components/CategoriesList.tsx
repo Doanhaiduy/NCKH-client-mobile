@@ -13,14 +13,8 @@ interface Props {
 }
 
 export default function CategoriesList(props: Props) {
-    const { routeName, index } = props;
+    const { routeName } = props;
 
-    const flatListRef = useRef<FlatList | null>(null);
-    const activeIndex = index || 0;
-    console.log('activeIndex', activeIndex);
-    useEffect(() => {
-        flatListRef.current?.scrollToIndex({ index: activeIndex, animated: true });
-    }, [index]);
     return (
         <ScrollView
             horizontal

@@ -11,16 +11,31 @@ import {
 } from '@/components';
 import { appInfo } from '@/constants/appInfo';
 import { colors } from '@/constants/colors';
+import { useHeaderHeight } from '@/contexts/HeaderHeightContext';
+import useScrollAnimation from '@/hooks/useScrollAnimation';
 import { EventData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQueries, useQuery } from '@tanstack/react-query';
+import { pl } from 'date-fns/locale';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { FlatList, RefreshControl, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+    FlatList,
+    NativeScrollEvent,
+    NativeSyntheticEvent,
+    Platform,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
     const { authData } = useSelector(authSelector);
+
+    const { handleScroll } = useScrollAnimation();
 
     const [posts, news] = useQueries({
         queries: [
@@ -45,10 +60,9 @@ export default function Home() {
         ],
     });
 
-    console.log('posts :', posts);
-
     return (
         <ScrollView
+            onScroll={handleScroll}
             refreshControl={
                 <RefreshControl
                     refreshing={posts.isLoading || news.isLoading}
