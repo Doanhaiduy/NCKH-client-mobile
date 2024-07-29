@@ -7,7 +7,7 @@ export default function useScrollAnimation() {
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        if (offsetY > 40) {
+        if (offsetY > 300) {
             setHeaderHeight(appInfo.headerHeight.onScroll);
         } else {
             setHeaderHeight(appInfo.headerHeight.default);

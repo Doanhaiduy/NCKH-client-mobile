@@ -9,7 +9,7 @@ import TextComponent from './TextComponent';
 import { dateFormat } from '@/utils';
 
 interface Props {
-    data: CardItemData;
+    data: EventCard | CardItemData;
     onPress?: () => void;
     isShadow?: boolean;
     isAction?: boolean;
@@ -20,13 +20,16 @@ export default function ItemCardList(props: Props) {
     const { data, onPress, isShadow, isAction, onPressButton } = props;
 
     return (
-        <CardComponent onPress={onPress} isShadow={isShadow} className=" bg-white min-w-full flex-row">
+        <CardComponent onPress={onPress} isShadow={isShadow} className="bg-white min-w-full flex-row">
             <View className="flex-1 pr-3 min-h-[100px] justify-between">
-                <TextComponent numberOfLines={3} text={data.title} />
+                <TextComponent numberOfLines={3} text={(data as EventCard).name || (data as CardItemData).title} />
                 <RowComponent className="justify-between">
                     <RowComponent>
                         <Ionicons name="calendar" size={14} color={colors.black} />
-                        <TextComponent text={dateFormat(data.createdAt)} className="text-[13px] text-text-400 ml-1" />
+                        <TextComponent
+                            text={dateFormat((data as EventCard).startAt || (data as CardItemData).createdAt)}
+                            className="text-[13px] text-text-400 ml-1"
+                        />
                     </RowComponent>
                     {isAction && (
                         <ButtonComponent

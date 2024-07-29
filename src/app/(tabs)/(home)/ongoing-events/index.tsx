@@ -55,7 +55,14 @@ export default function OngoingEventList() {
                             />
                         )}
                         ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}
-                        refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isFetching}
+                                onRefresh={() => {
+                                    refetch();
+                                }}
+                            />
+                        }
                         onEndReachedThreshold={0.3}
                         onEndReached={loadMore}
                         renderItem={({ item }) => (

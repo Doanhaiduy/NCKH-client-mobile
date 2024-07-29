@@ -32,6 +32,7 @@ interface Props extends React.ComponentProps<typeof View> {
     handleRefresh?: () => void;
     search?: boolean;
     iconRight?: ReactNode;
+    _refreshing?: boolean;
 }
 
 export default function ContainerComponent(props: Props) {
@@ -47,6 +48,7 @@ export default function ContainerComponent(props: Props) {
         handleRefresh,
         iconRight,
         search,
+        _refreshing,
         ...containerProps
     } = props;
 
@@ -136,7 +138,7 @@ export default function ContainerComponent(props: Props) {
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     Platform.OS === 'android' ? (
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        <RefreshControl refreshing={_refreshing === undefined && refreshing} onRefresh={onRefresh} />
                     ) : (
                         <RefreshControl
                             refreshing={refreshing}

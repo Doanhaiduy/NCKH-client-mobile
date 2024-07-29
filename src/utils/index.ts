@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
+const CryptoJS = require('crypto-js');
+
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const checkHasErr = (data: object) => {
@@ -34,4 +36,28 @@ export const dateFormat = (time: string) => {
     return format(new Date(time), 'dd MMM, yyyy', {
         locale: vi,
     });
+};
+
+export const decryptData = (cipherText: string): EncryptedEventDetails | null => {
+    try {
+        const bytes = CryptoJS.AES.decrypt(cipherText, process.env.EXPO_PUBLIC_CRYPTO_SECRET_KEY);
+        const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
+
+        if (!decryptedString) {
+            return null;
+        }
+        try {
+            const decryptedData = JSON.parse(decryptedString);
+            return decryptedData;
+        } catch (jsonError) {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+};
+
+export const checkTimeActive = (startAt: string | number, endAt: string | number) => {
+    const time = new Date().getTime();
+    return time > +startAt && time < +endAt;
 };

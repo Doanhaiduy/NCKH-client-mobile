@@ -4,14 +4,14 @@ import { API_URL } from '@/constants/apiUrl';
 import QueryString from 'qs';
 import { Platform } from 'react-native';
 
-class PostAPI {
-    HandlePost = async <T>(
+class EventAPI {
+    HandleEvent = async <T>(
         url: string,
         data?: any,
         method?: 'get' | 'post' | 'put' | 'delete',
         options: AxiosRequestConfig = {},
     ): Promise<T> => {
-        return await axiosClient(`${process.env.EXPO_PUBLIC_BASE_URL}/posts${url}`, {
+        return await axiosClient(`${process.env.EXPO_PUBLIC_BASE_URL}/events${url}`, {
             method: method || 'get',
             data,
             params: method === 'get' ? data : undefined,
@@ -19,10 +19,10 @@ class PostAPI {
         });
     };
 
-    getPosts = async (data?: PostsParams, option: AxiosRequestConfig = {}): Promise<Posts> => {
+    getEvents = async (data?: EventsParams, option: AxiosRequestConfig = {}): Promise<Events> => {
         if (Platform.OS === 'ios') {
-            return await this.HandlePost(
-                `${API_URL.post.getPosts}?${QueryString.stringify({
+            return await this.HandleEvent(
+                `${API_URL.event.getEvents}?${QueryString.stringify({
                     ...data,
                 })}`,
                 undefined,
@@ -31,8 +31,8 @@ class PostAPI {
             );
         }
 
-        return await this.HandlePost(
-            `${API_URL.post.getPosts}`,
+        return await this.HandleEvent(
+            `${API_URL.event.getEvents}`,
             {
                 ...data,
             },
@@ -40,11 +40,11 @@ class PostAPI {
         );
     };
 
-    getDetailPost = async (id: string, option: AxiosRequestConfig = {}): Promise<{ data: PostDetails }> => {
-        return await this.HandlePost(`/${id}`, undefined, 'get', option);
+    getDetailEvents = async (id: string, option: AxiosRequestConfig = {}): Promise<{ data: EventDetails }> => {
+        return await this.HandleEvent(`/${id}`, undefined, 'get', option);
     };
 }
 
-const postAPI = new PostAPI();
+const eventAPI = new EventAPI();
 
-export default postAPI;
+export default eventAPI;
