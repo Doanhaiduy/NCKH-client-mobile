@@ -48,7 +48,7 @@ export default function FinishedEventList() {
                     <FlatList
                         onScroll={handleScroll}
                         keyExtractor={(item, index) => index.toString()}
-                        data={data?.pages.map((page) => page.data).flat()}
+                        data={data?.pages.map((page) => page.posts).flat()}
                         showsVerticalScrollIndicator={false}
                         ListHeaderComponent={() => (
                             <TextComponent

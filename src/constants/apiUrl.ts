@@ -5,6 +5,7 @@ export const API_URL = Object.freeze({
         resetPassword: '/reset-password',
         changePassword: '/change-password',
         register: '/register',
+        refreshToken: '/refresh-token',
     },
     post: {
         getPosts: '/get-all',

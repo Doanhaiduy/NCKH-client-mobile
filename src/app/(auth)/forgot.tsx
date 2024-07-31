@@ -8,7 +8,6 @@ import {
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
-import { sendOTP } from '@/stores/actions/authAction';
 import { authSelector, setOtpValue } from '@/stores/reducers/authReducer';
 import { checkHasErr, Regex, sleep } from '@/utils';
 import { schemasCustom } from '@/utils/zod';

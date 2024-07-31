@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { OtpInput } from 'react-native-otp-entry';
+import { OtpInput, OtpInputRef } from 'react-native-otp-entry';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function VerificationPage() {
@@ -18,7 +18,7 @@ export default function VerificationPage() {
     const [error, setError] = useState('');
     const [expiredTime, setExpiredTime] = useState(0);
     const { OTP } = useSelector(authSelector);
-    console.log('OTP VALUE: ', OTP);
+    const otpRef = React.useRef<OtpInputRef>(null);
     const dispatch = useDispatch<any>();
 
     useEffect(() => {
@@ -36,33 +36,40 @@ export default function VerificationPage() {
         }
     }, [expiredTime]);
 
-    const handleVerification = async () => {
-        console.log({
-            otp,
-            OTP,
-        });
+    const handleVerification = async (text?: string) => {
         setIsLoading(true);
-        if (otp == OTP?.otp) {
+        const inputOtp: string = text || otp;
+        console.log('inputOtp', inputOtp);
+
+        if (inputOtp.length !== 6) {
+            setError('Mã OTP không hợp lệ');
+            setIsLoading(false);
+            return;
+        }
+
+        if (inputOtp == OTP?.otp) {
             if (checkExpiredTime(OTP?.expiredIn || 0)) {
                 setError('Mã OTP đã hết hạn');
-                setIsLoading(false);
-                return;
             } else {
+                await sleep(500);
                 dispatch(setDoneVerify());
                 router.push('/set-password');
                 setError('');
-                setIsLoading(false);
             }
         } else {
             setError('Mã OTP không chính xác');
-            setIsLoading(false);
         }
+
+        setIsLoading(false);
     };
 
     const { mutate, isPending } = useMutation({
         mutationFn: (variables: { email: string }) => authAPI.sendOTP(variables),
         onSuccess: (data) => {
             dispatch(setOtpValue(data));
+            setError('');
+            setOtp('');
+            otpRef.current?.clear();
         },
         onError: (error: string) => {
             setError(error);
@@ -73,6 +80,7 @@ export default function VerificationPage() {
         mutate({
             email: OTP?.email || '',
         });
+        otpRef.current?.focus();
     };
 
     return (
@@ -91,10 +99,15 @@ export default function VerificationPage() {
                 <SectionComponent className="items-center">
                     <SpaceComponent height={24} />
                     <OtpInput
+                        ref={otpRef}
                         numberOfDigits={6}
                         autoFocus
                         focusColor={colors['primary400']}
-                        onTextChange={(text) => setOtp(text)}
+                        onTextChange={(text) => {
+                            setOtp(text);
+                            setError('');
+                        }}
+                        onFilled={(text) => handleVerification(text)}
                         theme={{
                             pinCodeContainerStyle: {
                                 width: 40,
@@ -112,7 +125,7 @@ export default function VerificationPage() {
                         disabled={otp.length < 6}
                         size="large"
                         type="primary"
-                        onPress={handleVerification}
+                        onPress={() => handleVerification(undefined)}
                     />
 
                     <SpaceComponent height={12} />

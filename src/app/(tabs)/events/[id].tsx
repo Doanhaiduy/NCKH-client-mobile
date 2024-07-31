@@ -18,13 +18,6 @@ import WebView from 'react-native-webview';
 
 export default function Details({ navigation, route, options }: { navigation: any; route: any; options: any }) {
     const { id, event, eventName } = useLocalSearchParams();
-    console.log('id', id);
-    console.log({
-        navigation,
-        route,
-        options,
-    });
-
     const { data, isLoading, error, refetch } = useQuery({
         queryKey: ['posts', id],
         queryFn: () => postAPI.getDetailPost(id?.toString() || ''),
@@ -79,12 +72,12 @@ export default function Details({ navigation, route, options }: { navigation: an
                             }
                         </style>
                     </head><body>
-                    <img src="${data?.data?.thumbnail}" />
+                    <img src="${data?.thumbnail}" />
                     <div class="time">
-                        <span>${data?.data?.createdAt && dateFormat(data?.data?.createdAt)}</span>
+                        <span>${data?.createdAt && dateFormat(data?.createdAt)}</span>
                         <button>Đăng ký</button>
                     </div>
-                    <div class="container">${data?.data?.content}</div>
+                    <div class="container">${data?.content}</div>
                     </body></html>`,
                     }}
                 />

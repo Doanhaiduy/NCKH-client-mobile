@@ -1,10 +1,9 @@
 type Posts = {
-    message: string;
     page: string;
     size: number;
     previous: number;
     next: number;
-    data: CardItemData[];
+    posts: CardItemData[];
 };
 
 type PostDetails = {

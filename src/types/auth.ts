@@ -6,6 +6,7 @@ type AuthData = {
     avatar: string;
     role: string;
     accessToken: string;
+    refreshToken: string;
 };
 
 type AuthState = {

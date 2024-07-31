@@ -16,20 +16,9 @@ import useScrollAnimation from '@/hooks/useScrollAnimation';
 import { EventData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { pl } from 'date-fns/locale';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import {
-    FlatList,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-    Platform,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import { FlatList, RefreshControl, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
@@ -60,6 +49,9 @@ export default function Home() {
         ],
     });
 
+    console.log('posts', posts.data?.posts);
+    console.log('news', news.data);
+
     return (
         <ScrollView
             onScroll={handleScroll}
@@ -81,7 +73,7 @@ export default function Home() {
             showsVerticalScrollIndicator={false}
         >
             <View className="pt-4">
-                <SlideCardComponent data={posts?.data?.data || []} autoPlay duration={4000} />
+                <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
             </View>
             <TouchableOpacity
                 onPress={() => {
@@ -100,7 +92,7 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={posts?.data?.data || []}
+                        data={posts?.data?.posts || []}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -129,7 +121,7 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={news?.data?.data}
+                        data={news?.data?.posts}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         ListFooterComponent={() => (
@@ -154,11 +146,11 @@ export default function Home() {
                     text="Hoạt động đang diễn ra"
                     className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
                 />
-                <ItemCardGrid size="large" data={posts?.data?.data[0] || EventData[0]} onPress={() => {}} />
+                <ItemCardGrid size="large" data={posts?.data?.posts[0] || EventData[0]} onPress={() => {}} />
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={posts?.data?.data}
+                        data={posts?.data?.posts}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         columnWrapperStyle={{ justifyContent: 'space-between' }}
@@ -190,7 +182,7 @@ export default function Home() {
                 <View className="flex-1">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={posts?.data?.data}
+                        data={posts?.data?.posts}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         ListFooterComponent={() => (

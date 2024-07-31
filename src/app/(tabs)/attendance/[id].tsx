@@ -13,7 +13,8 @@ export default function Details() {
         queryFn: () => eventAPI.getDetailEvents(id?.toString() || ''),
     });
 
-    console.log(data?.data);
+    console.log('data', data);
+
     return (
         <ContainerComponent
             iconLeft="back"
@@ -24,7 +25,7 @@ export default function Details() {
             handleRefresh={refetch}
         >
             <SectionComponent className="items-center ">
-                <TextComponent text={data?.data.name || ''} size={20} className="text-center mt-4" />
+                <TextComponent text={data?.name || ''} size={20} className="text-center mt-4" />
                 <SpaceComponent height={40} />
                 <Image source={require('@/assets/images/scanner.png')} className="w-[90%] h-[310px]" />
                 <SpaceComponent height={40} />
@@ -39,7 +40,7 @@ export default function Details() {
                             pathname: '/attendance/scan',
                             params: {
                                 id: id,
-                                eventCode: data?.data.eventCode,
+                                eventCode: data?.eventCode,
                             },
                         });
                     }}

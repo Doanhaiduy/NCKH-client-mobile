@@ -22,7 +22,6 @@ export default function SearchPage() {
     useEffect(() => {
         FetchPost();
     }, []);
-    console.log('post :', post);
 
     return (
         // <ContainerComponent

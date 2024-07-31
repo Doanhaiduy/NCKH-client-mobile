@@ -1,10 +1,9 @@
 type Events = {
-    message: string;
     page: string;
     size: number;
     previous: number;
     next: number;
-    data: EventCard[];
+    events: EventCard[];
 };
 
 type EventDetails = {

@@ -1,7 +1,6 @@
 import eventAPI from '@/apis/eventApi';
 import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
-import { EventData } from '@/mockData';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -49,7 +48,7 @@ export default function Attendance() {
                 <View className="">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={eventActive?.data?.data}
+                        data={eventActive?.data?.events}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         renderItem={({ item }) => (
@@ -73,7 +72,7 @@ export default function Attendance() {
                 <View className="">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
-                        data={eventInactive.data?.data}
+                        data={eventInactive.data?.events}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         renderItem={({ item }) => (
