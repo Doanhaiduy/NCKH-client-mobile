@@ -6,7 +6,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import { dateFormat } from '@/utils';
+import { dateFormat } from '@/utils/dateTime';
 
 interface Props {
     data: CardItemData;

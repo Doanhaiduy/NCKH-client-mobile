@@ -73,10 +73,19 @@ export default function UploadImage() {
                 console.log(postData);
             });
 
-            const res = await userAPI.HandleUser('/upload-multiple', formData, 'post');
-            if (res.data) {
+            const res = await userAPI.HandleUser<
+                {
+                    public_id: string;
+                    url: string;
+                }[]
+            >('/upload-multiple', formData, 'post', {
+                timeout: 1000 * 60,
+            });
+
+            console.log(res[0].url);
+            if (res.length > 0) {
                 Alert.alert('Thông báo', 'Tải ảnh lên thành công');
-                console.log(res.data);
+                console.log(res);
                 setIsLoading(false);
                 router.back();
             }

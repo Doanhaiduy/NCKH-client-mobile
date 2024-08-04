@@ -53,3 +53,30 @@ type EventsParams = {
     size?: number;
     status?: 'active' | 'inactive';
 };
+
+type EventCheckInParams = {
+    location: EventLocation;
+    checkInAt: string;
+    userId: string;
+};
+
+type AttendanceDetails = {
+    id: string;
+    event: {
+        id: string;
+        name: string;
+        eventCode: string;
+    };
+    user: string;
+    checkInAt: string;
+    status: string;
+    location: EventLocation;
+};
+
+type Attendances = {
+    page: string;
+    size: number;
+    previous: number;
+    next: number;
+    attendances: AttendanceDetails[];
+};

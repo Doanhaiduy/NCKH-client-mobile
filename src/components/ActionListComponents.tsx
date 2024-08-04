@@ -18,7 +18,7 @@ const ActionData: {
     {
         icon: 'check-to-slot',
         text: 'Đã điểm danh',
-        path: 'CheckedIn',
+        path: '/attendance/list',
     },
     {
         icon: 'check-to-slot',

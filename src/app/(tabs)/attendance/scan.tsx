@@ -1,19 +1,57 @@
 import eventAPI from '@/apis/eventApi';
-import { checkTimeActive, decryptData, sleep } from '@/utils';
+import { decryptData, sleep } from '@/utils';
+import { checkTimeActive } from '@/utils/dateTime';
 import { ButtonComponent, ContainerComponent, SectionComponent } from '@components/index';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, Linking, StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 import { getDistance } from 'geolib';
+import { useSelector } from 'react-redux';
+import { authSelector } from '@/stores/reducers/authReducer';
+import axios from 'axios';
+import { GeoLocation } from '@/types/geoLocation';
 
 export default function ScanQRScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const [scanned, setScanned] = useState(false);
     const { id, eventCode } = useLocalSearchParams();
     const [location, setLocation] = useState<EventLocation>();
+    const { authData } = useSelector(authSelector);
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: () =>
+            eventAPI.checkInEvent(
+                {
+                    checkInAt: new Date().toISOString(),
+                    location: location!,
+                    userId: authData?.id!,
+                },
+                id?.toString()!,
+            ),
+        onSuccess: (data) => {
+            Alert.alert('Thông báo', 'Điểm danh thành công', [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        setScanned(false);
+                        router.dismiss();
+                        router.replace({
+                            pathname: '/attendance/list',
+                            params: {
+                                id: data.id,
+                            },
+                        });
+                    },
+                },
+            ]);
+        },
+        onError: (error: string) => {
+            console.log(error);
+        },
+    });
 
     const getCurrentLocation: any = async () => {
         const permission = await Location.requestForegroundPermissionsAsync();
@@ -31,19 +69,19 @@ export default function ScanQRScreen() {
         }
         if (permission.status === 'granted') {
             const location = await Location.getLastKnownPositionAsync({});
-            console.log(location?.coords);
+            // console.log(location?.coords);
             if (location) {
                 setLocation({
                     lat: location.coords.latitude,
                     lng: location.coords.longitude,
-                    name: 'Vị trí hiện tại',
+                    name: '',
                 });
             } else {
                 const location = await Location.getCurrentPositionAsync({});
                 setLocation({
                     lat: location.coords.latitude,
                     lng: location.coords.longitude,
-                    name: 'Vị trí hiện tại',
+                    name: '',
                 });
             }
         }
@@ -76,12 +114,30 @@ export default function ScanQRScreen() {
         );
     }
 
+    const reverseLocation = async (lat: number, long: number) => {
+        try {
+            const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VN&apiKey=${process
+                .env.EXPO_PUBLIC_HERE_LOCATION_API_KEY!}`;
+            console.log(api);
+            const res = await axios<{ items: GeoLocation[] }>(api);
+            if (res && res.status === 200) {
+                setLocation({
+                    ...location!,
+                    name: res.data.items[0].address.label,
+                });
+            }
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
+
     const handleCheck = async (dataDecrypt: EncryptedEventDetails | null) => {
         if (!location) {
             getCurrentLocation();
             return false;
         }
         if (eventCode !== dataDecrypt?.eventCode) {
+            console.log(eventCode, dataDecrypt?.eventCode);
             Alert.alert('Thông báo', 'Mã QR không hợp lệ.', [
                 {
                     text: 'Thử lại',
@@ -96,8 +152,7 @@ export default function ScanQRScreen() {
                 { latitude: location.lat, longitude: location.lng },
                 { latitude: dataLocation.lat, longitude: dataLocation.lng },
             );
-            if (distance > dataDecrypt?.distanceLimit) {
-                console.log(distance);
+            if (distance > dataDecrypt?.distanceLimit && dataDecrypt?.distanceLimit !== 0) {
                 Alert.alert(
                     'Thông báo',
                     `bạn cần đến gần hơn ${distance - dataDecrypt?.distanceLimit}(m) để điểm danh.`,
@@ -140,16 +195,12 @@ export default function ScanQRScreen() {
                 return;
             }
             if (await handleCheck(dataDecrypt)) {
-                // handle check in here
-                // call api save to server
-                Alert.alert('Thông báo', 'Điểm danh thành công.', [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            router.dismiss();
-                        },
-                    },
-                ]);
+                try {
+                    await reverseLocation(location?.lat!, location?.lng!);
+                    mutate();
+                } catch (error) {
+                    console.log(error);
+                }
             }
         } catch (error) {
             Alert.alert('Thông báo', 'Mã QR không hợp lệ.', [

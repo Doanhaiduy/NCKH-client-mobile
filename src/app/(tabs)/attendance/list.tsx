@@ -1,3 +1,4 @@
+import userAPI from '@/apis/userApi';
 import {
     ContainerComponent,
     DropDownComponent,
@@ -8,12 +9,35 @@ import {
 } from '@/components';
 import { colors } from '@/constants/colors';
 import { AttendanceOptionData } from '@/mockData';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { useQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 
 export default function ListAttendance() {
+    const { authData } = useSelector(authSelector);
+
+    const { data, refetch, isFetching } = useQuery({
+        queryKey: ['attendance-list', authData?.id],
+        queryFn: () =>
+            userAPI.getAttendances(authData?.id!, {
+                page: 1,
+                size: 10,
+            }),
+    });
+
     return (
-        <ContainerComponent isScroll title="Đã điểm danh" iconLeft="back" search>
+        <ContainerComponent
+            onBack={() => router.dismissAll()}
+            isScroll
+            title="Đã điểm danh"
+            handleRefresh={refetch}
+            _refreshing={isFetching}
+            iconLeft="back"
+            search
+        >
             <SectionComponent className="items-center">
                 <TextComponent
                     text="Hoạt động đã tham gia"
@@ -24,7 +48,7 @@ export default function ListAttendance() {
                 <RowComponent className="ml-auto mb-4">
                     <DropDownComponent title="" data={AttendanceOptionData} onSelect={() => {}} width={230} />
                 </RowComponent>
-                <TableComponent />
+                <TableComponent data={data?.attendances || []} />
             </SectionComponent>
         </ContainerComponent>
     );

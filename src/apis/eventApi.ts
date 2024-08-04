@@ -43,6 +43,14 @@ class EventAPI {
     getDetailEvents = async (id: string, option: AxiosRequestConfig = {}): Promise<EventDetails> => {
         return await this.HandleEvent(`/${id}`, undefined, 'get', option);
     };
+
+    checkInEvent = async (
+        data: EventCheckInParams,
+        eventId: string,
+        option: AxiosRequestConfig = {},
+    ): Promise<AttendanceDetails> => {
+        return await this.HandleEvent(`/${eventId}/check-in`, data, 'post', option);
+    };
 }
 
 const eventAPI = new EventAPI();

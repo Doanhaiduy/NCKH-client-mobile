@@ -47,6 +47,9 @@ export default function ForGotPassWord() {
             dispatch(setOtpValue(data));
             router.push('/verification');
         },
+        onError: (error: string) => {
+            setError('root', { type: 'manual', message: error });
+        },
     });
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {

@@ -11,7 +11,6 @@ import {
 } from '@/components';
 import { appInfo } from '@/constants/appInfo';
 import { colors } from '@/constants/colors';
-import { useHeaderHeight } from '@/contexts/HeaderHeightContext';
 import useScrollAnimation from '@/hooks/useScrollAnimation';
 import { EventData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';

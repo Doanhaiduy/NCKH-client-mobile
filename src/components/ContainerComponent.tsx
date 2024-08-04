@@ -33,6 +33,7 @@ interface Props extends React.ComponentProps<typeof View> {
     search?: boolean;
     iconRight?: ReactNode;
     _refreshing?: boolean;
+    onBack?: () => void;
 }
 
 export default function ContainerComponent(props: Props) {
@@ -49,6 +50,7 @@ export default function ContainerComponent(props: Props) {
         iconRight,
         search,
         _refreshing,
+        onBack,
         ...containerProps
     } = props;
 
@@ -89,7 +91,7 @@ export default function ContainerComponent(props: Props) {
             <View className={`px-4 border-b-[0.2px]`} style={[style]}>
                 <RowComponent style={{ justifyContent: 'space-between', paddingTop: heightBar, paddingBottom: 8 }}>
                     {iconLeft === 'back' && (
-                        <TouchableOpacity onPress={() => router.back()}>
+                        <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())}>
                             <Ionicons name="chevron-back" size={24} color={colors['primary400']} />
                         </TouchableOpacity>
                     )}

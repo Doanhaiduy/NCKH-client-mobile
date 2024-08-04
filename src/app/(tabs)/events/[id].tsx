@@ -8,7 +8,7 @@ import {
     TextComponent,
 } from '@/components';
 import { colors } from '@/constants/colors';
-import { dateFormat } from '@/utils';
+import { dateFormat } from '@/utils/dateTime';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';

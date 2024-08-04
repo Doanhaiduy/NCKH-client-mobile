@@ -1,14 +1,57 @@
+import { AxiosRequestConfig } from 'axios';
 import axiosClient from './index';
+import { Platform } from 'react-native';
+import QueryString from 'qs';
 
 class UserAPI {
-    HandleUser = async (url: string, data?: any, method?: 'get' | 'post' | 'put' | 'delete') => {
+    HandleUser = async <T>(
+        url: string,
+        data?: any,
+        method?: 'get' | 'post' | 'put' | 'delete',
+        options: AxiosRequestConfig = {},
+    ): Promise<T> => {
         return await axiosClient(`${process.env.EXPO_PUBLIC_BASE_URL}/users${url}`, {
             method: method || 'get',
             data,
-            headers: {
-                'content-type': 'multipart/form-data',
-            },
+            params: method === 'get' ? data : undefined,
+            ...options,
         });
+    };
+
+    getAttendances = async (
+        userId: string,
+        data?: EventsParams,
+        option: AxiosRequestConfig = {},
+    ): Promise<Attendances> => {
+        if (Platform.OS === 'ios') {
+            return await this.HandleUser(
+                `/${userId}/attendances?${QueryString.stringify({
+                    ...data,
+                })}`,
+                undefined,
+                'get',
+                option,
+            );
+        }
+        return await this.HandleUser(`/${userId}/attendances`, { ...data }, 'get');
+    };
+
+    getTrainingPoints = async (
+        userId: string,
+        data?: TrainingPointsParams,
+        option: AxiosRequestConfig = {},
+    ): Promise<TrainingPoint> => {
+        if (Platform.OS === 'ios') {
+            return await this.HandleUser(
+                `/${userId}/training-points?${QueryString.stringify({
+                    ...data,
+                })}`,
+                undefined,
+                'get',
+                option,
+            );
+        }
+        return await this.HandleUser(`/${userId}/training-points`, { ...data }, 'get');
     };
 }
 

@@ -1,5 +1,3 @@
-import { format } from 'date-fns';
-import { vi } from 'date-fns/locale';
 const CryptoJS = require('crypto-js');
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -8,16 +6,6 @@ export const checkHasErr = (data: object) => {
     return Object.values({ ...data }).some(
         (value, index) => value !== undefined && Object.keys(data)[index] !== 'root',
     );
-};
-
-export const checkExpiredTime = (time: number) => {
-    return new Date(time) < new Date();
-};
-
-export const getSecondTimeLimit = (time: number) => {
-    const now = new Date();
-    const expired = new Date(time);
-    return Math.floor((expired.getTime() - now.getTime()) / 1000);
 };
 
 export const Regex = {
@@ -30,12 +18,6 @@ export const Regex = {
 
 export const obfuscateEmail = (email: string): string => {
     return email.replace(/^(.)(.*)(.@.*)$/, (_, a, b, c) => a + b.replace(/./g, '*') + c);
-};
-
-export const dateFormat = (time: string) => {
-    return format(new Date(time), 'dd MMM, yyyy', {
-        locale: vi,
-    });
 };
 
 export const decryptData = (cipherText: string): EncryptedEventDetails | null => {
@@ -57,7 +39,42 @@ export const decryptData = (cipherText: string): EncryptedEventDetails | null =>
     }
 };
 
-export const checkTimeActive = (startAt: string | number, endAt: string | number) => {
-    const time = new Date().getTime();
-    return time > +startAt && time < +endAt;
+export const romanize = (num: string) => {
+    var digits = String(+num).split(''),
+        key = [
+            '',
+            'C',
+            'CC',
+            'CCC',
+            'CD',
+            'D',
+            'DC',
+            'DCC',
+            'DCCC',
+            'CM',
+            '',
+            'X',
+            'XX',
+            'XXX',
+            'XL',
+            'L',
+            'LX',
+            'LXX',
+            'LXXX',
+            'XC',
+            '',
+            'I',
+            'II',
+            'III',
+            'IV',
+            'V',
+            'VI',
+            'VII',
+            'VIII',
+            'IX',
+        ],
+        roman = '',
+        i = 3;
+    while (i--) roman = (key[+digits.pop()! + i * 10] || '') + roman;
+    return Array(+digits.join('') + 1).join('M') + roman;
 };
