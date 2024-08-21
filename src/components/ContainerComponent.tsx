@@ -58,8 +58,8 @@ export default function ContainerComponent(props: Props) {
 
     const onRefresh = () => {
         setRefreshing(true);
+        handleRefresh && handleRefresh();
         setTimeout(() => {
-            handleRefresh && handleRefresh();
             setRefreshing(false);
         }, 1000);
     };
@@ -72,7 +72,7 @@ export default function ContainerComponent(props: Props) {
             {children}
             <SectionComponent
                 align="center"
-                className="pb-12 w-full "
+                className="pb-12 w-full"
                 style={{
                     marginTop: iconLeft === 'back' || title ? 170 : 118,
                 }}

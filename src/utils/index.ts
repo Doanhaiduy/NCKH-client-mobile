@@ -78,3 +78,39 @@ export const romanize = (num: string) => {
     while (i--) roman = (key[+digits.pop()! + i * 10] || '') + roman;
     return Array(+digits.join('') + 1).join('M') + roman;
 };
+
+export const flattenCriteria = (criteria: Criteria[]) => {
+    let result: {
+        id: string;
+        title: string;
+        maxScore: number;
+        totalScore: number;
+        require: boolean;
+        level: number;
+        criteriaCode: string;
+        evidence?: Evidence[];
+    }[] = [];
+
+    const traverse = (criteria: Criteria[]) => {
+        criteria?.forEach((item) => {
+            result.push({
+                id: item.id,
+                title: item.title,
+                maxScore: item.maxScore,
+                totalScore: item.totalScore,
+                level: item.level,
+                require: item.evidenceType !== 'none',
+                evidence:
+                    item.evidenceType === 'none' ? undefined : item.evidence?.length! > 0 ? item.evidence : undefined,
+                criteriaCode: item.criteriaCode,
+            });
+
+            if (item.subCriteria && item.subCriteria.length > 0) {
+                traverse(item.subCriteria);
+            }
+        });
+    };
+
+    traverse(criteria);
+    return result;
+};

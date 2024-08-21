@@ -1,3 +1,4 @@
+import { appInfo } from '@/constants/appInfo';
 import { logout, updateAccessToken } from '@/stores/reducers/authReducer';
 import store from '@/stores/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,7 +33,7 @@ const handleRefreshToken = async () => {
             HandleExpiredToken();
             return null;
         }
-        const res = await axios.post(`${process.env.EXPO_PUBLIC_BASE_URL}/auth/refresh-token`, null, {
+        const res = await axios.post(`${appInfo.base_url}/auth/refresh-token`, null, {
             headers: {
                 token: `Bearer ${refreshToken}`,
             },
@@ -73,6 +74,7 @@ axiosClient.interceptors.response.use(
         throw new Error('Something went wrong');
     },
     async (error) => {
+        console.log('error ~ 1 ', error);
         if (error.response && error.response.status === 401) {
             const newAccessToken = await handleRefreshToken();
             if (newAccessToken) {

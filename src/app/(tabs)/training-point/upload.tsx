@@ -1,3 +1,4 @@
+import trainingPointAPI from '@/apis/trainingPointApi';
 import {
     ContainerComponent,
     SectionComponent,
@@ -6,16 +7,31 @@ import {
     TextComponent,
 } from '@/components';
 import { colors } from '@/constants/colors';
-import { router } from 'expo-router';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { romanize } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
 
 export default function Upload() {
+    const { id } = useLocalSearchParams();
+    const { authData } = useSelector(authSelector);
+    const { data, refetch, isFetching } = useQuery({
+        queryKey: ['training-points', id],
+        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
+    });
+
+    console.log(id);
+
     return (
         <ContainerComponent
             title="Tải lên minh chứng"
             iconLeft="back"
             isScroll
+            handleRefresh={refetch}
+            _refreshing={isFetching}
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
@@ -40,12 +56,17 @@ export default function Upload() {
         >
             <SectionComponent className="items-center">
                 <SpaceComponent height={16} />
-                <TextComponent text="Mã sinh viên: 63123456" className="font-interMd" size={20} />
-                <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
-                <TextComponent text="Năm học 2023-2024 | Học Kỳ 2 " color={colors.text400} className="mt-2" size={16} />
+                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
+                <TextComponent text={`Tên sinh viên: ${authData?.fullName}`} className="font-interMd mt-2" size={20} />
+                <TextComponent
+                    text={`Năm học ${data?.year} - ${+data?.year! + 1} | Học Kỳ ${romanize(data?.semester.toString()!)}`}
+                    color={colors.text400}
+                    className="mt-2"
+                    size={16}
+                />
             </SectionComponent>
             <SectionComponent className="items-center">
-                <TableBorderComponent isUpload />
+                <TableBorderComponent isUpload data={data?.criteria} />
             </SectionComponent>
         </ContainerComponent>
     );

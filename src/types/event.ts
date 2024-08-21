@@ -56,6 +56,7 @@ type EventsParams = {
 
 type EventCheckInParams = {
     location: EventLocation;
+    distance: number;
     checkInAt: string;
     userId: string;
 };

@@ -4,7 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 
 export default function Support() {
     return (
-        <ContainerComponent isModal iconLeft="back" title="Hỗ trợ khách hàng">
+        <ContainerComponent iconLeft="back" title="Hỗ trợ khách hàng">
             <Text>Support</Text>
         </ContainerComponent>
     );

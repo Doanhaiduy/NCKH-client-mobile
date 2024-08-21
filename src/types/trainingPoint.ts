@@ -4,6 +4,7 @@ type TrainingPoint = {
     year: number;
     criteria: Criteria[];
     status: string;
+    totalScore: number;
     id: string;
 };
 
@@ -15,7 +16,7 @@ type Criteria = {
     maxScore: number;
     totalScore: number;
     evidenceType: string;
-    evidence: any[];
+    evidence?: Evidence[];
     subCriteria: Criteria[] | [];
     id: string;
 };
@@ -23,4 +24,16 @@ type Criteria = {
 type TrainingPointsParams = {
     year: number;
     semester: 1 | 2;
+    userId?: string;
+};
+
+type Evidence = {
+    name: string;
+    data: ResponseEvidence[];
+    id: string;
+};
+
+type ResponseEvidence = {
+    url: string;
+    public_id: string;
 };

@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import axiosClient from './index';
 import { Platform } from 'react-native';
 import QueryString from 'qs';
+import { appInfo } from '@/constants/appInfo';
 
 class UserAPI {
     HandleUser = async <T>(
@@ -10,7 +11,7 @@ class UserAPI {
         method?: 'get' | 'post' | 'put' | 'delete',
         options: AxiosRequestConfig = {},
     ): Promise<T> => {
-        return await axiosClient(`${process.env.EXPO_PUBLIC_BASE_URL}/users${url}`, {
+        return await axiosClient(`${appInfo.base_url}/users${url}`, {
             method: method || 'get',
             data,
             params: method === 'get' ? data : undefined,

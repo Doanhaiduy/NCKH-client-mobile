@@ -2,18 +2,27 @@ import { ContainerComponent, PortalizeComponent, SectionComponent, SpaceComponen
 import { colors } from '@/constants/colors';
 import { globalStyles } from '@/styles';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import mime from 'mime';
-import { sleep } from '@/utils';
 import { LoadingModal } from '@/modals';
 import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import userAPI from '@/apis/userApi';
 import { Modalize } from 'react-native-modalize';
+import trainingPointAPI from '@/apis/trainingPointApi';
+import { useQuery } from '@tanstack/react-query';
 
 export default function UploadImage() {
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
+    const [currentImages, setCurrentImages] = useState<
+        {
+            uri: string;
+            id: string;
+        }[]
+    >([]);
+
+    const { id } = useLocalSearchParams();
     const [isLoading, setIsLoading] = useState(false);
     const modalizeRef = React.useRef<Modalize>(null);
 
@@ -55,35 +64,51 @@ export default function UploadImage() {
         setIsLoading(false);
     };
 
+    const { data, isFetching, refetch } = useQuery({
+        queryKey: ['training-points', id],
+        queryFn: () => trainingPointAPI.getCriteriaEvidence(id?.toString() ?? ''),
+    });
+
+    useEffect(() => {
+        if (data) {
+            const parserImages = data[0].data.map((item: ResponseEvidence) => ({
+                uri: item.url,
+                id: item.public_id,
+            }));
+            setCurrentImages(parserImages);
+        }
+    }, [data]);
+
     const handleUploadImages = async () => {
         setIsLoading(true);
         try {
             const formData = new FormData();
             images.forEach(async (image: any) => {
                 const newImageUri = image.uri;
-                console.log(newImageUri);
-
                 const postData = {
                     name: newImageUri.split('/').pop(),
                     uri: newImageUri,
                     type: (await mime.getType(newImageUri)) || '',
                 };
-                formData.append('images', postData as any);
-                console.log(mime.getType(newImageUri));
-                console.log(postData);
+                formData.append('evidence', postData as any);
             });
+            console.log(formData);
 
-            const res = await userAPI.HandleUser<
-                {
-                    public_id: string;
-                    url: string;
-                }[]
-            >('/upload-multiple', formData, 'post', {
-                timeout: 1000 * 60,
-            });
+            // const res = await userAPI.HandleUser<
+            //     {
+            //         public_id: string;
+            //         url: string;
+            //     }[]
+            // >('/upload-multiple', formData, 'post', {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data',
+            //     },
+            // });
+            const res = await trainingPointAPI.updateCriteriaEvidence(id?.toString() ?? '', formData);
 
-            console.log(res[0].url);
-            if (res.length > 0) {
+            console.log(res);
+
+            if (res) {
                 Alert.alert('Thông báo', 'Tải ảnh lên thành công');
                 console.log(res);
                 setIsLoading(false);
@@ -99,6 +124,9 @@ export default function UploadImage() {
     return (
         <ContainerComponent
             title="Tải lên ảnh minh chứng"
+            handleRefresh={refetch}
+            _refreshing={isFetching}
+            isScroll
             iconLeft="back"
             iconRight={
                 <TouchableOpacity
@@ -131,6 +159,27 @@ export default function UploadImage() {
                 <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
                 <TextComponent text="Tải lên minh chứng mục 1.2" color={colors.text400} className="mt-2" size={16} />
             </SectionComponent>
+            {currentImages.length > 0 && (
+                <SectionComponent>
+                    <TextComponent text="Ảnh đã tải lên" size={20} />
+                    <View className="w-full flex-row gap-3 flex-wrap ">
+                        {currentImages.map((image: any, index: number) => (
+                            <View key={index} className="w-[80px] h-[80px] relative">
+                                <Image source={{ uri: image.uri }} className="w-full h-full" resizeMode="cover" />
+                                <TouchableOpacity
+                                    className="absolute right-1 top-1"
+                                    onPress={() => {
+                                        const newImages = currentImages.filter((_: any, i: number) => i !== index);
+                                        setCurrentImages(newImages);
+                                    }}
+                                >
+                                    {/* <Ionicons name='close-circle' size={24} color={colors.white} /> */}
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+                    </View>
+                </SectionComponent>
+            )}
             {images.length <= 0 ? (
                 <SectionComponent>
                     <TouchableOpacity

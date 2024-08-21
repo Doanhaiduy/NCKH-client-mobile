@@ -22,12 +22,19 @@ export default function ScanQRScreen() {
     const { authData } = useSelector(authSelector);
 
     const { mutate, isPending } = useMutation({
-        mutationFn: () =>
+        mutationFn: (dataLocation: EventLocation) =>
             eventAPI.checkInEvent(
                 {
                     checkInAt: new Date().toISOString(),
                     location: location!,
                     userId: authData?.id!,
+                    distance: getDistance(
+                        { latitude: location?.lat!, longitude: location?.lng! },
+                        {
+                            latitude: dataLocation?.lat,
+                            longitude: dataLocation?.lng,
+                        },
+                    ),
                 },
                 id?.toString()!,
             ),
@@ -146,6 +153,16 @@ export default function ScanQRScreen() {
             ]);
             return false;
         }
+        if (!checkTimeActive(dataDecrypt?.startAt || 0, dataDecrypt?.endAt || 0)) {
+            Alert.alert('Thông báo', 'Thời gian điểm danh không hợp lệ', [
+                {
+                    text: 'Thử lại',
+                    onPress: () => setScanned(false),
+                },
+            ]);
+            return false;
+        }
+
         if (dataDecrypt?.location) {
             const dataLocation = dataDecrypt?.location;
             const distance = getDistance(
@@ -165,16 +182,6 @@ export default function ScanQRScreen() {
                 );
                 return false;
             }
-        }
-
-        if (!checkTimeActive(dataDecrypt?.startAt || 0, dataDecrypt?.endAt || 0)) {
-            Alert.alert('Thông báo', 'Thời gian điểm danh không hợp lệ', [
-                {
-                    text: 'Thử lại',
-                    onPress: () => setScanned(false),
-                },
-            ]);
-            return false;
         }
 
         return true;
@@ -197,7 +204,8 @@ export default function ScanQRScreen() {
             if (await handleCheck(dataDecrypt)) {
                 try {
                     await reverseLocation(location?.lat!, location?.lng!);
-                    mutate();
+                    const dataLocation = dataDecrypt?.location;
+                    mutate(dataLocation);
                 } catch (error) {
                     console.log(error);
                 }

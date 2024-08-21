@@ -3,6 +3,7 @@ import axiosClient from './index';
 import { API_URL } from '@/constants/apiUrl';
 import QueryString from 'qs';
 import { Platform } from 'react-native';
+import { appInfo } from '@/constants/appInfo';
 
 class PostAPI {
     HandlePost = async <T>(
@@ -11,7 +12,7 @@ class PostAPI {
         method?: 'get' | 'post' | 'put' | 'delete',
         options: AxiosRequestConfig = {},
     ): Promise<T> => {
-        return await axiosClient(`${process.env.EXPO_PUBLIC_BASE_URL}/posts${url}`, {
+        return await axiosClient(`${appInfo.base_url}/posts${url}`, {
             method: method || 'get',
             data,
             params: method === 'get' ? data : undefined,

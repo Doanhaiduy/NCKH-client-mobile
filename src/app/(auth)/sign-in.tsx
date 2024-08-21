@@ -89,7 +89,7 @@ export default function LoginPage() {
                 </SectionComponent>
                 <SpaceComponent height={47} />
 
-                <SectionComponent align="center" className=" px-12">
+                <SectionComponent align="center" className="px-12">
                     <Controller
                         name="username"
                         control={control}

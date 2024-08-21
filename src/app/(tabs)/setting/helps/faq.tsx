@@ -4,7 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 
 export default function FAQ() {
     return (
-        <ContainerComponent isModal>
+        <ContainerComponent isScroll iconLeft="back">
             <Text>FAQ</Text>
         </ContainerComponent>
     );

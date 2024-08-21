@@ -1,4 +1,4 @@
-import userAPI from '@/apis/userApi';
+import trainingPointAPI from '@/apis/trainingPointApi';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -13,25 +13,18 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { romanize } from '@/utils';
 import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function TrainingPointDetails() {
+    const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
     const { data, error, refetch, isFetching } = useQuery({
-        queryKey: ['training-points', authData?.id],
-        queryFn: async () => {
-            const res = await userAPI.getTrainingPoints(authData?.id!, {
-                semester: 1,
-                year: 2024,
-            });
-            return res;
-        },
+        queryKey: ['training-points', id],
+        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
     });
-
-    console.log(data);
 
     return (
         <ContainerComponent
@@ -42,14 +35,11 @@ export default function TrainingPointDetails() {
             _refreshing={isFetching}
             iconRight={
                 <TouchableOpacity
-                    onPress={
-                        () =>
-                            router.push({
-                                pathname: '/training-point/upload-image',
-                                params: { id: 1 },
-                            })
-
-                        // refetch()
+                    onPress={() =>
+                        router.push({
+                            pathname: '/training-point/upload',
+                            params: { id },
+                        })
                     }
                 >
                     <Feather name="upload" size={24} color={colors.primary400} />
@@ -77,7 +67,7 @@ export default function TrainingPointDetails() {
                     onPress={() =>
                         router.push({
                             pathname: '/training-point/upload',
-                            params: { id: 1 },
+                            params: { id },
                         })
                     }
                 />

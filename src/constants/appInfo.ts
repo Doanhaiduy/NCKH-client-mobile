@@ -7,7 +7,8 @@ export const appInfo = Object.freeze({
     },
     headerHomeBar: 0,
     headerHeight: {
-        default: Platform.OS === 'android' ? 122 : 150,
+        default: Platform.OS === 'android' ? 80 : 102,
         onScroll: Platform.OS === 'android' ? 80 : 102,
     },
+    base_url: 'http://10.160.1.12:3000/api/v1',
 });

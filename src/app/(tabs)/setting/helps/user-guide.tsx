@@ -4,7 +4,7 @@ import { StyleSheet, Text } from 'react-native';
 
 export default function UserGuide() {
     return (
-        <ContainerComponent isModal>
+        <ContainerComponent iconLeft="back">
             <Text>UserGuide</Text>
         </ContainerComponent>
     );

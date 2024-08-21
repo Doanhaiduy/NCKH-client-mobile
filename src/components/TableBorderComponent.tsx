@@ -5,8 +5,18 @@ import React, { useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import ButtonComponent from './ButtonComponent';
 import TextComponent from './TextComponent';
-import { romanize } from '@/utils';
+import { flattenCriteria, romanize } from '@/utils';
 // import LoadingModal from '../modals/loadingModal';
+type flattenCriteria = {
+    id: string;
+    title: string;
+    maxScore: number;
+    totalScore: number;
+    require: boolean;
+    level: number;
+    criteriaCode: string;
+    evidence?: Evidence[];
+};
 
 interface Props {
     data?: Criteria[];
@@ -14,50 +24,9 @@ interface Props {
     isUpload?: boolean;
 }
 
-const flattenCriteria = (criteria: Criteria[]) => {
-    let result: {
-        title: string;
-        maxScore: number;
-        totalScore: number;
-        require: boolean;
-        level: number;
-        criteriaCode: string;
-    }[] = [];
-
-    const traverse = (criteria: Criteria[]) => {
-        criteria?.forEach((item) => {
-            result.push({
-                title: item.title,
-                maxScore: item.maxScore,
-                totalScore: item.totalScore,
-                level: item.level,
-                require: item.evidenceType !== 'none',
-                criteriaCode: item.criteriaCode,
-            });
-
-            if (item.subCriteria && item.subCriteria.length > 0) {
-                traverse(item.subCriteria);
-            }
-        });
-    };
-
-    traverse(criteria);
-    return result;
-};
-
 export default function TableBorderComponent(props: Props) {
     const { numOfColumns = 3, isUpload, data } = props;
-    const [flattenedData, setFlattenedData] = React.useState<
-        | {
-              title: string;
-              maxScore: number;
-              totalScore: number;
-              require: boolean;
-              level: number;
-              criteriaCode: string;
-          }[]
-        | null
-    >(null);
+    const [flattenedData, setFlattenedData] = React.useState<flattenCriteria[] | null>(null);
 
     useEffect(() => {
         if (data) {
@@ -91,9 +60,7 @@ export default function TableBorderComponent(props: Props) {
                 )}
             </View>
             {/* Body */}
-            {!data ? (
-                <ActivityIndicator size="large" color={colors.primary400} />
-            ) : (
+            {!data ? null : (
                 <View className="flex-1">
                     {flattenedData?.map((item, index) => (
                         <View
@@ -130,12 +97,12 @@ export default function TableBorderComponent(props: Props) {
 
                             {isUpload ? (
                                 <View className="flex-1 py-3 px-1 border-text-200 border-r-[1px] items-center justify-center">
-                                    {item.require && (
+                                    {item.require && !item.evidence && (
                                         <ButtonComponent
                                             onPress={() => {
                                                 router.push({
                                                     pathname: '/training-point/upload-image',
-                                                    params: { id: 1 },
+                                                    params: { id: item.id },
                                                 });
                                             }}
                                             title="Tải lên"
@@ -145,21 +112,20 @@ export default function TableBorderComponent(props: Props) {
                                         />
                                     )}
 
-                                    {/* uploaded */}
-                                    {/* {item.require && (
-                                    <ButtonComponent
-                                        onPress={() => {
-                                            router.push({
-                                                pathname: '/training-point/upload-image',
-                                                params: { id: 1 },
-                                            });
-                                        }}
-                                        title='Đã tải lên'
-                                        type='outline'
-                                        size='small'
-                                        icon={<Feather name='image' size={18} color={colors.primary400} />}
-                                    />
-                                )} */}
+                                    {item.require && item.evidence && (
+                                        <ButtonComponent
+                                            onPress={() => {
+                                                router.push({
+                                                    pathname: '/training-point/upload-image',
+                                                    params: { id: item.id },
+                                                });
+                                            }}
+                                            title="Đã tải lên"
+                                            type="outline"
+                                            size="small"
+                                            icon={<Feather name="image" size={18} color={colors.primary400} />}
+                                        />
+                                    )}
 
                                     {/* Done */}
                                     {/* {item.require && (

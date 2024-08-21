@@ -1,7 +1,9 @@
-import { Feather } from '@expo/vector-icons';
+import { TextComponent } from '@/components';
+import { colors } from '@/constants/colors';
+import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 export default function TabsLayout() {
     return (
@@ -13,6 +15,12 @@ export default function TabsLayout() {
                 headerBackgroundContainerStyle: {
                     backgroundColor: '#fff',
                 },
+                tabBarStyle: {
+                    elevation: 0,
+                    backgroundColor: '#fff',
+                    paddingTop: 15,
+                    height: Platform.OS === 'ios' ? 80 : 60,
+                },
             }}
             sceneContainerStyle={{
                 backgroundColor: '#fff',
@@ -21,35 +29,68 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="(home)"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name="home" size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => (
+                        <View className="items-center ">
+                            <Feather name="home" size={20} color={color} />
+                            <TextComponent text="Trang chủ" color={color} size={10} />
+                        </View>
+                    ),
                     headerTitle: 'Trang chủ',
-                    title: 'Trang chủ',
-                }}
-            />
-            <Tabs.Screen
-                name="attendance"
-                options={{
-                    tabBarIcon: ({ color, size }) => <Feather name="check-square" size={24} color={color} />,
-                    headerTitle: 'Điểm danh',
-                    title: 'Điểm danh',
+                    title: '',
                 }}
             />
             <Tabs.Screen
                 name="notification"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name="bell" size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => (
+                        <View className="items-center ">
+                            <Feather name="bell" size={20} color={color} />
+                            <TextComponent text="Thông báo" color={color} size={10} />
+                        </View>
+                    ),
                     headerTitle: 'Thông báo',
-                    title: 'Thông báo',
+                    title: '',
+                }}
+            />
+            <Tabs.Screen
+                name="attendance"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <View className="items-center justify-center h-14 w-14 rounded-full bg-primary-400 mb-10">
+                            <MaterialIcons name="qr-code-scanner" size={26} color={colors.white} />
+                        </View>
+                    ),
+                    headerTitle: 'Điểm danh',
+                    title: '',
+                }}
+            />
+            <Tabs.Screen
+                name="feedback"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <View className="items-center ">
+                            <MaterialCommunityIcons name="message-processing-outline" size={20} color={color} />
+                            <TextComponent text="Góp ý" color={color} size={10} />
+                        </View>
+                    ),
+                    title: '',
+                    headerTitle: 'Góp ý',
                 }}
             />
             <Tabs.Screen
                 name="setting"
                 options={{
-                    tabBarIcon: ({ color, size }) => <Feather name="user" size={24} color={color} />,
+                    tabBarIcon: ({ color, size }) => (
+                        <View className="items-center ">
+                            <Feather name="user" size={20} color={color} />
+                            <TextComponent text="Cài đặt" color={color} size={10} />
+                        </View>
+                    ),
                     headerTitle: 'Cài đặt',
-                    title: 'Cài đặt',
+                    title: '',
                 }}
             />
+
             <Tabs.Screen
                 name="training-point"
                 options={{
@@ -62,6 +103,7 @@ export default function TabsLayout() {
                     href: null,
                 }}
             />
+
             {/* <Tabs.Screen
                 name='search'
                 options={{

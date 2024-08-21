@@ -15,7 +15,7 @@ interface Props {
     title: string;
     data: Data[];
     onSelect: (selectedItem: Data, index: number) => void;
-    width?: number; // default 140
+    width?: number;
 }
 
 export default function DropDownComponent(props: Props) {
@@ -36,7 +36,10 @@ export default function DropDownComponent(props: Props) {
                                 },
                             ]}
                         >
-                            <TextComponent className="" text={(selectedItem && selectedItem.title) || data[0].title} />
+                            <TextComponent
+                                className=""
+                                text={(selectedItem && selectedItem.title) ?? data[3]?.title ?? data[0].title}
+                            />
                             <Ionicons
                                 name={isOpened ? 'chevron-up' : 'chevron-down'}
                                 size={18}

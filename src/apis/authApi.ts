@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants/apiUrl';
 import axiosClient from './index';
 import { AxiosRequestConfig } from 'axios';
+import { appInfo } from '@/constants/appInfo';
 
 class AuthAPI {
     HandleAuth = async <T>(
@@ -9,7 +10,7 @@ class AuthAPI {
         method?: 'get' | 'post' | 'put' | 'delete',
         option: AxiosRequestConfig = {},
     ): Promise<T> => {
-        return await axiosClient(`${process.env.EXPO_PUBLIC_BASE_URL}/auth${url}`, {
+        return await axiosClient(`${appInfo.base_url}/auth${url}`, {
             method: method || 'get',
             data,
             params: method === 'get' ? data : undefined,
