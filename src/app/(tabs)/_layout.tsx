@@ -1,11 +1,13 @@
 import { TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Tabs, usePathname, useRouter } from 'expo-router';
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
 export default function TabsLayout() {
+    const path = usePathname();
+    console.log(path);
     return (
         <Tabs
             initialRouteName="(home)"
@@ -20,6 +22,7 @@ export default function TabsLayout() {
                     backgroundColor: '#fff',
                     paddingTop: 15,
                     height: Platform.OS === 'ios' ? 80 : 60,
+                    display: path === '/attendance/scan' ? 'none' : 'flex',
                 },
             }}
             sceneContainerStyle={{
@@ -30,7 +33,7 @@ export default function TabsLayout() {
                 name="(home)"
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center ">
+                        <View className="items-center min-w-[70px]">
                             <Feather name="home" size={20} color={color} />
                             <TextComponent text="Trang chủ" color={color} size={10} />
                         </View>
@@ -43,7 +46,7 @@ export default function TabsLayout() {
                 name="notification"
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center ">
+                        <View className="items-center min-w-[70px]">
                             <Feather name="bell" size={20} color={color} />
                             <TextComponent text="Thông báo" color={color} size={10} />
                         </View>
@@ -68,7 +71,7 @@ export default function TabsLayout() {
                 name="feedback"
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center ">
+                        <View className="items-center min-w-[70px]">
                             <MaterialCommunityIcons name="message-processing-outline" size={20} color={color} />
                             <TextComponent text="Góp ý" color={color} size={10} />
                         </View>
@@ -81,7 +84,7 @@ export default function TabsLayout() {
                 name="setting"
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center ">
+                        <View className="items-center min-w-[70px]">
                             <Feather name="user" size={20} color={color} />
                             <TextComponent text="Cài đặt" color={color} size={10} />
                         </View>

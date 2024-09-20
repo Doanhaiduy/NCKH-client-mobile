@@ -8,15 +8,21 @@ interface Props extends React.ComponentProps<typeof Text> {
     size?: number;
     color?: string;
     fontBold?: boolean;
+    center?: boolean;
 }
 
 export default function TextComponent(props: Props) {
-    const { text, title, className, size, color, fontBold, ...prop } = props;
+    const { text, title, className, size, color, fontBold, center, ...prop } = props;
 
     return (
         <Text
             {...prop}
-            className={clsx('text-base text-black font-inter', title && 'text-2xl font-interMd ', className)}
+            className={clsx(
+                'text-base text-black font-inter',
+                title && 'text-2xl font-interMd ',
+                center && 'text-center',
+                className,
+            )}
             style={[
                 {
                     fontSize: title ? 24 : size || 16,

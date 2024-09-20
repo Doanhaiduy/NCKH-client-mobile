@@ -12,9 +12,9 @@
             "tsconfigPaths": true
         },
         "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#ffffff"
+            "image": "./assets/splash-screen.png",
+            "resizeMode": "cover",
+            "backgroundImage": "./assets/splash-screen-background.png"
         },
         "ios": {
             "supportsTablet": true

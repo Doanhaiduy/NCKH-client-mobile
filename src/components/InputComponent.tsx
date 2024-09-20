@@ -57,7 +57,7 @@ function InputComponent(props: Props) {
         <View className="mt-4 w-full">
             <Pressable className={containerClass} onPress={() => inputRef.current?.focus()}>
                 <View className="flex-col flex-1">
-                    {value && <Text className="px-5 pt-2 text-[12px] text-black font-inter">{placeholder}</Text>}
+                    {value && <Text className="px-5 pt-1 text-[12px] text-black font-inter">{placeholder}</Text>}
                     <TextInput
                         ref={inputRef}
                         autoCapitalize="none"

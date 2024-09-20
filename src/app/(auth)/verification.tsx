@@ -91,11 +91,10 @@ export default function VerificationPage() {
                 <SectionComponent align="center">
                     <TextComponent text="Xác minh email" title className="text-primary-400" />
                     <TextComponent
-                        text={`Một mã OTP 6 chữ số đã được gửi đến email ${obfuscateEmail(
-                            OTP?.email || '',
-                        )}. Vui lòng kiểm tra và nhập mã.`}
+                        text={`Một mã OTP 6 chữ số đã được gửi đến email ${obfuscateEmail(OTP?.email || '')}.`}
                         className="text-center mt-4"
                     />
+                    <TextComponent text="Vui lòng kiểm tra và nhập mã." className="text-center" />
                 </SectionComponent>
                 <SectionComponent className="items-center">
                     <SpaceComponent height={24} />
@@ -103,7 +102,7 @@ export default function VerificationPage() {
                         ref={otpRef}
                         numberOfDigits={6}
                         autoFocus
-                        focusColor={colors['primary400']}
+                        focusColor={error ? colors.error : colors.primary400}
                         onTextChange={(text) => {
                             setOtp(text);
                             setError('');
@@ -114,7 +113,12 @@ export default function VerificationPage() {
                                 width: 40,
                                 height: 56,
                                 backgroundColor: colors['white'],
-                                borderColor: colors['primary400'],
+                                borderColor: error ? colors.error : colors.primary400,
+                            },
+                            containerStyle: {
+                                justifyContent: 'center',
+                                gap: 12,
+                                width: '100%',
                             },
                         }}
                     />

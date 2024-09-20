@@ -34,8 +34,8 @@ export default function TableBorderComponent(props: Props) {
         }
     }, [data]);
     return (
-        <View className="min-w-full flex-1 px-2">
-            <View className="flex-row flex-nowrap flex-1 border-text-200 border-y-[1px] ">
+        <View className="min-w-full px-2">
+            <View className="flex-row flex-nowrap  border-text-200 border-y-[1px] ">
                 <View className="w-[10%] items-start border-text-200 py-3 px-1 border-x-[1px]">
                     <TextComponent text="Mã TC" fontBold />
                 </View>
@@ -65,7 +65,7 @@ export default function TableBorderComponent(props: Props) {
                     {flattenedData?.map((item, index) => (
                         <View
                             key={index}
-                            className="flex-row flex-nowrap flex-1 border-text-200 border-b-[1px] "
+                            className="flex-row flex-nowrap  border-text-200 border-b-[1px] "
                             style={{
                                 backgroundColor: index % 2 === 0 ? '#F3F4F6' : '#fff',
                             }}

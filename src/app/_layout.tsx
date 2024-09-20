@@ -7,12 +7,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'react-native-reanimated';
 import { Provider } from 'react-redux';
 import '../../global.css';
 import { Host } from 'react-native-portalize';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
 SplashScreen.preventAutoHideAsync();
 

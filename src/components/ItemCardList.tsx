@@ -24,7 +24,7 @@ export default function ItemCardList(props: Props) {
             <View className="flex-1 pr-3 min-h-[100px] justify-between">
                 <TextComponent numberOfLines={3} text={(data as EventCard).name || (data as CardItemData).title} />
                 <RowComponent className="justify-between">
-                    <RowComponent>
+                    <RowComponent className="flex-1">
                         <Ionicons name="calendar" size={14} color={colors.black} />
                         <TextComponent
                             text={dateFormat((data as EventCard).startAt || (data as CardItemData).createdAt)}
@@ -32,16 +32,18 @@ export default function ItemCardList(props: Props) {
                         />
                     </RowComponent>
                     {isAction && (
-                        <ButtonComponent
-                            title="Điểm danh"
-                            size="small"
-                            type="primary"
-                            onPress={() => onPressButton && onPressButton()}
-                        />
+                        <View className="flex-1 items-end">
+                            <ButtonComponent
+                                title="Điểm danh"
+                                size="small"
+                                type="primary"
+                                onPress={() => onPressButton && onPressButton()}
+                            />
+                        </View>
                     )}
                 </RowComponent>
             </View>
-            <View className="w-[30%] aspect-square">
+            <View className="w-[30%] aspect-square max-h-[100px]">
                 <Image
                     source={{
                         uri: data.thumbnail || 'https://via.placeholder.com/150',

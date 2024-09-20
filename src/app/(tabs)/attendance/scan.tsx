@@ -1,18 +1,26 @@
 import eventAPI from '@/apis/eventApi';
 import { decryptData, sleep } from '@/utils';
 import { checkTimeActive } from '@/utils/dateTime';
-import { ButtonComponent, ContainerComponent, SectionComponent } from '@components/index';
+import {
+    ButtonComponent,
+    ContainerComponent,
+    PortalizeComponent,
+    SectionComponent,
+    TextComponent,
+} from '@components/index';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Alert, Image, Linking, StyleSheet, Text, View } from 'react-native';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Location from 'expo-location';
 import { getDistance } from 'geolib';
 import { useSelector } from 'react-redux';
 import { authSelector } from '@/stores/reducers/authReducer';
 import axios from 'axios';
 import { GeoLocation } from '@/types/geoLocation';
+import { Ionicons } from '@expo/vector-icons';
+import { Modalize } from 'react-native-modalize';
 
 export default function ScanQRScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -20,6 +28,7 @@ export default function ScanQRScreen() {
     const { id, eventCode } = useLocalSearchParams();
     const [location, setLocation] = useState<EventLocation>();
     const { authData } = useSelector(authSelector);
+    const modalizeRef = useRef<Modalize>(null);
 
     const { mutate, isPending } = useMutation({
         mutationFn: (dataLocation: EventLocation) =>
@@ -221,7 +230,7 @@ export default function ScanQRScreen() {
     };
 
     return (
-        <ContainerComponent iconLeft="back" title="Quét mã QR">
+        <View style={{ flex: 1, position: 'relative' }}>
             <CameraView
                 facing="back"
                 className="flex-1"
@@ -231,13 +240,59 @@ export default function ScanQRScreen() {
                 onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
             >
                 <View className="flex-1 items-center justify-center">
+                    <TouchableOpacity
+                        onPress={() => router.dismiss()}
+                        style={{ position: 'absolute', top: 60, left: 20 }}
+                    >
+                        <Ionicons name="close" size={44} color="white" />
+                    </TouchableOpacity>
+                    <TextComponent
+                        text="Hướng camera về phía mã QR"
+                        size={16}
+                        className="text-white  font-interMd mb-4"
+                    />
                     <Image
                         source={require('@/assets/images/scanner-action.png')}
-                        style={{ width: 350, height: 350, alignSelf: 'center' }}
+                        style={{ width: 350, height: 350, alignSelf: 'center', opacity: 0.8 }}
                     />
                 </View>
             </CameraView>
-        </ContainerComponent>
+            <TouchableOpacity
+                className="absolute top-5 right-5 bg-white p-2 rounded-full"
+                onPress={() => {
+                    console.log('open modal');
+                    modalizeRef.current?.open();
+                }}
+            >
+                <Ionicons name="camera" size={32} color="black" />
+            </TouchableOpacity>
+
+            <PortalizeComponent
+                ref={modalizeRef}
+                children={
+                    <View className="shadow-xl gap-5 p-3 bg-white">
+                        <TouchableOpacity
+                            className="flex-row  items-center"
+                            onPress={() => {
+                                modalizeRef.current?.close();
+                            }}
+                        >
+                            <Ionicons name="image" size={22} color="black" />
+                            <TextComponent text="Chọn từ thư viện" className="ml-2 font-medium" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            className="flex-row py-2 items-center"
+                            onPress={() => {
+                                modalizeRef.current?.close();
+                            }}
+                        >
+                            <Ionicons name="camera" size={24} color="black" />
+                            <TextComponent text="Chụp ảnh" className="ml-2 font-medium" />
+                        </TouchableOpacity>
+                    </View>
+                }
+            />
+        </View>
     );
 }
 

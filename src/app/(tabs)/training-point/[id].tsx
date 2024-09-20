@@ -46,10 +46,15 @@ export default function TrainingPointDetails() {
                 </TouchableOpacity>
             }
         >
-            <SectionComponent className="items-center">
+            <SectionComponent className="items-center justify-center">
                 <SpaceComponent height={16} />
                 <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
-                <TextComponent text={`Tên sinh viên: ${authData?.fullName}`} className="font-interMd mt-2" size={20} />
+                <TextComponent
+                    text={`Tên sinh viên: ${authData?.fullName}`}
+                    className="font-interMd mt-2"
+                    size={20}
+                    center
+                />
                 <TextComponent
                     text={`Năm học ${data?.year} - ${+data?.year! + 1} | Học Kỳ ${romanize(data?.semester.toString()!)}`}
                     color={colors.text400}

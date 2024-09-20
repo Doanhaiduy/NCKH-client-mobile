@@ -2,7 +2,7 @@ import eventAPI from '@/apis/eventApi';
 import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
 import { useQueries } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 export default function Attendance() {
@@ -28,6 +28,7 @@ export default function Attendance() {
             },
         ],
     });
+
     return (
         <ContainerComponent
             iconLeft="logo"
@@ -45,7 +46,7 @@ export default function Attendance() {
                     text="Hoạt động đang diễn ra"
                     className="text-[20px] text-primary-500 font-interMd mt-2 mb-4 "
                 />
-                <View className="">
+                <View className="w-full">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={eventActive?.data?.events}

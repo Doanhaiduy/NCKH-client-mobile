@@ -12,6 +12,8 @@ import userAPI from '@/apis/userApi';
 import { Modalize } from 'react-native-modalize';
 import trainingPointAPI from '@/apis/trainingPointApi';
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
+import { authSelector } from '@/stores/reducers/authReducer';
 
 export default function UploadImage() {
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
@@ -21,6 +23,7 @@ export default function UploadImage() {
             id: string;
         }[]
     >([]);
+    const { authData } = useSelector(authSelector);
 
     const { id } = useLocalSearchParams();
     const [isLoading, setIsLoading] = useState(false);
@@ -123,7 +126,7 @@ export default function UploadImage() {
     };
     return (
         <ContainerComponent
-            title="Tải lên ảnh minh chứng"
+            title="Tải lên ảnh"
             handleRefresh={refetch}
             _refreshing={isFetching}
             isScroll
@@ -155,8 +158,13 @@ export default function UploadImage() {
         >
             <SectionComponent className="items-center">
                 <SpaceComponent height={16} />
-                <TextComponent text="Mã sinh viên: 63123456" className="font-interMd" size={20} />
-                <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
+                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
+                <TextComponent
+                    text={`Tên sinh viên: ${authData?.fullName}`}
+                    className="font-interMd mt-2"
+                    size={20}
+                    center
+                />
                 <TextComponent text="Tải lên minh chứng mục 1.2" color={colors.text400} className="mt-2" size={16} />
             </SectionComponent>
             {currentImages.length > 0 && (

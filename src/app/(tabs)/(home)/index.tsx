@@ -2,6 +2,7 @@ import postAPI from '@/apis/postApi';
 import {
     ActionListComponents,
     ButtonComponent,
+    ContainerComponent,
     ItemCardGrid,
     ItemCardList,
     RowComponent,
@@ -15,10 +16,20 @@ import { colors } from '@/constants/colors';
 import useScrollAnimation from '@/hooks/useScrollAnimation';
 import { EventData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';
+import { Feather } from '@expo/vector-icons';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { FlatList, Image, RefreshControl, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+    FlatList,
+    Image,
+    RefreshControl,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
@@ -50,28 +61,29 @@ export default function Home() {
     });
 
     return (
-        <ScrollView
-            onScroll={handleScroll}
-            refreshControl={
-                <RefreshControl
-                    refreshing={posts.isLoading || news.isLoading}
-                    onRefresh={() => {
-                        posts.refetch();
-                        news.refetch();
-                    }}
-                />
-            }
-            style={{
-                marginTop: appInfo.headerHomeBar,
-                backgroundColor: colors.white,
-                flex: 1,
+        <ContainerComponent
+            isScroll
+            title="Trang chủ"
+            isHome
+            _refreshing={posts.isFetching || news.isFetching}
+            handleRefresh={() => {
+                posts.refetch();
+                news.refetch();
             }}
-            contentContainerStyle={{ paddingBottom: appInfo.headerHomeBar }}
-            showsVerticalScrollIndicator={false}
+            iconRight={
+                <TouchableOpacity onPress={() => router.push('/notification')}>
+                    <Feather name="bell" size={32} color={colors.primary500} />
+                </TouchableOpacity>
+            }
         >
-            <View className="pt-4">
-                <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
-            </View>
+            <StatusBar barStyle={'light-content'} />
+            <SectionComponent className="flex-1 w-full">
+                <TextComponent text="Hoạt động nổi bật" fontBold />
+
+                <View className="pt-4 w-full  -ml-1">
+                    <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
+                </View>
+            </SectionComponent>
             <SectionComponent className="pt-4">
                 <TextComponent text="Truy cập nhanh" fontBold />
                 <ActionListComponents />
@@ -195,7 +207,7 @@ export default function Home() {
                     />
                 </View>
             </SectionComponent> */}
-        </ScrollView>
+        </ContainerComponent>
     );
 }
 

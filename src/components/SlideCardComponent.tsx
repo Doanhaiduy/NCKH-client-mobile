@@ -6,7 +6,6 @@ import { EventData } from '@/mockData';
 import ItemCardGrid from './ItemCardGrid';
 import { useSharedValue } from 'react-native-reanimated';
 import AnimatedDotsCarousel from 'react-native-animated-dots-carousel';
-import { globalStyles } from '@/styles';
 
 interface Props {
     data: CardItemData[];
@@ -24,17 +23,17 @@ export default function SlideCardComponent(props: Props) {
     const baseOptions = isVertical
         ? ({
               vertical: true,
-              width: appInfo.sizes.WIDTH,
+              width: appInfo.sizes.WIDTH * 0.95,
               height: 365,
           } as const)
         : ({
               vertical: false,
-              width: appInfo.sizes.WIDTH,
+              width: appInfo.sizes.WIDTH * 0.95,
               height: 365,
           } as const);
 
     return (
-        <View style={{ flex: 1, height: 290 }}>
+        <View style={{ height: 290 }}>
             <Carousel
                 {...baseOptions}
                 loop

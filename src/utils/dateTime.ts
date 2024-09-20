@@ -1,5 +1,5 @@
-import { format, formatDistanceToNow } from 'date-fns';
-import { vi, es } from 'date-fns/locale';
+import { format, formatDistanceStrict } from 'date-fns';
+import { vi } from 'date-fns/locale';
 export const checkExpiredTime = (time: number) => {
     return new Date(time) < new Date();
 };
@@ -9,10 +9,9 @@ export const getSecondTimeLimit = (time: number) => {
     return Math.floor((expired.getTime() - now.getTime()) / 1000);
 };
 export const dateFormat = (time: string) => {
-    // return format(new Date(time), 'hh:mm a', {
-    //     locale: vi,
-    // });
-    return formatDistanceToNow(new Date(time), { addSuffix: true, locale: vi });
+    return formatDistanceStrict(new Date(time), new Date(), {
+        locale: vi,
+    });
 };
 export const convertDateToVNTime = (time: string) => {
     const pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";

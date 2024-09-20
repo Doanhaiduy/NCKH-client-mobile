@@ -2,11 +2,12 @@ import { colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import {
     ImageBackground,
     Platform,
     RefreshControl,
+    SafeAreaView,
     ScrollView,
     StatusBar,
     StyleProp,
@@ -19,6 +20,7 @@ import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import TextComponent from './TextComponent';
 import SpaceComponent from './SpaceComponent';
+import { appInfo } from '@/constants/appInfo';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
@@ -34,6 +36,7 @@ interface Props extends React.ComponentProps<typeof View> {
     iconRight?: ReactNode;
     _refreshing?: boolean;
     onBack?: () => void;
+    isHome?: boolean;
 }
 
 export default function ContainerComponent(props: Props) {
@@ -51,6 +54,7 @@ export default function ContainerComponent(props: Props) {
         search,
         _refreshing,
         onBack,
+        isHome,
         ...containerProps
     } = props;
 
@@ -64,9 +68,8 @@ export default function ContainerComponent(props: Props) {
         }, 1000);
     };
 
-    const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 52 : StatusBar.currentHeight || 52) : 22;
+    const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 50 : StatusBar.currentHeight || 30) : 22;
     const ViewWrapper = isScroll ? ScrollView : View;
-
     const HeaderAuth = (
         <ViewWrapper style={{ paddingTop: iconLeft === 'back' || title ? 0 : heightBar }} className="flex-1">
             {children}
@@ -88,8 +91,25 @@ export default function ContainerComponent(props: Props) {
 
     const HeaderMain = () => {
         return (
-            <View className={`px-4 border-b-[0.2px]`} style={[style]}>
-                <RowComponent style={{ justifyContent: 'space-between', paddingTop: heightBar, paddingBottom: 8 }}>
+            <View
+                className={`px-4`}
+                style={[
+                    style,
+                    {
+                        borderBottomWidth: isHome ? 0 : 0.6,
+                        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                        maxWidth: appInfo.sizes.WIDTH,
+                    },
+                ]}
+            >
+                <RowComponent
+                    style={{
+                        justifyContent: 'space-between',
+                        // paddingTop: heightBar,
+                        paddingTop: 20,
+                        paddingBottom: 8,
+                    }}
+                >
                     {iconLeft === 'back' && (
                         <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())}>
                             <Ionicons name="chevron-back" size={24} color={colors['primary400']} />
@@ -100,7 +120,17 @@ export default function ContainerComponent(props: Props) {
                             <Ionicons name="logo-react" size={24} color={colors['primary400']} />
                         </TouchableOpacity>
                     )}
-                    {title && <TextComponent text={title} title />}
+                    {title && (
+                        <TextComponent
+                            text={title}
+                            title
+                            center
+                            style={{
+                                fontSize: isHome ? 32 : 24,
+                                lineHeight: isHome ? 40 : 32,
+                            }}
+                        />
+                    )}
                     {search ? (
                         <TouchableOpacity onPress={() => router.push('/search')}>
                             <Ionicons name="search" size={26} color={colors['primary400']} />
@@ -133,7 +163,8 @@ export default function ContainerComponent(props: Props) {
             {HeaderAuth}
         </ImageBackground>
     ) : (
-        <View className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white">
+            <StatusBar barStyle={'dark-content'} />
             <HeaderMain />
             <ViewWrapper
                 keyboardShouldPersistTaps="handled"
@@ -154,7 +185,7 @@ export default function ContainerComponent(props: Props) {
             >
                 {children}
             </ViewWrapper>
-        </View>
+        </SafeAreaView>
     );
 }
 

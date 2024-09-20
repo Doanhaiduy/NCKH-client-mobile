@@ -13,7 +13,7 @@ export default function AttendanceLayout() {
             <Stack.Screen
                 name="scan"
                 options={{
-                    presentation: 'fullScreenModal',
+                    presentation: 'containedModal',
                 }}
             />
             <Stack.Screen name="pending" />

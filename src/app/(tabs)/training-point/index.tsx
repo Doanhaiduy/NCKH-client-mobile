@@ -42,10 +42,15 @@ export default function TrainingPoint() {
             handleRefresh={refetch}
             _refreshing={isFetching}
         >
-            <SectionComponent className="items-center">
+            <SectionComponent className="items-center justify-center">
                 <SpaceComponent height={16} />
-                <TextComponent text="Mã sinh viên: 63123456" className="font-interMd" size={20} />
-                <TextComponent text="Tên sinh viên: Nguyễn Trà My" className="font-interMd mt-2" size={20} />
+                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
+                <TextComponent
+                    text={`Tên sinh viên: ${authData?.fullName}`}
+                    className="font-interMd mt-2"
+                    size={20}
+                    center
+                />
             </SectionComponent>
             <SpaceComponent height={16} />
             <SectionComponent className="flex-row justify-center flex-wrap">
@@ -66,12 +71,11 @@ export default function TrainingPoint() {
                     }}
                 />
             </SectionComponent>
-            <SectionComponent className="items-center">
-                {/* <ButtonComponent title='Xem kết quả' onPress={handleGetTrainingPoints} type='primary' size='medium' /> */}
+            <SectionComponent className="items-center w-full">
                 <SpaceComponent height={16} />
                 {data ? (
                     <TouchableOpacity
-                        className="flex-row px-2 py-4 bg-text-100 rounded-[10px] mt-4 items-center"
+                        className="flex-row px-2 py-4 bg-text-100 rounded-[10px] mt-4 items-center w-full"
                         onPress={() => router.push(`/training-point/${data.id}`)}
                     >
                         <RowComponent className="flex-1 gap-2">

@@ -76,6 +76,7 @@ axiosClient.interceptors.response.use(
     async (error) => {
         console.log('error ~ 1 ', error);
         if (error.response && error.response.status === 401) {
+            console.log('error ~ 2 ', error, 'Token expired');
             const newAccessToken = await handleRefreshToken();
             if (newAccessToken) {
                 const config = error.config;

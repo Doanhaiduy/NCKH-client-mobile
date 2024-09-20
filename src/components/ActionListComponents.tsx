@@ -4,7 +4,7 @@ import { Feather, FontAwesome6 } from '@expo/vector-icons';
 import TextComponent from './TextComponent';
 import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { ReduceMotion, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { globalStyles } from '@/styles';
 
 let ActionDataTemp: {
@@ -14,33 +14,33 @@ let ActionDataTemp: {
 }[] = [
     {
         icon: 'check-to-slot',
-        text: 'Đã điểm danh',
-        path: 'Registered',
+        text: 'Tin tức',
+        path: '/',
     },
     {
         icon: 'check-to-slot',
-        text: 'Điểm danh',
+        text: 'Đã điểm danh',
         path: '/attendance/list',
     },
     {
         icon: 'check-to-slot',
-        text: 'Điểm rèn luyện',
+        text: 'Kết quả rèn luyện',
         path: '/training-point',
     },
     {
         icon: 'check-to-slot',
         text: 'Khảo sát',
-        path: '/training-point',
+        path: '/feedback',
     },
     {
         icon: 'check-to-slot',
         text: 'Thông báo',
-        path: '/training-point',
+        path: '/notification',
     },
     {
         icon: 'check-to-slot',
-        text: 'Tin tức',
-        path: 'Registered',
+        text: 'Tài khoản',
+        path: '/setting',
     },
     {
         icon: 'check-to-slot',
@@ -71,45 +71,51 @@ let ActionDataTemp: {
 
 const ActionCard = ({ text, icon, path }: { text: string; icon: string; path: string }) => {
     return (
-        <TouchableOpacity
-            className="items-center justify-between w-[25%] mb-2 "
-            onPress={() =>
-                router.push({
-                    pathname: path,
-                })
-            }
-        >
-            <View className="mb-1 w-[60px] h-[60px] items-center justify-center border-[1px] border-text-100 rounded-[10px]">
-                <FontAwesome6 name={icon} size={36} color={colors.primary400} />
-            </View>
-            <TextComponent text={text} size={12} className="text-center" />
-        </TouchableOpacity>
+        <View className="w-[25%] p-2">
+            <TouchableOpacity
+                className="items-center mb-2 px-2 py-3 bg-primary-100 rounded-xl"
+                style={[globalStyles.shadow, { minHeight: 130 }]}
+                onPress={() =>
+                    router.push({
+                        pathname: path,
+                    })
+                }
+            >
+                <View className="mb-2 w-16 aspect-square items-center justify-center ">
+                    <FontAwesome6 name={icon} size={36} color={colors.primary400} />
+                </View>
+                <TextComponent
+                    text={text}
+                    size={12}
+                    className="text-center"
+                    numberOfLines={2}
+                    style={{
+                        lineHeight: 16,
+                    }}
+                />
+            </TouchableOpacity>
+        </View>
     );
 };
 
 export default function ActionListComponents() {
     const [expended, setExpended] = React.useState(false);
-    const [ActionData, setActionData] = React.useState(ActionDataTemp.slice(0, 4));
+    const [ActionData, setActionData] = React.useState(ActionDataTemp.slice(0, 8));
 
     const animatedContainerStyle = useAnimatedStyle(() => {
         return {
-            height: withTiming(expended ? 350 : 160, { duration: 300 }),
+            height: withTiming(expended ? 550 : 390, { duration: 300, reduceMotion: ReduceMotion.Never }),
         };
     });
 
     const handleExpended = () => {
         setExpended(!expended);
-        setActionData(!expended ? ActionDataTemp : ActionDataTemp.slice(0, 4));
+        setActionData(!expended ? ActionDataTemp : ActionDataTemp.slice(0, 8));
     };
     return (
-        // <View className='py-2 flex-1 w-full flex-row justify-start flex-wrap'>
-        //     {ActionData.map((item, index) => (
-        //         <ActionCard key={index} text={item.text} icon={item.icon} path={item.path} />
-        //     ))}
-        // </View>
         <Animated.View
             style={[animatedContainerStyle]}
-            className="py-2 flex-1 w-full flex-row items-start justify-start flex-wrap bg-white overflow-hidden"
+            className="py-2 flex-1 w-full flex-row items-stretch justify-start flex-wrap bg-white overflow-hidden pb-[50px]"
         >
             {ActionData.map((item, index) => (
                 <ActionCard key={index} text={item.text} icon={item.icon} path={item.path} />
@@ -119,7 +125,6 @@ export default function ActionListComponents() {
                 style={[
                     globalStyles.centerAbsolute,
                     {
-                        bottom: 0,
                         top: 'auto',
                         backgroundColor: colors.white,
                         width: '100%',
