@@ -41,7 +41,7 @@ export default function Attendance() {
                 eventInactive.refetch();
             }}
         >
-            <SectionComponent className="flex-1">
+            <SectionComponent>
                 <TextComponent
                     text="Hoạt động đang diễn ra"
                     className="text-[20px] text-primary-500 font-interMd mt-2 mb-4 "
@@ -92,7 +92,7 @@ export default function Attendance() {
                     />
                 </View>
             </SectionComponent>
-            <View className=" w-[80%] mx-auto">
+            <View className=" w-[80%] mx-auto py-5">
                 <ButtonComponent
                     title="Xem hoạt động đã điểm danh"
                     size="large"

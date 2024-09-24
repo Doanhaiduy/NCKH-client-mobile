@@ -17,7 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Link, router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Alert, Image, StyleSheet } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
@@ -78,6 +78,22 @@ export default function LoginPage() {
         mutate(data);
     };
 
+    const handleGetAllUser = () => {
+        fetch('https://nckhserver.duydemo.io.vn/api/v1/users/get-all', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZWY5MmI2NzA2YTgyZDFhY2EyOWY0YSIsInVzZXJuYW1lIjoiNjMxMzAyNjAiLCJlbWFpbCI6ImhhaWR1eXRidDJrM0BnbWFpbC5jb20iLCJ0eXBlUm9sZSI6InVzZXIiLCJyb2xlQ29kZSI6IlNWIiwiaWF0IjoxNzI2OTg5MjcxLCJleHAiOjE3MjY5OTI4NzF9.7bN3b8VewSKrJUOQSPtc8kpEGxpUp5-QrJAWcCJ1Wbo`,
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
     return (
         <ContainerComponent isAuth isScroll className="">
             <KeyboardAwareScrollView>
@@ -90,6 +106,9 @@ export default function LoginPage() {
                 <SpaceComponent height={47} />
 
                 <SectionComponent align="center" className="px-12">
+                    <TouchableOpacity onPress={handleGetAllUser}>
+                        <TextComponent text="Lấy tất cả user" />
+                    </TouchableOpacity>
                     <Controller
                         name="username"
                         control={control}

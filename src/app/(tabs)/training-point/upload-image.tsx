@@ -74,7 +74,7 @@ export default function UploadImage() {
 
     useEffect(() => {
         if (data) {
-            const parserImages = data[0].data.map((item: ResponseEvidence) => ({
+            const parserImages = data.data.map((item: ResponseEvidence) => ({
                 uri: item.url,
                 id: item.public_id,
             }));

@@ -41,7 +41,7 @@ export default function ForGotPassWord() {
     });
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (variables: FormFields) => authAPI.sendOTP(variables),
+        mutationFn: (variables: FormFields) => authAPI.forgotPassword(variables),
         onSuccess: (data) => {
             console.log('data', data);
             dispatch(setOtpValue(data));

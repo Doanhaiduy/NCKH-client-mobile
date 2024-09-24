@@ -1,8 +1,9 @@
 export const API_URL = Object.freeze({
     auth: {
         login: '/login',
-        sendOTP: '/send-reset-password-email',
+        forgotPassword: '/forgot-password',
         resetPassword: '/reset-password',
+        verifyOTP: '/verify-otp',
         changePassword: '/change-password',
         register: '/register',
         refreshToken: '/refresh-token',

@@ -22,7 +22,7 @@ export default function SetPassword() {
     };
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (variables: { email: string; newPassword: string }) => authAPI.resetPassword(variables),
+        mutationFn: (variables: FormResetPassword) => authAPI.resetPassword(variables),
         onSuccess: async (data) => {
             await dispatch(removeOTP());
             Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!', [

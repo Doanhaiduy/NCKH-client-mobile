@@ -6,20 +6,22 @@ import { Modalize } from 'react-native-modalize';
 interface Props {
     children: React.ReactNode;
     radius?: number;
+    onClose?: () => void;
 }
 
 const PortalizeComponent = forwardRef((props: Props, ref) => {
-    const { children, radius } = props;
+    const { children, radius, onClose } = props;
 
     return (
         <Portal>
             <Modalize
+                onClose={onClose}
                 ref={ref}
                 adjustToContentHeight
                 childrenStyle={{
                     borderTopRightRadius: radius || 50,
                     borderTopLeftRadius: radius || 50,
-                    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+                    paddingBottom: Platform.OS === 'ios' ? 30 : 0,
                     paddingTop: 20,
                 }}
             >

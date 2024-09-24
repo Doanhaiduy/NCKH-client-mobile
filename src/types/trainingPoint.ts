@@ -16,7 +16,7 @@ type Criteria = {
     maxScore: number;
     totalScore: number;
     evidenceType: string;
-    evidence?: Evidence[];
+    evidence?: Evidence;
     subCriteria: Criteria[] | [];
     id: string;
 };
@@ -29,8 +29,11 @@ type TrainingPointsParams = {
 
 type Evidence = {
     name: string;
+    dataType: string;
     data: ResponseEvidence[];
     id: string;
+    status: string;
+    createdAt: string;
 };
 
 type ResponseEvidence = {

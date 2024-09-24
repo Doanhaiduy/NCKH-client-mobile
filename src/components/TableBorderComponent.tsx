@@ -15,7 +15,7 @@ type flattenCriteria = {
     require: boolean;
     level: number;
     criteriaCode: string;
-    evidence?: Evidence[];
+    evidence?: Evidence;
 };
 
 interface Props {

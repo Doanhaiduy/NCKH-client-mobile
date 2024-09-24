@@ -15,10 +15,14 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import authAPI from '@/apis/authApi';
+import { authSelector, setOtpValue } from '@/stores/reducers/authReducer';
+import { useDispatch, useSelector } from 'react-redux';
 
 const schema = z
     .object({
-        currentPassword: schemasCustom.password('Login'),
+        oldPassword: schemasCustom.password('Login'),
         newPassword: schemasCustom.password('SignUp'),
         confirmPassword: schemasCustom.confirmPassword,
     })
@@ -29,27 +33,56 @@ const schema = z
 
 type FormFields = z.infer<typeof schema>;
 export default function ResetPassword() {
-    const [isLoading, setIsLoading] = useState(false);
-
     const {
         handleSubmit,
+        setError,
         control,
         formState: { errors },
     } = useForm<FormFields>({
         defaultValues: {
-            currentPassword: '',
+            oldPassword: '',
             newPassword: '',
             confirmPassword: '',
         },
         resolver: zodResolver(schema),
     });
 
+    const { authData } = useSelector(authSelector);
+    const dispatch = useDispatch<any>();
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: (variables: FormChangePassword) => authAPI.changePassword(variables),
+        onSuccess: async (data) => {
+            Alert.alert('Thành công', 'Cập nhật mật khẩu thành công!', [
+                {
+                    text: 'Đồng ý',
+                    onPress: () => router.back(),
+                },
+            ]);
+        },
+        onError: (error: string) => {
+            setError('root', { type: 'manual', message: error });
+        },
+    });
+
+    const { mutate: sendOTP, isPending: pendingOTP } = useMutation({
+        mutationFn: (variables: { email: string }) => authAPI.forgotPassword(variables),
+        onSuccess: (data) => {
+            console.log('data', data);
+            dispatch(setOtpValue(data));
+            router.push('setting/change-password/verification');
+        },
+        onError: (error: string) => {
+            setError('root', { type: 'manual', message: error });
+        },
+    });
+
     const onSubmit: SubmitHandler<FormFields> = async (data: FormFields) => {
-        setIsLoading(true);
-        await sleep(1000);
-        setIsLoading(false);
-        Alert.alert('Thông báo', 'Cập nhật mật khẩu thành công');
-        router.back();
+        mutate({
+            oldPassword: data.oldPassword,
+            newPassword: data.newPassword,
+            email: authData?.email || '',
+        });
     };
 
     return (
@@ -63,7 +96,7 @@ export default function ResetPassword() {
                 <SpaceComponent height={32} />
                 <Controller
                     control={control}
-                    name="currentPassword"
+                    name="oldPassword"
                     render={({ field: { onChange, value, onBlur } }) => (
                         <InputComponent
                             value={value}
@@ -71,7 +104,7 @@ export default function ResetPassword() {
                             onBlur={onBlur}
                             isPassword
                             placeholder="Mật khẩu hiện tại"
-                            err={errors.currentPassword?.message}
+                            err={errors.oldPassword?.message}
                         />
                     )}
                 />
@@ -104,9 +137,16 @@ export default function ResetPassword() {
                     )}
                 />
 
-                <TouchableOpacity onPress={() => router.push('setting/change-password/verification')}>
+                <TouchableOpacity
+                    onPress={() =>
+                        sendOTP({
+                            email: authData?.email || '',
+                        })
+                    }
+                >
                     <TextComponent text="Quên mật khẩu?" className="mt-2 ml-5" size={14} />
                 </TouchableOpacity>
+                {errors.root && <TextComponent text={`${errors.root.message}`} className="text-error" />}
             </SectionComponent>
             <SectionComponent className="px-12">
                 <ButtonComponent
@@ -117,7 +157,7 @@ export default function ResetPassword() {
                     disabled={checkHasErr(errors)}
                 />
             </SectionComponent>
-            <LoadingModal visible={isLoading} />
+            <LoadingModal visible={isPending || pendingOTP} />
         </ContainerComponent>
     );
 }

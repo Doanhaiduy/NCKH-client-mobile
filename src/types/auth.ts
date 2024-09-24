@@ -32,9 +32,9 @@ type FormResetPassword = {
 };
 
 type FormChangePassword = {
+    email: string;
     oldPassword: string;
     newPassword: string;
-    confirmPassword: string;
 };
 
 // post

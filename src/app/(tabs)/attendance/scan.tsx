@@ -6,6 +6,7 @@ import {
     ContainerComponent,
     PortalizeComponent,
     SectionComponent,
+    SpaceComponent,
     TextComponent,
 } from '@components/index';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -21,6 +22,8 @@ import axios from 'axios';
 import { GeoLocation } from '@/types/geoLocation';
 import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
+import { colors } from '@/constants/colors';
+import { LoadingModal } from '@/modals';
 
 export default function ScanQRScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -28,7 +31,11 @@ export default function ScanQRScreen() {
     const { id, eventCode } = useLocalSearchParams();
     const [location, setLocation] = useState<EventLocation>();
     const { authData } = useSelector(authSelector);
-    const modalizeRef = useRef<Modalize>(null);
+
+    const modalizeRefFailed = useRef<Modalize>(null);
+    const modalizeRefSuccess = useRef<Modalize>(null);
+
+    const [error, setError] = useState<string | null>(null);
 
     const { mutate, isPending } = useMutation({
         mutationFn: (dataLocation: EventLocation) =>
@@ -48,24 +55,12 @@ export default function ScanQRScreen() {
                 id?.toString()!,
             ),
         onSuccess: (data) => {
-            Alert.alert('Thông báo', 'Điểm danh thành công', [
-                {
-                    text: 'OK',
-                    onPress: () => {
-                        setScanned(false);
-                        router.dismiss();
-                        router.replace({
-                            pathname: '/attendance/list',
-                            params: {
-                                id: data.id,
-                            },
-                        });
-                    },
-                },
-            ]);
+            modalizeRefSuccess.current?.open();
         },
         onError: (error: string) => {
-            console.log(error);
+            setError(error);
+            setScanned(true);
+            modalizeRefFailed.current?.open();
         },
     });
 
@@ -85,7 +80,6 @@ export default function ScanQRScreen() {
         }
         if (permission.status === 'granted') {
             const location = await Location.getLastKnownPositionAsync({});
-            // console.log(location?.coords);
             if (location) {
                 setLocation({
                     lat: location.coords.latitude,
@@ -154,24 +148,18 @@ export default function ScanQRScreen() {
         }
         if (eventCode !== dataDecrypt?.eventCode) {
             console.log(eventCode, dataDecrypt?.eventCode);
-            Alert.alert('Thông báo', 'Mã QR không hợp lệ.', [
-                {
-                    text: 'Thử lại',
-                    onPress: () => setScanned(false),
-                },
-            ]);
+            setError('Mã QR không hợp lệ');
+            // stop scan
+            setScanned(true);
+            modalizeRefFailed.current?.open();
             return false;
         }
         if (!checkTimeActive(dataDecrypt?.startAt || 0, dataDecrypt?.endAt || 0)) {
-            Alert.alert('Thông báo', 'Thời gian điểm danh không hợp lệ', [
-                {
-                    text: 'Thử lại',
-                    onPress: () => setScanned(false),
-                },
-            ]);
+            setError('Thời gian điểm danh không hợp lệ');
+            setScanned(true);
+            modalizeRefFailed.current?.open();
             return false;
         }
-
         if (dataDecrypt?.location) {
             const dataLocation = dataDecrypt?.location;
             const distance = getDistance(
@@ -179,16 +167,9 @@ export default function ScanQRScreen() {
                 { latitude: dataLocation.lat, longitude: dataLocation.lng },
             );
             if (distance > dataDecrypt?.distanceLimit && dataDecrypt?.distanceLimit !== 0) {
-                Alert.alert(
-                    'Thông báo',
-                    `bạn cần đến gần hơn ${distance - dataDecrypt?.distanceLimit}(m) để điểm danh.`,
-                    [
-                        {
-                            text: 'Thử lại',
-                            onPress: () => setScanned(false),
-                        },
-                    ],
-                );
+                setError(`Bạn cần đến gần hơn ${distance - dataDecrypt?.distanceLimit}(m) để điểm danh.`);
+                setScanned(true);
+                modalizeRefFailed.current?.open();
                 return false;
             }
         }
@@ -202,12 +183,9 @@ export default function ScanQRScreen() {
             await sleep(1000);
             const dataDecrypt = decryptData(JSON.parse(data).data);
             if (!dataDecrypt) {
-                Alert.alert('Thông báo', 'Mã QR không hợp lệ.', [
-                    {
-                        text: 'Thử lại',
-                        onPress: () => setScanned(false),
-                    },
-                ]);
+                setError('Mã QR không hợp lệ');
+                setScanned(true);
+                modalizeRefFailed.current?.open();
                 return;
             }
             if (await handleCheck(dataDecrypt)) {
@@ -220,12 +198,9 @@ export default function ScanQRScreen() {
                 }
             }
         } catch (error) {
-            Alert.alert('Thông báo', 'Mã QR không hợp lệ.', [
-                {
-                    text: 'Thử lại',
-                    onPress: () => setScanned(false),
-                },
-            ]);
+            setError('Mã QR không hợp lệ');
+            setScanned(true);
+            modalizeRefFailed.current?.open();
         }
     };
 
@@ -257,41 +232,82 @@ export default function ScanQRScreen() {
                     />
                 </View>
             </CameraView>
-            <TouchableOpacity
-                className="absolute top-5 right-5 bg-white p-2 rounded-full"
-                onPress={() => {
-                    console.log('open modal');
-                    modalizeRef.current?.open();
-                }}
-            >
-                <Ionicons name="camera" size={32} color="black" />
-            </TouchableOpacity>
-
             <PortalizeComponent
-                ref={modalizeRef}
+                onClose={async () => {
+                    await sleep(1000);
+                    setScanned(false);
+                }}
+                ref={modalizeRefFailed}
                 children={
                     <View className="shadow-xl gap-5 p-3 bg-white">
-                        <TouchableOpacity
-                            className="flex-row  items-center"
-                            onPress={() => {
-                                modalizeRef.current?.close();
-                            }}
-                        >
-                            <Ionicons name="image" size={22} color="black" />
-                            <TextComponent text="Chọn từ thư viện" className="ml-2 font-medium" />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            className="flex-row py-2 items-center"
-                            onPress={() => {
-                                modalizeRef.current?.close();
-                            }}
-                        >
-                            <Ionicons name="camera" size={24} color="black" />
-                            <TextComponent text="Chụp ảnh" className="ml-2 font-medium" />
-                        </TouchableOpacity>
+                        <View className="border-[2px] border-white rounded-full items-center">
+                            <Ionicons name="close-circle" size={100} color={colors.error} />
+                        </View>
+                        <View className="justify-center items-center">
+                            <TextComponent
+                                className="text-center text-xl font-bold"
+                                text="Điểm danh không thành công"
+                            />
+                            <TextComponent
+                                className="mt-2 text-center text-sm max-w-[70%] "
+                                text="Đã có lỗi xảy ra trong quá trình điểm danh"
+                            />
+                            <TextComponent
+                                className="mt-2 text-center text-sm max-w-[70%] text-error"
+                                text={error || ''}
+                            />
+                        </View>
+
+                        <View className="flex-row justify-center">
+                            <SpaceComponent width={6} />
+                            <ButtonComponent
+                                title="Quét lại"
+                                onPress={async () => {
+                                    modalizeRefFailed.current?.close();
+                                    await sleep(1000);
+                                    setScanned(false);
+                                }}
+                                type="primary"
+                                size="large"
+                            />
+                        </View>
                     </View>
                 }
             />
+            <PortalizeComponent
+                ref={modalizeRefSuccess}
+                children={
+                    <View className="shadow-xl gap-5 p-3 bg-white">
+                        <View className="border-[2px] border-white rounded-full items-center">
+                            <Ionicons name="checkmark-circle" size={100} color={colors.success} />
+                        </View>
+                        <View className="justify-center items-center">
+                            <TextComponent className="text-center text-xl font-bold" text="Điểm danh thành công" />
+                            <TextComponent
+                                className="mt-2 text-center text-sm max-w-[70%] "
+                                text="Bạn đã điểm danh thành công sự kiện có mã: "
+                            />
+                            <TextComponent className="font-bold" text={eventCode?.toString() || ''} />
+                        </View>
+
+                        <View>
+                            <ButtonComponent
+                                title={'Xác nhận'}
+                                onPress={async () => {
+                                    router.dismiss();
+                                    router.replace({
+                                        pathname: '/attendance/list',
+                                    });
+                                }}
+                                type="primary"
+                                size="large"
+                            />
+                        </View>
+                    </View>
+                }
+            />
+
+            <LoadingModal visible={isPending} />
         </View>
     );
 }

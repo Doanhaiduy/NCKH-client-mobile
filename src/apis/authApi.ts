@@ -22,8 +22,15 @@ class AuthAPI {
         return await this.HandleAuth(API_URL.auth.login, data, 'post', option);
     };
 
-    sendOTP = async (data: { email: string }, option: AxiosRequestConfig = {}): Promise<Omit<OTP, 'done'>> => {
-        return await this.HandleAuth(API_URL.auth.sendOTP, data, 'post', option);
+    forgotPassword = async (data: { email: string }, option: AxiosRequestConfig = {}): Promise<Omit<OTP, 'done'>> => {
+        return await this.HandleAuth(API_URL.auth.forgotPassword, data, 'post', option);
+    };
+
+    verifyOTP = async (
+        data: { email: string; otp: string },
+        option: AxiosRequestConfig = {},
+    ): Promise<{ email: String }> => {
+        return await this.HandleAuth(API_URL.auth.verifyOTP, data, 'post', option);
     };
 
     resetPassword = async (data: FormResetPassword, option: AxiosRequestConfig = {}): Promise<{ email: String }> => {

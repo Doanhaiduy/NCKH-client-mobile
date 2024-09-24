@@ -52,10 +52,7 @@ export default function VerificationPage() {
             if (checkExpiredTime(OTP?.expiredIn || 0)) {
                 setError('Mã OTP đã hết hạn');
             } else {
-                await sleep(500);
-                dispatch(setDoneVerify());
-                router.push('/set-password');
-                setError('');
+                verifyOTP({ email: OTP?.email || '', otp: inputOtp });
             }
         } else {
             setError('Mã OTP không chính xác');
@@ -64,8 +61,22 @@ export default function VerificationPage() {
         setIsLoading(false);
     };
 
+    const { mutate: verifyOTP, isPending: isVerifying } = useMutation({
+        mutationFn: (variables: { email: string; otp: string }) => authAPI.verifyOTP(variables),
+        onSuccess: async (data) => {
+            await sleep(500);
+            dispatch(setDoneVerify());
+            router.push('/set-password');
+            setError('');
+        },
+
+        onError: (error: string) => {
+            setError(error);
+        },
+    });
+
     const { mutate, isPending } = useMutation({
-        mutationFn: (variables: { email: string }) => authAPI.sendOTP(variables),
+        mutationFn: (variables: { email: string }) => authAPI.forgotPassword(variables),
         onSuccess: (data) => {
             dispatch(setOtpValue(data));
             setError('');
@@ -152,7 +163,7 @@ export default function VerificationPage() {
 
                     <SpaceComponent height={12} />
 
-                    <LoadingModal visible={isPending || isLoading} />
+                    <LoadingModal visible={isPending || isLoading || isVerifying} />
                     <SpaceComponent height={50} />
                 </SectionComponent>
             </View>

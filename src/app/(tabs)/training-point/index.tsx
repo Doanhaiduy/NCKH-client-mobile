@@ -24,14 +24,23 @@ export default function TrainingPoint() {
     const [selectedSemester, setSelectedSemester] = useState<String>(SemesterData[0].value.toString());
     const { authData } = useSelector(authSelector);
 
-    const { data, refetch, isFetching } = useQuery({
+    const { data, refetch, isFetching } = useQuery<TrainingPoint>({
         queryKey: ['training-point', selectedYear, selectedSemester, authData?.id],
         queryFn: () =>
-            userAPI.getTrainingPoints(authData?.id!, {
-                year: +selectedYear.split('-')[0],
-                semester: +selectedSemester as 1 | 2,
-            }),
+            userAPI
+                .getTrainingPoints(authData?.id!, {
+                    year: +selectedYear.split('-')[0],
+                    semester: +selectedSemester as 1 | 2,
+                })
+                .then((res) => {
+                    if (res) {
+                        return res;
+                    }
+                    return {} as TrainingPoint;
+                }),
     });
+
+    console.log(data);
 
     return (
         <ContainerComponent
@@ -73,7 +82,7 @@ export default function TrainingPoint() {
             </SectionComponent>
             <SectionComponent className="items-center w-full">
                 <SpaceComponent height={16} />
-                {data ? (
+                {data?.id ? (
                     <TouchableOpacity
                         className="flex-row px-2 py-4 bg-text-100 rounded-[10px] mt-4 items-center w-full"
                         onPress={() => router.push(`/training-point/${data.id}`)}

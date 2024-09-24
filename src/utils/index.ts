@@ -88,7 +88,7 @@ export const flattenCriteria = (criteria: Criteria[]) => {
         require: boolean;
         level: number;
         criteriaCode: string;
-        evidence?: Evidence[];
+        evidence?: Evidence;
     }[] = [];
 
     const traverse = (criteria: Criteria[]) => {
@@ -100,8 +100,7 @@ export const flattenCriteria = (criteria: Criteria[]) => {
                 totalScore: item.totalScore,
                 level: item.level,
                 require: item.evidenceType !== 'none',
-                evidence:
-                    item.evidenceType === 'none' ? undefined : item.evidence?.length! > 0 ? item.evidence : undefined,
+                evidence: item.evidenceType === 'none' ? undefined : item.evidence ? item.evidence : undefined,
                 criteriaCode: item.criteriaCode,
             });
 

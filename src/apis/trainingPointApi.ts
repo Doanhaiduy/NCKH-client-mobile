@@ -42,7 +42,7 @@ class TrainingPointAPI {
         return await this.HandleTrainingPoint(`/${id}`, undefined, 'get', option);
     };
 
-    getCriteriaEvidence = async (id = '', option: AxiosRequestConfig = {}): Promise<Evidence[]> => {
+    getCriteriaEvidence = async (id = '', option: AxiosRequestConfig = {}): Promise<Evidence> => {
         return await this.HandleTrainingPoint(`/${id}/criteria-evidence`, undefined, 'get', option);
     };
 
