@@ -33,7 +33,7 @@ export default function SlideCardComponent(props: Props) {
           } as const);
 
     return (
-        <View style={{ height: 290 }}>
+        <View style={{ height: 380 }}>
             <Carousel
                 {...baseOptions}
                 loop

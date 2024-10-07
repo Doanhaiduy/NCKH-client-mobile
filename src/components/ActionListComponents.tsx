@@ -4,7 +4,7 @@ import { Feather, FontAwesome6 } from '@expo/vector-icons';
 import TextComponent from './TextComponent';
 import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
-import Animated, { ReduceMotion, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { globalStyles } from '@/styles';
 
 let ActionDataTemp: {
@@ -99,45 +99,13 @@ const ActionCard = ({ text, icon, path }: { text: string; icon: string; path: st
 };
 
 export default function ActionListComponents() {
-    const [expended, setExpended] = React.useState(false);
-    const [ActionData, setActionData] = React.useState(ActionDataTemp.slice(0, 8));
+    const [ActionData, setActionData] = React.useState(ActionDataTemp);
 
-    const animatedContainerStyle = useAnimatedStyle(() => {
-        return {
-            height: withTiming(expended ? 550 : 390, { duration: 300, reduceMotion: ReduceMotion.Never }),
-        };
-    });
-
-    const handleExpended = () => {
-        setExpended(!expended);
-        setActionData(!expended ? ActionDataTemp : ActionDataTemp.slice(0, 8));
-    };
     return (
-        <Animated.View
-            style={[animatedContainerStyle]}
-            className="py-2 flex-1 w-full flex-row items-stretch justify-start flex-wrap bg-white overflow-hidden pb-[50px]"
-        >
+        <Animated.View className="py-2 flex-1 w-full flex-row items-stretch justify-start flex-wrap bg-white overflow-hidden pb-[50px]">
             {ActionData.map((item, index) => (
                 <ActionCard key={index} text={item.text} icon={item.icon} path={item.path} />
             ))}
-            <View
-                className="absolute "
-                style={[
-                    globalStyles.centerAbsolute,
-                    {
-                        top: 'auto',
-                        backgroundColor: colors.white,
-                        width: '100%',
-                    },
-                ]}
-            >
-                <TouchableOpacity
-                    onPress={handleExpended}
-                    className="bg-primary-100 p-2 justify-center items-center rounded-full"
-                >
-                    <Feather name={expended ? 'chevrons-up' : 'chevrons-down'} size={20} color={colors.primary400} />
-                </TouchableOpacity>
-            </View>
         </Animated.View>
     );
 }

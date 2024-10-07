@@ -84,14 +84,14 @@ export default function ScanQRScreen() {
                 setLocation({
                     lat: location.coords.latitude,
                     lng: location.coords.longitude,
-                    name: '',
+                    name: 'Not found name',
                 });
             } else {
                 const location = await Location.getCurrentPositionAsync({});
                 setLocation({
                     lat: location.coords.latitude,
                     lng: location.coords.longitude,
-                    name: '',
+                    name: 'Not found name',
                 });
             }
         }
@@ -113,6 +113,7 @@ export default function ScanQRScreen() {
                     <Text className="text-base font-medium">
                         Ứng dụng cần quyền truy cập máy ảnh để quét mã QR. Vui lòng bật quyền truy cập máy ảnh.
                     </Text>
+                    <SpaceComponent height={20} />
                     <ButtonComponent
                         onPress={requestPermission}
                         title={'Ứng dụng cần quyền truy cập máy ảnh'}

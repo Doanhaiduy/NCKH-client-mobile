@@ -14,6 +14,7 @@ const getAccessToken = async () => {
 
 const HandleExpiredToken = async () => {
     await AsyncStorage.removeItem('auth');
+
     Alert.alert('Token expired!!', 'Your token has expired, please login again', [
         {
             text: 'OK',
@@ -76,7 +77,6 @@ axiosClient.interceptors.response.use(
     async (error) => {
         console.log('error ~ 1 ', error);
         if (error.response && error.response.status === 401) {
-            console.log('error ~ 2 ', error, 'Token expired');
             const newAccessToken = await handleRefreshToken();
             if (newAccessToken) {
                 const config = error.config;

@@ -7,22 +7,24 @@ import { NotificationData } from '@/mockData';
 import { dateFormat } from '@/utils/dateTime';
 
 interface Props {
-    data: NotificationData;
+    data: _Notification;
     isNew?: boolean;
+    onPress?: () => void;
 }
 
 export default function NotificationCard(props: Props) {
-    const { data, isNew = true } = props;
+    const { data, onPress, isNew = true } = props;
 
     return (
         <TouchableOpacity
             className="px-4 py-2 flex-1 border-b-[1px] border-text-200"
             style={{
-                backgroundColor: isNew ? '#235DF408' : '#fff',
+                backgroundColor: isNew ? '#03009908' : '#fff',
             }}
+            onPress={onPress}
         >
             <RowComponent className="justify-between">
-                <TextComponent text={data?.title?.toString()} size={20} className="font-interMd" />
+                <TextComponent text={data?.message?.toString()} size={20} className="font-interMd" />
                 {isNew && <View className="w-2 h-2 rounded-full bg-primary-400"></View>}
             </RowComponent>
             <TextComponent text={data?.description?.toString() || ''} numberOfLines={1} className="pr-5 py-1" />

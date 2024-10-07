@@ -54,6 +54,20 @@ class UserAPI {
         }
         return await this.HandleUser(`/${userId}/training-points`, { ...data }, 'get');
     };
+
+    getNotifications = async (userId: string, data = {}, option: AxiosRequestConfig = {}): Promise<_Notification[]> => {
+        if (Platform.OS === 'ios') {
+            return await this.HandleUser(
+                `/${userId}/notifications?${QueryString.stringify({
+                    ...data,
+                })}`,
+                undefined,
+                'get',
+                option,
+            );
+        }
+        return await this.HandleUser(`/${userId}/notifications`, { ...data }, 'get');
+    };
 }
 
 const userAPI = new UserAPI();

@@ -53,7 +53,7 @@ export default function DropDownComponent(props: Props) {
                         <View
                             style={{
                                 ...styles.dropdownItemStyle,
-                                ...(isSelected && { backgroundColor: '#235DF426' }),
+                                ...(isSelected && { backgroundColor: '#03009926' }),
                             }}
                         >
                             <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>

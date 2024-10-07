@@ -8,12 +8,12 @@ import mime from 'mime';
 import { LoadingModal } from '@/modals';
 import * as ImagePicker from 'expo-image-picker';
 import { router, useLocalSearchParams } from 'expo-router';
-import userAPI from '@/apis/userApi';
 import { Modalize } from 'react-native-modalize';
 import trainingPointAPI from '@/apis/trainingPointApi';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { authSelector } from '@/stores/reducers/authReducer';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function UploadImage() {
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
@@ -28,6 +28,8 @@ export default function UploadImage() {
     const { id } = useLocalSearchParams();
     const [isLoading, setIsLoading] = useState(false);
     const modalizeRef = React.useRef<Modalize>(null);
+
+    const isFocused = useIsFocused();
 
     const pickImage = async (option: 'camera' | 'library') => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -71,6 +73,12 @@ export default function UploadImage() {
         queryKey: ['training-points', id],
         queryFn: () => trainingPointAPI.getCriteriaEvidence(id?.toString() ?? ''),
     });
+
+    useEffect(() => {
+        if (isFocused) {
+            refetch();
+        }
+    }, [isFocused]);
 
     useEffect(() => {
         if (data) {

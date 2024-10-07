@@ -80,11 +80,11 @@ export default function Home() {
             <SectionComponent className="flex-1 w-full">
                 <TextComponent text="Hoạt động nổi bật" fontBold />
 
-                <View className="pt-4 w-full  -ml-1">
+                <View className="pt-4 w-full -ml-1">
                     <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
                 </View>
             </SectionComponent>
-            <SectionComponent className="pt-4">
+            <SectionComponent className="flex-1">
                 <TextComponent text="Truy cập nhanh" fontBold />
                 <ActionListComponents />
                 {/* <ActionListComponents /> */}

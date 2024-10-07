@@ -21,7 +21,7 @@ import { useSelector } from 'react-redux';
 export default function TrainingPointDetails() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
-    const { data, error, refetch, isFetching } = useQuery({
+    const { data, error, refetch, isFetching, isRefetching } = useQuery({
         queryKey: ['training-points', id],
         queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
     });
@@ -32,7 +32,7 @@ export default function TrainingPointDetails() {
             iconLeft="back"
             isScroll
             handleRefresh={refetch}
-            _refreshing={isFetching}
+            _refreshing={isRefetching}
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
@@ -77,7 +77,7 @@ export default function TrainingPointDetails() {
                     }
                 />
             </SectionComponent>
-            <LoadingModal visible={isFetching} />
+            {/* <LoadingModal visible={isRefetching} /> */}
         </ContainerComponent>
     );
 }

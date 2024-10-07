@@ -11,17 +11,26 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { romanize } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Upload() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
-    const { data, refetch, isFetching } = useQuery({
+    const { data, refetch, isRefetching } = useQuery({
         queryKey: ['training-points', id],
         queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
     });
+
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        if (isFocused) {
+            refetch();
+        }
+    }, [isFocused]);
 
     console.log(id);
 
@@ -31,7 +40,7 @@ export default function Upload() {
             iconLeft="back"
             isScroll
             handleRefresh={refetch}
-            _refreshing={isFetching}
+            _refreshing={isRefetching}
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
@@ -44,7 +53,6 @@ export default function Upload() {
                                 text: 'Đồng ý',
                                 onPress: () => {
                                     router.back();
-                                    Alert.alert('Thông báo', 'Gửi thành công');
                                 },
                             },
                         ])

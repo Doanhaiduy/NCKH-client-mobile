@@ -10,8 +10,9 @@ module.exports = {
             transparent: 'transparent',
             primary: {
                 100: '#EDEDFA',
+                200: '#235DF4',
                 300: '#1479FD',
-                400: '#235DF4',
+                400: '#030099',
                 500: '#030099',
             },
             text: {

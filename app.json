@@ -11,6 +11,7 @@
         "experiments": {
             "tsconfigPaths": true
         },
+        "platforms": ["ios", "android"],
         "splash": {
             "image": "./assets/splash-screen.png",
             "resizeMode": "cover",
@@ -30,6 +31,11 @@
             "favicon": "./assets/favicon.png",
             "bundler": "metro"
         },
-        "plugins": ["expo-router", "expo-font"]
+        "plugins": ["expo-router", "expo-font"],
+        "extra": {
+            "eas": {
+                "projectId": "ff882bf5-0743-477d-a871-2ad55526a76e"
+            }
+        }
     }
 }

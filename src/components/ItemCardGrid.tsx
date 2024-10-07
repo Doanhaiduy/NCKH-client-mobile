@@ -24,7 +24,7 @@ export default function ItemCardGrid(props: Props) {
     const imageClass = clsx(
         'rounded-t-[10px] w-full object-cover',
         size === 'medium' && 'rounded-b-[10px] h-[100px]',
-        size === 'large' && 'h-[150px]',
+        size === 'large' && 'h-[228px]',
     );
     const containerTextClass = clsx(size === 'medium' && 'px-1 pt-2 pr-2', size === 'large' && 'px-4 pt-4');
     const textClass = clsx(size === 'medium' && 'text-[14px]', size === 'large' && 'text-[16px] h-[50px]');

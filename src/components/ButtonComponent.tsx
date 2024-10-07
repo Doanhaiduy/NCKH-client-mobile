@@ -40,7 +40,7 @@ export default function ButtonComponent(props: Props) {
                 locations={[0.0, 1.0]}
                 colors={
                     type === 'primary'
-                        ? [colors.primary400, colors.primary500]
+                        ? [colors.primary200, colors.primary500]
                         : type === 'grey'
                           ? [colors.text400, colors.text400]
                           : [colors.white, colors.white]
