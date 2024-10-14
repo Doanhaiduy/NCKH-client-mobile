@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import clsx from 'clsx';
 import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import TextComponent from './TextComponent';
+import RowComponent from './RowComponent';
 interface Props {
     placeholder?: string;
     value: string;
@@ -17,6 +19,10 @@ interface Props {
     multiline?: boolean;
     icon?: React.ReactNode;
     color?: string;
+    labelTop?: string;
+    readOnly?: boolean;
+    height?: number;
+    required?: boolean;
 }
 
 function InputComponent(props: Props) {
@@ -38,6 +44,10 @@ function InputComponent(props: Props) {
         multiline,
         color,
         onBlur,
+        labelTop,
+        readOnly,
+        height,
+        required,
         ...inputProps
     } = props;
     console.log('InputComponent: value', value);
@@ -55,9 +65,23 @@ function InputComponent(props: Props) {
 
     return (
         <View className="mt-4 w-full">
-            <Pressable className={containerClass} onPress={() => inputRef.current?.focus()}>
+            {labelTop ? (
+                <RowComponent>
+                    {required && <TextComponent text="*" className="text-error mr-1" />}
+                    <TextComponent text={labelTop} className="mb-1" />
+                </RowComponent>
+            ) : null}
+            <Pressable
+                className={containerClass}
+                onPress={() => inputRef.current?.focus()}
+                style={{
+                    height: height ?? 'auto',
+                }}
+            >
                 <View className="flex-col flex-1">
-                    {value && <Text className="px-5 pt-1 text-[12px] text-black font-inter">{placeholder}</Text>}
+                    {value && placeholder && !labelTop && (
+                        <Text className="px-5 pt-1 text-[12px] text-black font-inter">{placeholder}</Text>
+                    )}
                     <TextInput
                         ref={inputRef}
                         autoCapitalize="none"
@@ -74,14 +98,24 @@ function InputComponent(props: Props) {
                         numberOfLines={numberOfLines}
                         multiline={multiline}
                         className={inputClass}
+                        readOnly={readOnly}
                         style={{
-                            marginBottom: value ? 10 : 0,
+                            marginBottom: value && placeholder ? 10 : 0,
                             color: color ?? 'black',
+                            height: height ?? 'auto',
                         }}
                     />
                 </View>
-                {value && !isPassword && (
-                    <Pressable onPress={() => onChange('')} className="mr-5">
+                {value && !isPassword && !readOnly && (
+                    <Pressable
+                        onPress={() => onChange('')}
+                        className="mr-5"
+                        style={{
+                            position: multiline ? 'absolute' : 'relative',
+                            top: multiline ? 10 : 0,
+                            right: 0,
+                        }}
+                    >
                         <Ionicons name="close" size={18} color={color ?? 'black'} />
                     </Pressable>
                 )}

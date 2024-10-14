@@ -1,4 +1,6 @@
+import authAPI from '@/apis/authApi';
 import { ContainerComponent, SectionComponent, TextComponent } from '@/components';
+import ImageComponent from '@/components/ImageComponent';
 import { colors } from '@/constants/colors';
 import { authSelector, logout } from '@/stores/reducers/authReducer';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -12,22 +14,20 @@ export default function SettingPage() {
 
     const dispatch = useDispatch();
 
+    const handleLogout = async () => {
+        try {
+            const res = await authAPI.logout();
+            dispatch(logout());
+            router.navigate('/sign-in');
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
-        <ContainerComponent isScroll title="Cài đặt" iconLeft="logo" search>
+        <ContainerComponent isScroll title="Cài đặt" iconLeft="logo" notification>
             <SectionComponent className="flex-row flex-1 items-center mt-4">
                 <View className="border-1 border rounded-full border-primary-400 p-[2px]">
-                    <Image
-                        source={{
-                            uri: authData?.avatar,
-                            headers: { Accept: 'image/*' },
-                        }}
-                        style={{
-                            width: 80,
-                            height: 80,
-                            borderRadius: 9999,
-                            resizeMode: 'cover',
-                        }}
-                    />
+                    <ImageComponent url={authData?.avatar!} height={80} width={80} rounded={9999} />
                 </View>
                 <View className="ml-4 flex-1">
                     <TextComponent text={authData?.fullName || ''} className="text-xl" />
@@ -71,10 +71,7 @@ export default function SettingPage() {
                             },
                             {
                                 text: 'Đồng ý',
-                                onPress: () => {
-                                    dispatch(logout());
-                                    router.navigate('/sign-in');
-                                },
+                                onPress: () => handleLogout(),
                             },
                         ]);
                     }}

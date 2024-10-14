@@ -52,7 +52,7 @@ export default function SetPassword() {
             <SpaceComponent height={110} />
             <View className="px-8 pb-4 ">
                 <SectionComponent align="center">
-                    <TextComponent text="Tạo mật khẩu mới" title className="text-primary-400" />
+                    <TextComponent text="Tạo mật khẩu mới" title className="text-primary-500" />
                     <TextComponent
                         text="Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó."
                         className="text-center mt-4"

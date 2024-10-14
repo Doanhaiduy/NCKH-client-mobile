@@ -63,7 +63,7 @@ export default function LoginPage() {
         mutationFn: (variables: FormLogin) => authAPI.login(variables),
         onSuccess: (data) => {
             dispatch(login(data));
-            router.navigate('(home)/');
+            router.navigate('/');
             Alert.alert('Đăng nhập thành công');
         },
         onError: (error: string) => {
@@ -85,10 +85,9 @@ export default function LoginPage() {
                 <SectionComponent align="center">
                     <Image source={require('../../assets/images/logo-login.png')} width={125} height={125} />
                     <SpaceComponent height={6} />
-                    <TextComponent text="Information Technology" title className="text-primary-500 font-interSemi" />
+                    <TextComponent text="NTU Student" title className="text-primary-500 font-interSemi" />
                 </SectionComponent>
                 <SpaceComponent height={47} />
-
                 <SectionComponent align="center" className="px-12">
                     <Controller
                         name="username"

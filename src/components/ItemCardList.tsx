@@ -6,7 +6,8 @@ import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import { dateFormat } from '@/utils/dateTime';
+import { dateFormatLocale } from '@/utils/dateTime';
+import ImageComponent from './ImageComponent';
 
 interface Props {
     data: EventCard | CardItemData;
@@ -27,7 +28,7 @@ export default function ItemCardList(props: Props) {
                     <RowComponent className="flex-1">
                         <Ionicons name="calendar" size={14} color={colors.black} />
                         <TextComponent
-                            text={dateFormat((data as EventCard).startAt || (data as CardItemData).createdAt)}
+                            text={dateFormatLocale((data as EventCard).startAt || (data as CardItemData).createdAt)}
                             className="text-[13px] text-text-400 ml-1"
                         />
                     </RowComponent>
@@ -44,13 +45,7 @@ export default function ItemCardList(props: Props) {
                 </RowComponent>
             </View>
             <View className="w-[30%] aspect-square max-h-[100px]">
-                <Image
-                    source={{
-                        uri: data.thumbnail || 'https://via.placeholder.com/150',
-                    }}
-                    resizeMode="cover"
-                    className="w-full h-full object-cover rounded-[5px]"
-                />
+                <ImageComponent url={data.thumbnail!} imageClass="w-full h-full" rounded={10} />
             </View>
         </CardComponent>
     );

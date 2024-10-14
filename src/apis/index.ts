@@ -1,5 +1,5 @@
 import { appInfo } from '@/constants/appInfo';
-import { logout, updateAccessToken } from '@/stores/reducers/authReducer';
+import { updateToken } from '@/stores/reducers/authReducer';
 import store from '@/stores/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -12,17 +12,24 @@ const getAccessToken = async () => {
     return res ? JSON.parse(res).accessToken : '';
 };
 
-const HandleExpiredToken = async () => {
-    await AsyncStorage.removeItem('auth');
+let alertShown = false;
 
-    Alert.alert('Token expired!!', 'Your token has expired, please login again', [
-        {
-            text: 'OK',
-            onPress: () => {
-                router.navigate('/sign-in');
+const HandleExpiredToken = async () => {
+    if (!alertShown) {
+        alertShown = true;
+
+        await AsyncStorage.removeItem('auth');
+
+        Alert.alert('Phiên đã hết hạn!!', 'Vui lòng đăng nhập lại', [
+            {
+                text: 'OK',
+                onPress: () => {
+                    alertShown = false;
+                    router.navigate('/sign-in');
+                },
             },
-        },
-    ]);
+        ]);
+    }
 };
 
 const handleRefreshToken = async () => {
@@ -41,7 +48,10 @@ const handleRefreshToken = async () => {
         });
         if (res.data.data.accessToken) {
             await AsyncStorage.setItem('auth', JSON.stringify(res.data.data.accessToken));
-            return res.data.data.accessToken;
+            return {
+                newAccessToken: res.data.data.accessToken,
+                newRefreshToken: res.data.data.refreshToken,
+            };
         }
         HandleExpiredToken();
         return null;
@@ -77,11 +87,16 @@ axiosClient.interceptors.response.use(
     async (error) => {
         console.log('error ~ 1 ', error);
         if (error.response && error.response.status === 401) {
-            const newAccessToken = await handleRefreshToken();
-            if (newAccessToken) {
+            const tokenData = await handleRefreshToken();
+            if (tokenData) {
                 const config = error.config;
-                store.dispatch(updateAccessToken(newAccessToken));
-                config.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                store.dispatch(
+                    updateToken({
+                        newAccessToken: tokenData.newAccessToken,
+                        newRefreshToken: tokenData.newRefreshToken,
+                    }),
+                );
+                config.headers['Authorization'] = `Bearer ${tokenData.newAccessToken}`;
                 return axiosClient.request(config);
             }
         }

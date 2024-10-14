@@ -14,9 +14,9 @@ export default function Home() {
         if (auth) {
             const authData = JSON.parse(auth);
             dispatch(setAuth(authData));
-            router.navigate('(home)/');
+            router.navigate('/(home)/');
         } else {
-            router.navigate('(auth)/sign-in');
+            router.navigate('/(auth)/sign-in');
         }
     };
 

@@ -3,7 +3,7 @@ import { Stack } from 'expo-router';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-export default function DetailsLayout() {
+export default function ActivityLayout() {
     return (
         <Stack
             screenOptions={{
@@ -11,11 +11,8 @@ export default function DetailsLayout() {
                 contentStyle: {
                     backgroundColor: colors.white,
                 },
-                presentation: 'modal',
             }}
-        >
-            <Stack.Screen name="[id]" />
-        </Stack>
+        />
     );
 }
 

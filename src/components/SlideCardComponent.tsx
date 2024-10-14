@@ -6,6 +6,7 @@ import { EventData } from '@/mockData';
 import ItemCardGrid from './ItemCardGrid';
 import { useSharedValue } from 'react-native-reanimated';
 import AnimatedDotsCarousel from 'react-native-animated-dots-carousel';
+import { router } from 'expo-router';
 
 interface Props {
     data: CardItemData[];
@@ -50,7 +51,14 @@ export default function SlideCardComponent(props: Props) {
                 onSnapToItem={(index) => setIndex(index)}
                 renderItem={({ item, index }) => (
                     <View className="mx-2">
-                        <ItemCardGrid size="large" key={index} data={item} onPress={() => {}} />
+                        <ItemCardGrid
+                            size="large"
+                            key={index}
+                            data={item}
+                            onPress={() => {
+                                router.push(`/activity/${item.id}`);
+                            }}
+                        />
                     </View>
                 )}
             />

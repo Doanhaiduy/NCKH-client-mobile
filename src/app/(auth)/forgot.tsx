@@ -61,7 +61,7 @@ export default function ForGotPassWord() {
             <SpaceComponent height={110} />
             <View className="px-8 pb-4">
                 <SectionComponent align="center">
-                    <TextComponent text="Quên mật khẩu?" title className="text-primary-400" />
+                    <TextComponent text="Quên mật khẩu?" title className="text-primary-500" />
                     <TextComponent
                         text="Vui lòng nhập địa chỉ email đã liên kết với tài khoản của bạn."
                         className="text-center mt-4"
@@ -103,7 +103,7 @@ export default function ForGotPassWord() {
                     <ButtonComponent
                         title="Đăng nhập"
                         size="large"
-                        type="outline"
+                        type="primary"
                         onPress={() => router.dismissAll()}
                     />
                 </SectionComponent>

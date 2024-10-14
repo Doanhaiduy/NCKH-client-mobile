@@ -1,41 +1,47 @@
 {
-    "expo": {
-        "name": "mobile",
-        "slug": "mobile",
-        "scheme": "mobile",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "backgroundColor": "#ffffff",
-        "experiments": {
-            "tsconfigPaths": true
-        },
-        "platforms": ["ios", "android"],
-        "splash": {
-            "image": "./assets/splash-screen.png",
-            "resizeMode": "cover",
-            "backgroundImage": "./assets/splash-screen-background.png"
-        },
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "package": "com.doanhaiduy.mobile"
-        },
-        "web": {
-            "favicon": "./assets/favicon.png",
-            "bundler": "metro"
-        },
-        "plugins": ["expo-router", "expo-font"],
-        "extra": {
-            "eas": {
-                "projectId": "ff882bf5-0743-477d-a871-2ad55526a76e"
-            }
-        }
+  "expo": {
+    "name": "NTU Student",
+    "slug": "ntu_student",
+    "scheme": "ntustudent",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#ffffff",
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "splash": {
+      "image": "./assets/splash-screen.png",
+      "resizeMode": "cover",
+      "backgroundImage": "./assets/splash-screen.png"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.doanhaiduy.mobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "61b61d09-d739-4c06-a399-e6562f8b6fce"
+      }
     }
+  }
 }

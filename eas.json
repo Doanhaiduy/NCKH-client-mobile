@@ -15,6 +15,11 @@
             },
             "android": {
                 "buildType": "apk"
+            },
+            "env": {
+                "EXPO_PUBLIC_BASE_URL": "http://192.168.1.84:3000/api/v1",
+                "EXPO_PUBLIC_CRYPTO_SECRET_KEY": "0IlnkIoQRiAznxkNON11JYeaK9o0OaxpKaQmjJ4ADJMV9q4qV+TNaG1bsyzDXEqKv9f+L5jtJyjldXetjUbq1ghS873nhwxEJnLicqZxiOpF3Ewp9M4SuAvGdYpRBqhnsNSC4BWwHBea74oQU49SOD59WOnQvs3CgmJrT8mEf12X3c5JoVeN/6n8s4VKx23f4YDUwr4i3eLUWIVSYIrphXym6+XO5W5BD8XtIZf3bNvJYyXeGS2tijQQUeWTNAuNewl2pbeKf22oqyypcKBFRVoVglStsnMCAp7kUO4sB0eOQssr2XZLOtwuvEmGDUsTNMcmSUyam6mIpnXGxg7raA==",
+                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY"
             }
         },
         "production": {

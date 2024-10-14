@@ -1,5 +1,6 @@
 import eventAPI from '@/apis/eventApi';
 import { decryptData, sleep } from '@/utils';
+
 import { checkTimeActive } from '@/utils/dateTime';
 import {
     ButtonComponent,
@@ -24,6 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
 import { colors } from '@/constants/colors';
 import { LoadingModal } from '@/modals';
+const DataTest = require('./mock.json');
 
 export default function ScanQRScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -109,15 +111,20 @@ export default function ScanQRScreen() {
     if (!permission.granted) {
         return (
             <ContainerComponent iconLeft="back" title="Quét mã QR">
-                <SectionComponent className="items-center">
+                <SectionComponent className="items-center mt-6">
                     <Text className="text-base font-medium">
                         Ứng dụng cần quyền truy cập máy ảnh để quét mã QR. Vui lòng bật quyền truy cập máy ảnh.
                     </Text>
                     <SpaceComponent height={20} />
                     <ButtonComponent
-                        onPress={requestPermission}
-                        title={'Ứng dụng cần quyền truy cập máy ảnh'}
-                        size="medium"
+                        onPress={() => {
+                            if (!permission.canAskAgain) {
+                                Linking.openSettings();
+                            }
+                            requestPermission();
+                        }}
+                        title={'Cấp quyền truy cập máy ảnh'}
+                        size="large"
                         type="primary"
                     />
                 </SectionComponent>
@@ -148,9 +155,7 @@ export default function ScanQRScreen() {
             return false;
         }
         if (eventCode !== dataDecrypt?.eventCode) {
-            console.log(eventCode, dataDecrypt?.eventCode);
             setError('Mã QR không hợp lệ');
-            // stop scan
             setScanned(true);
             modalizeRefFailed.current?.open();
             return false;
@@ -180,9 +185,14 @@ export default function ScanQRScreen() {
 
     const handleBarCodeScanned = async ({ type, data }: any) => {
         setScanned(true);
+        // console.log('==== data ====', data.dât);
+        // console.log('==== dataTest =====', DataTest);
         try {
             await sleep(1000);
-            const dataDecrypt = decryptData(JSON.parse(data).data);
+            const dataParse = JSON.parse(data);
+            console.log('==== data ====', dataParse.data);
+            const dataDecrypt = decryptData(dataParse.data);
+            console.log('==== dataDecrypt ====', dataDecrypt);
             if (!dataDecrypt) {
                 setError('Mã QR không hợp lệ');
                 setScanned(true);
@@ -199,10 +209,16 @@ export default function ScanQRScreen() {
                 }
             }
         } catch (error) {
-            setError('Mã QR không hợp lệ');
+            setError('Mã QR không hợp lệ 3');
             setScanned(true);
             modalizeRefFailed.current?.open();
         }
+    };
+    const handleTest = async () => {
+        const dataParse = JSON.parse(DataTest);
+        console.log('==== data ====', dataParse);
+        const dataDecrypt = decryptData(dataParse);
+        console.log('==== dataDecrypt ====', dataDecrypt);
     };
 
     return (
@@ -218,6 +234,7 @@ export default function ScanQRScreen() {
                 <View className="flex-1 items-center justify-center">
                     <TouchableOpacity
                         onPress={() => router.dismiss()}
+                        // onPress={handleTest}
                         style={{ position: 'absolute', top: 60, left: 20 }}
                     >
                         <Ionicons name="close" size={44} color="white" />
@@ -298,6 +315,9 @@ export default function ScanQRScreen() {
                                     router.dismiss();
                                     router.replace({
                                         pathname: '/attendance/list',
+                                        params: {
+                                            back: 'to_scan',
+                                        },
                                     });
                                 }}
                                 type="primary"

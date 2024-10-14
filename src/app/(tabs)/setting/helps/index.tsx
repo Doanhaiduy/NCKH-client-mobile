@@ -7,7 +7,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function HelpsPage() {
     return (
-        <ContainerComponent iconLeft="back" title="Trợ giúp" search>
+        <ContainerComponent iconLeft="back" title="Trợ giúp" notification onBack={() => router.dismiss()}>
             <SectionComponent className="flex-1">
                 <SpaceComponent height={4} />
                 <TouchableOpacity

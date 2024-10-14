@@ -1,22 +1,16 @@
-import { HeaderHeightProvider } from '@/contexts/HeaderHeightContext';
-import { CustomTopTabComponent } from '@/layouts/Components';
-import { Tabs } from 'expo-router';
+import { Stack } from 'expo-router';
 import React from 'react';
 
 export default function HomeLayout() {
     return (
-        <HeaderHeightProvider>
-            <Tabs
-                screenOptions={{
-                    header: (props) => <CustomTopTabComponent {...props} />,
-                    headerStyle: {
-                        backgroundColor: 'transparent',
-                    },
-                }}
-                tabBar={() => null}
-            >
-                <Tabs.Screen name="index" />
-            </Tabs>
-        </HeaderHeightProvider>
+        <Stack
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="news" />
+            <Stack.Screen name="activity" />
+        </Stack>
     );
 }

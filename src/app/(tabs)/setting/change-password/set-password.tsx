@@ -60,7 +60,7 @@ export default function SetPassword() {
     };
 
     return (
-        <ContainerComponent title="Tạo mật khẩu mới" iconLeft="back" search isScroll>
+        <ContainerComponent title="Tạo mật khẩu mới" iconLeft="back" notification isScroll>
             <SectionComponent className="mt-2">
                 <TextComponent text="Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. " />
             </SectionComponent>

@@ -22,8 +22,9 @@ const authSlice = createSlice({
         setAuth: (state, action) => {
             state.authData = action.payload;
         },
-        updateAccessToken: (state, action) => {
-            state.authData!.accessToken = action.payload;
+        updateToken: (state, action) => {
+            state.authData!.accessToken = action.payload.newAccessToken;
+            state.authData!.refreshToken = action.payload.newRefreshToken;
             AsyncStorage.setItem('auth', JSON.stringify(state.authData));
         },
         logout: (state) => {
@@ -45,6 +46,6 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { login, setAuth, logout, updateAccessToken, removeOTP, setOtpValue, setDoneVerify } = authSlice.actions;
+export const { login, setAuth, logout, updateToken, removeOTP, setOtpValue, setDoneVerify } = authSlice.actions;
 
 export const authSelector = (state: any): AuthState => state.auth;

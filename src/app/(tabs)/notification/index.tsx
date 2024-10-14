@@ -33,7 +33,7 @@ export default function NotificationPage() {
         <ContainerComponent
             iconLeft="logo"
             title="Thông báo"
-            search
+            notification
             isScroll
             handleRefresh={refetch}
             _refreshing={isFetching}

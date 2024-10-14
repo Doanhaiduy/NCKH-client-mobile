@@ -1,9 +1,9 @@
 import trainingPointAPI from '@/apis/trainingPointApi';
 import userAPI from '@/apis/userApi';
 import {
+    ButtonComponent,
     ContainerComponent,
     DropDownComponent,
-    RowComponent,
     SectionComponent,
     SpaceComponent,
     TextComponent,
@@ -15,8 +15,8 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function TrainingPoint() {
@@ -46,7 +46,7 @@ export default function TrainingPoint() {
         <ContainerComponent
             title="Kết quả rèn luyện"
             iconLeft="back"
-            search
+            notification
             isScroll
             handleRefresh={refetch}
             _refreshing={isFetching}
@@ -83,20 +83,58 @@ export default function TrainingPoint() {
             <SectionComponent className="items-center w-full">
                 <SpaceComponent height={16} />
                 {data?.id ? (
-                    <TouchableOpacity
-                        className="flex-row px-2 py-4 bg-text-100 rounded-[10px] mt-4 items-center w-full"
-                        onPress={() => router.push(`/training-point/${data.id}`)}
-                    >
-                        <RowComponent className="flex-1 gap-2">
-                            <Ionicons name="bookmark" size={32} color={colors.primary400} />
-                            <View className="px-2 py-1 rounded-[6px] bg-primary-400">
-                                <TextComponent size={12} color={colors.white} text={data.status} />
+                    <View className="w-[80%] justify-between items-center">
+                        <View
+                            className="justify-between items-center border-primary-300 border-[1px] rounded-full w-[200px] aspect-square mb-10"
+                            style={{
+                                shadowColor: colors.primary300,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 0,
+                                },
+                                shadowOpacity: 0.6,
+                                shadowRadius: 50,
+                                elevation: 8,
+                                backgroundColor: colors.white,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    transform: [{ translateY: -40 }],
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <TextComponent
+                                    text={data?.totalScore?.toString()}
+                                    size={96}
+                                    color={colors.primary500}
+                                    style={{
+                                        lineHeight: 96,
+                                        fontWeight: 'semibold',
+                                    }}
+                                />
+                                <TextComponent
+                                    text={data.status}
+                                    size={20}
+                                    color={colors.primary200}
+                                    style={{
+                                        textTransform: 'capitalize',
+                                    }}
+                                />
                             </View>
-                            <TextComponent text="Điểm rèn luyện hiện tại" />
-                        </RowComponent>
-                        <TextComponent text={data?.totalScore?.toString()} />
-                        <Ionicons name="chevron-forward" size={24} color={colors.text200} />
-                    </TouchableOpacity>
+                        </View>
+                        <ButtonComponent
+                            iconFlex="right"
+                            icon={<Ionicons name="arrow-forward" size={24} color={colors.white} />}
+                            title="Xem chi tiết"
+                            type="primary"
+                            size="large"
+                            onPress={() => router.push(`/training-point/${data.id}`)}
+                        />
+                    </View>
                 ) : (
                     <View className="px-2 py-4">
                         <TextComponent text="Không có dữ liệu" />

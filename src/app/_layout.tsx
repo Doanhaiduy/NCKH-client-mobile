@@ -11,7 +11,6 @@ import { Provider } from 'react-redux';
 import '../../global.css';
 import { Host } from 'react-native-portalize';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,7 +27,7 @@ const queryClient = new QueryClient({
 });
 
 export const unstable_settings = {
-    initialRouteName: '',
+    initialRouteName: '/',
 };
 
 export default function RootLayout() {
@@ -65,6 +64,5 @@ function RootLayoutNav() {
         </QueryClientProvider>
     );
 }
-// <ReactQueryDevtools initialIsOpen={true} />
 
 const styles = StyleSheet.create({});

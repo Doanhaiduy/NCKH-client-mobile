@@ -1,3 +1,4 @@
+import { ImageComponent } from 'react-native';
 import ActionListComponents from './ActionListComponents';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
@@ -11,6 +12,7 @@ import LanguageCard from './LanguageCard';
 import NotificationCard from './NotificationCard';
 import PortalizeComponent from './PortalizeComponent';
 import RowComponent from './RowComponent';
+import SearchComponent from './SearchComponent';
 import SectionComponent from './SectionComponent';
 import SlideCardComponent from './SlideCardComponent';
 import SpaceComponent from './SpaceComponent';
@@ -38,4 +40,6 @@ export {
     SlideCardComponent,
     ActionListComponents,
     PortalizeComponent,
+    SearchComponent,
+    ImageComponent,
 };

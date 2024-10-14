@@ -1,13 +1,13 @@
 import { TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Tabs, usePathname, useRouter } from 'expo-router';
+import { router, Tabs, usePathname, useRouter } from 'expo-router';
 import React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function TabsLayout() {
     const path = usePathname();
-    console.log(path);
+
     return (
         <Tabs
             initialRouteName="(home)"
@@ -24,6 +24,7 @@ export default function TabsLayout() {
                     height: Platform.OS === 'ios' ? 80 : 60,
                     display: path === '/attendance/scan' ? 'none' : 'flex',
                 },
+                tabBarActiveTintColor: colors.primary400,
             }}
             sceneContainerStyle={{
                 backgroundColor: '#fff',
@@ -59,9 +60,15 @@ export default function TabsLayout() {
                 name="attendance"
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center justify-center h-14 w-14 rounded-full bg-primary-400 mb-10">
+                        <TouchableOpacity
+                            activeOpacity={0.3}
+                            className="items-center justify-center h-14 w-14 rounded-full bg-primary-400 mb-10"
+                            onPress={() => {
+                                router.navigate('/attendance');
+                            }}
+                        >
                             <MaterialIcons name="qr-code-scanner" size={26} color={colors.white} />
-                        </View>
+                        </TouchableOpacity>
                     ),
                     headerTitle: 'Điểm danh',
                     title: '',
@@ -100,19 +107,6 @@ export default function TabsLayout() {
                     href: null,
                 }}
             />
-            <Tabs.Screen
-                name="events"
-                options={{
-                    href: null,
-                }}
-            />
-
-            {/* <Tabs.Screen
-                name='search'
-                options={{
-                    href: null,
-                }}
-            /> */}
         </Tabs>
     );
 }

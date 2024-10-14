@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Feather, FontAwesome6 } from '@expo/vector-icons';
 import TextComponent from './TextComponent';
@@ -13,63 +13,48 @@ let ActionDataTemp: {
     path: string;
 }[] = [
     {
-        icon: 'check-to-slot',
+        icon: require('../assets/images/home/icon_news.png'),
         text: 'Tin tức',
-        path: '/',
+        path: '/news',
     },
     {
-        icon: 'check-to-slot',
+        icon: require('../assets/images/home/icon_activity.png'),
+        text: 'Hoạt động',
+        path: '/activity',
+    },
+    {
+        icon: require('../assets/images/home/icon_attendance.png'),
         text: 'Đã điểm danh',
         path: '/attendance/list',
     },
     {
-        icon: 'check-to-slot',
+        icon: require('../assets/images/home/icon_assessment.png'),
         text: 'Kết quả rèn luyện',
         path: '/training-point',
     },
     {
-        icon: 'check-to-slot',
-        text: 'Khảo sát',
+        icon: require('../assets/images/home/icon_help.png'),
+        text: 'Trợ giúp',
+        path: '/setting/helps',
+    },
+    {
+        icon: require('../assets/images/home/icon_feedback.png'),
+        text: 'Góp ý',
         path: '/feedback',
     },
     {
-        icon: 'check-to-slot',
-        text: 'Thông báo',
-        path: '/notification',
-    },
-    {
-        icon: 'check-to-slot',
-        text: 'Tài khoản',
+        icon: require('../assets/images/home/icon_setting.png'),
+        text: 'Cài đặt',
         path: '/setting',
     },
     {
-        icon: 'check-to-slot',
-        text: 'Đã đăng ký',
-        path: '/attendance/list',
-    },
-    {
-        icon: 'check-to-slot',
-        text: 'Đang diễn ra',
-        path: '/training-point',
-    },
-    {
-        icon: 'check-to-slot',
-        text: 'Đã diễn ra',
-        path: '/setting',
-    },
-    {
-        icon: 'check-to-slot',
-        text: 'Tài khoản',
-        path: '/setting',
-    },
-    {
-        icon: 'check-to-slot',
-        text: 'Góp ý',
-        path: '/setting',
+        icon: require('../assets/images/home/icon_all.png'),
+        text: 'Tất cả',
+        path: '/',
     },
 ];
 
-const ActionCard = ({ text, icon, path }: { text: string; icon: string; path: string }) => {
+const ActionCard = ({ text, icon, path }: { text: string; icon: any; path: string }) => {
     return (
         <View className="w-[25%] p-2">
             <TouchableOpacity
@@ -78,11 +63,14 @@ const ActionCard = ({ text, icon, path }: { text: string; icon: string; path: st
                 onPress={() =>
                     router.push({
                         pathname: path,
+                        params: {
+                            back: path === '/attendance/list' ? 'to_home' : 'nothing',
+                        },
                     })
                 }
             >
                 <View className="mb-2 w-16 aspect-square items-center justify-center ">
-                    <FontAwesome6 name={icon} size={36} color={colors.primary400} />
+                    <Image source={icon ?? require('@/assets/images/fallback.png')} style={{ width: 64, height: 64 }} />
                 </View>
                 <TextComponent
                     text={text}

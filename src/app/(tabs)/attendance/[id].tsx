@@ -18,7 +18,7 @@ export default function Details() {
     return (
         <ContainerComponent
             iconLeft="back"
-            search
+            notification
             title="Điểm Danh"
             isScroll
             _refreshing={isFetching}

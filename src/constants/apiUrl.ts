@@ -7,6 +7,7 @@ export const API_URL = Object.freeze({
         changePassword: '/change-password',
         register: '/register',
         refreshToken: '/refresh-token',
+        logout: '/logout',
     },
     post: {
         getPosts: '/get-all',

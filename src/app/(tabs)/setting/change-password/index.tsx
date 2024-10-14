@@ -86,7 +86,7 @@ export default function ResetPassword() {
     };
 
     return (
-        <ContainerComponent title="Đổi mật khẩu" iconLeft="back" search isScroll>
+        <ContainerComponent title="Đổi mật khẩu" iconLeft="back" notification isScroll>
             <TextComponent
                 text="Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. "
                 className="mt-2 mx-4"

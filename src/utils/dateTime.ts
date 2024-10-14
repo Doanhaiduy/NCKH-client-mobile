@@ -8,7 +8,16 @@ export const getSecondTimeLimit = (time: number) => {
     const expired = new Date(time);
     return Math.floor((expired.getTime() - now.getTime()) / 1000);
 };
+
 export const dateFormat = (time: string) => {
+    if (time === '') return '';
+    return format(new Date(time), 'dd/MM/yyyy', {
+        locale: vi,
+    });
+};
+
+export const dateFormatLocale = (time: string) => {
+    if (time === '') return '';
     return formatDistanceStrict(new Date(time), new Date(), {
         locale: vi,
     });

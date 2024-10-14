@@ -1,6 +1,6 @@
 import { ButtonComponent, ContainerComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
-import { sleep } from '@/utils';
+import { obfuscateEmail, sleep } from '@/utils';
 import { LoadingModal } from '@/modals';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -95,10 +95,10 @@ export default function verification() {
     };
 
     return (
-        <ContainerComponent isScroll iconLeft="back" title="Quên mật khẩu" search>
+        <ContainerComponent isScroll iconLeft="back" title="Quên mật khẩu" notification>
             <SectionComponent className="mt-2">
                 <TextComponent
-                    text="Chúng tôi đã gửi mã của bạn đến: mynt.63cntt@ntu.edu.vn"
+                    text={`Chúng tôi đã gửi mã của bạn đến email ${obfuscateEmail(OTP?.email || '')}`}
                     className="font-interMd"
                 />
                 <SpaceComponent height={8} />
@@ -113,7 +113,7 @@ export default function verification() {
                     <View className="w-full flex gap-1 flex-row">
                         <TextComponent text="Chưa nhận được mã OTP?" className="text-md" />
                         <TouchableOpacity onPress={handleResendOTP}>
-                            <TextComponent text="Gửi lại" className="text-md text-primary-400" />
+                            <TextComponent text="Gửi lại" className="text-md text-primary-500" />
                         </TouchableOpacity>
                     </View>
                 )}

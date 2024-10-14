@@ -7,6 +7,7 @@ type AuthData = {
     role: string;
     accessToken: string;
     refreshToken: string;
+    sclassName: string;
 };
 
 type AuthState = {

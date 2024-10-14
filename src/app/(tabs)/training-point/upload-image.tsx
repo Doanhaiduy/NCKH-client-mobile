@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useIsFocused } from '@react-navigation/native';
+import ImageComponent from '@/components/ImageComponent';
 
 export default function UploadImage() {
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
@@ -181,7 +182,7 @@ export default function UploadImage() {
                     <View className="w-full flex-row gap-3 flex-wrap ">
                         {currentImages.map((image: any, index: number) => (
                             <View key={index} className="w-[80px] h-[80px] relative">
-                                <Image source={{ uri: image.uri }} className="w-full h-full" resizeMode="cover" />
+                                <ImageComponent url={image.uri} rounded={4} />
                                 <TouchableOpacity
                                     className="absolute right-1 top-1"
                                     onPress={() => {
@@ -211,7 +212,7 @@ export default function UploadImage() {
                     <View className="w-full flex-row gap-3 flex-wrap ">
                         {images.map((image: any, index: number) => (
                             <View key={index} className="w-[80px] h-[80px] relative">
-                                <Image source={{ uri: image.uri }} className="w-full h-full" resizeMode="cover" />
+                                <ImageComponent url={image.uri} rounded={4} />
                                 <TouchableOpacity
                                     className="absolute right-1 top-1"
                                     onPress={() => {

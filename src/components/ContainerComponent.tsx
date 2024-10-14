@@ -1,9 +1,10 @@
 import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { ReactNode, useEffect } from 'react';
 import {
+    Image,
     ImageBackground,
     Platform,
     RefreshControl,
@@ -32,7 +33,7 @@ interface Props extends React.ComponentProps<typeof View> {
     style?: StyleProp<ViewStyle>;
     isModal?: boolean;
     handleRefresh?: () => void;
-    search?: boolean;
+    notification?: boolean;
     iconRight?: ReactNode;
     _refreshing?: boolean;
     onBack?: () => void;
@@ -51,7 +52,7 @@ export default function ContainerComponent(props: Props) {
         iconLeft,
         handleRefresh,
         iconRight,
-        search,
+        notification,
         _refreshing,
         onBack,
         isHome,
@@ -96,7 +97,7 @@ export default function ContainerComponent(props: Props) {
                 style={[
                     style,
                     {
-                        borderBottomWidth: isHome ? 0 : 0.6,
+                        borderBottomWidth: 0.6,
                         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
                         maxWidth: appInfo.sizes.WIDTH,
                     },
@@ -117,26 +118,33 @@ export default function ContainerComponent(props: Props) {
                     )}
                     {iconLeft === 'logo' && (
                         <TouchableOpacity onPress={() => {}}>
-                            <Ionicons name="logo-react" size={24} color={colors['primary400']} />
+                            <Image
+                                source={require('../assets/images/icon.png')}
+                                width={28}
+                                height={28}
+                                resizeMode="cover"
+                            />
                         </TouchableOpacity>
                     )}
                     {title && (
                         <TextComponent
                             text={title}
-                            title
+                            title={!isHome}
                             center
                             style={{
-                                fontSize: isHome ? 32 : 24,
+                                fontSize: isHome ? 28 : 24,
                                 lineHeight: isHome ? 40 : 32,
+                                color: colors['primary400'],
+                                fontWeight: isHome ? 'bold' : 'normal',
                             }}
                         />
                     )}
-                    {search ? (
-                        <TouchableOpacity onPress={() => router.push('/search')}>
-                            <Ionicons name="search" size={26} color={colors['primary400']} />
+                    {notification ? (
+                        <TouchableOpacity onPress={() => router.navigate('/notification')}>
+                            <Feather name="bell" size={26} color={colors.primary500} />
                         </TouchableOpacity>
                     ) : iconRight ? null : (
-                        <Ionicons name="search" size={26} color="transparent" />
+                        <Ionicons name="barbell" size={26} color="transparent" />
                     )}
                     {iconRight && iconRight}
                 </RowComponent>

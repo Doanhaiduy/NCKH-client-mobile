@@ -1,33 +1,44 @@
 import eventAPI from '@/apis/eventApi';
 import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
 import { useQueries } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 export default function Attendance() {
+    const navigation = useNavigation();
+
     const [eventActive, eventInactive] = useQueries({
         queries: [
             {
-                queryKey: ['events-active'],
+                queryKey: ['events-ongoing'],
                 queryFn: () =>
                     eventAPI.getEvents({
                         page: 1,
-                        size: 4,
+                        size: 10,
                         status: 'active',
+                        time: 'ongoing',
                     }),
             },
             {
-                queryKey: ['events-inactive'],
+                queryKey: ['events-past'],
                 queryFn: () =>
                     eventAPI.getEvents({
                         page: 1,
-                        size: 4,
-                        status: 'inactive',
+                        size: 10,
+                        status: 'active',
+                        time: 'past',
                     }),
             },
         ],
     });
+
+    useEffect(() => {
+        navigation.addListener('beforeRemove', (e) => {
+            e.preventDefault();
+            navigation.dispatch(e.data.action);
+        });
+    }, []);
 
     return (
         <ContainerComponent
@@ -35,7 +46,7 @@ export default function Attendance() {
             title="Điểm danh"
             isScroll
             _refreshing={eventActive.isFetching || eventInactive.isFetching}
-            search
+            notification
             handleRefresh={() => {
                 eventActive.refetch();
                 eventInactive.refetch();
@@ -98,7 +109,12 @@ export default function Attendance() {
                     size="large"
                     type="primary"
                     onPress={() => {
-                        router.push('/attendance/list');
+                        router.push({
+                            pathname: '/attendance/list',
+                            params: {
+                                back: 'to_attendance',
+                            },
+                        });
                     }}
                 />
             </View>

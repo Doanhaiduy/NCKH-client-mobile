@@ -10,7 +10,7 @@ interface Props {
     active?: boolean;
     onPress?: (val: string) => void;
     text: string;
-    icon?: string;
+    icon?: any;
     lang: string;
 }
 
@@ -27,13 +27,7 @@ export default function LanguageCard(props: Props) {
     return (
         <TouchableOpacity onPress={() => onPress?.(lang ?? 'vi')} className={containerClasses}>
             <RowComponent>
-                <Image
-                    source={{
-                        uri: icon,
-                    }}
-                    className="h-9 w-9 rounded-full"
-                    resizeMode="cover"
-                />
+                <Image source={icon} className="h-9 w-9 rounded-full" resizeMode="cover" />
                 <TextComponent text={text} className="ml-[6px]" size={16} />
             </RowComponent>
             {active ? (

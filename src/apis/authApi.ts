@@ -2,6 +2,7 @@ import { API_URL } from '@/constants/apiUrl';
 import axiosClient from './index';
 import { AxiosRequestConfig } from 'axios';
 import { appInfo } from '@/constants/appInfo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AuthAPI {
     HandleAuth = async <T>(
@@ -39,6 +40,17 @@ class AuthAPI {
 
     changePassword = async (data: FormChangePassword, option: AxiosRequestConfig = {}): Promise<{ email: string }> => {
         return await this.HandleAuth(API_URL.auth.changePassword, data, 'post', option);
+    };
+    logout = async (data = {}, option: AxiosRequestConfig = {}): Promise<{ email: string }> => {
+        const authStorage = await AsyncStorage.getItem('auth');
+        const refreshToken = authStorage && JSON.parse(authStorage).refreshToken;
+        option = {
+            headers: {
+                refresh_token: `Bearer ${refreshToken}`,
+            },
+            ...option,
+        };
+        return await this.HandleAuth(API_URL.auth.logout, data, 'post', option);
     };
 }
 

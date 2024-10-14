@@ -1,26 +1,30 @@
 import postAPI from '@/apis/postApi';
-import { ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
-import { appInfo } from '@/constants/appInfo';
-import useScrollAnimation from '@/hooks/useScrollAnimation';
-import { EventData } from '@/mockData';
-import { sleep } from '@/utils';
+import {
+    ContainerComponent,
+    ItemCardList,
+    SearchComponent,
+    SectionComponent,
+    SpaceComponent,
+    TextComponent,
+} from '@/components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
-export default function NewsList() {
-    const { handleScroll } = useScrollAnimation();
-
+export default function NewsScreen() {
+    const [SearchValue, setSearchValue] = React.useState('');
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
-            queryKey: ['news-events'],
+            queryKey: ['news'],
             initialPageParam: 1,
             queryFn: ({ pageParam }) =>
                 postAPI.getPosts({
                     page: pageParam,
                     size: 10,
                     category: 'news',
+                    search: SearchValue,
                 }),
             getNextPageParam: (lastPage, pages) => {
                 const nextPage = parseInt(lastPage.page) + 1;
@@ -36,54 +40,82 @@ export default function NewsList() {
         }
     };
 
+    const handleSubmit = async (text?: string) => {
+        const searchItemAsync = AsyncStorage.getItem('searchItem');
+        const textValue = text ? text : SearchValue;
+
+        searchItemAsync.then((value) => {
+            if (value) {
+                const searchItem = JSON.parse(value);
+
+                if (searchItem.includes(textValue)) {
+                    searchItem.splice(searchItem.indexOf(textValue), 1);
+                }
+                if (textValue === '') {
+                    refetch();
+                    return;
+                }
+                searchItem.push(textValue);
+                AsyncStorage.setItem('searchItem', JSON.stringify(searchItem));
+                setSearchValue(textValue);
+                refetch();
+            } else {
+                AsyncStorage.setItem('searchItem', JSON.stringify([textValue]));
+                setSearchValue(textValue);
+                refetch();
+            }
+        });
+    };
+
     return (
-        <View
-            style={{
-                flex: 1,
-                marginTop: appInfo.headerHomeBar,
-            }}
-        >
-            <SectionComponent className="flex-1">
-                <View className="flex-1">
-                    <FlatList
-                        onScroll={handleScroll}
-                        keyExtractor={(item, index) => index.toString()}
-                        data={data?.pages.map((page) => page.posts).flat()}
-                        showsVerticalScrollIndicator={false}
-                        ListHeaderComponent={
-                            <TextComponent
-                                text="Tin tức"
-                                className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
-                            />
-                        }
-                        refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
-                        removeClippedSubviews={true}
-                        initialNumToRender={10}
-                        ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}
-                        onEndReachedThreshold={0.3}
-                        onEndReached={loadMore}
-                        ListEmptyComponent={
-                            <View>
-                                <TextComponent text="Không có dữ liệu" />
-                            </View>
-                        }
-                        renderItem={({ item }) => (
-                            <ItemCardList
-                                data={item}
-                                onPress={() => {
-                                    router.push({
-                                        pathname: `/news/details/${item.id}`,
-                                        params: {
-                                            eventName: 'Hoạt động ngoại khóa',
-                                        },
-                                    });
-                                }}
-                            />
-                        )}
-                    />
-                </View>
+        <ContainerComponent title="Tin tức" iconLeft="back" handleRefresh={refetch} _refreshing={isFetching}>
+            <SpaceComponent height={16} />
+            <SectionComponent>
+                <SearchComponent
+                    value={SearchValue}
+                    onChangeText={setSearchValue}
+                    onSubmit={handleSubmit}
+                    onClear={() => setSearchValue('')}
+                    placeholder="Tìm kiếm hoạt động"
+                />
             </SectionComponent>
-        </View>
+            <SectionComponent
+                className="flex-1"
+                style={{
+                    zIndex: -1,
+                }}
+            >
+                <FlatList
+                    keyExtractor={(item, index) => index.toString()}
+                    data={data?.pages.map((page) => page.posts).flat()}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+                    removeClippedSubviews={true}
+                    initialNumToRender={10}
+                    ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}
+                    onEndReachedThreshold={0.3}
+                    onEndReached={loadMore}
+                    ListEmptyComponent={
+                        <View>
+                            <TextComponent text="Không có dữ liệu" />
+                        </View>
+                    }
+                    renderItem={({ item }) => (
+                        <ItemCardList
+                            data={item}
+                            onPress={() => {
+                                router.push({
+                                    pathname: `/news/${item.id}`,
+                                    params: {
+                                        eventName: 'Hoạt động ngoại khóa',
+                                    },
+                                });
+                            }}
+                        />
+                    )}
+                />
+            </SectionComponent>
+        </ContainerComponent>
     );
 }
 

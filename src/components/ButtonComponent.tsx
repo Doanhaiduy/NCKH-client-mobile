@@ -33,7 +33,14 @@ export default function ButtonComponent(props: Props) {
     const { title, type, size, disabled, onPress, icon, iconFlex } = props;
 
     return (
-        <TouchableOpacity disabled={disabled} onPress={onPress} className="flex-1 w-full justify-center items-center">
+        <TouchableOpacity
+            disabled={disabled}
+            onPress={onPress}
+            className="w-full justify-center items-center"
+            style={{
+                width: size === 'large' ? '100%' : size === 'medium' ? 'auto' : 'auto',
+            }}
+        >
             <LinearGradient
                 start={[0.0, 0.5]}
                 end={[1.0, 0.5]}
@@ -62,7 +69,7 @@ export default function ButtonComponent(props: Props) {
                             'opacity-70': disabled,
                         })}
                     />
-                    {icon && iconFlex === 'right' && <View className="">{icon}</View>}
+                    {icon && iconFlex === 'right' && <View className="ml-[2px]">{icon}</View>}
                 </>
             </LinearGradient>
         </TouchableOpacity>

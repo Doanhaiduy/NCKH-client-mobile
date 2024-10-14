@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import TextComponent from './TextComponent';
-import { dateFormat } from '@/utils/dateTime';
+import { dateFormatLocale } from '@/utils/dateTime';
 
 interface Props {
     data: AttendanceDetails[];
@@ -43,7 +43,7 @@ export default function TableComponent(props: Props) {
                             <TextComponent text={item.event.name} />
                         </View>
                         <View className="flex-1 items-start max-w-[35%]">
-                            <TextComponent text={dateFormat(item.checkInAt)} />
+                            <TextComponent text={dateFormatLocale(item.checkInAt)} />
                         </View>
                         <View className="flex-1 items-start max-w-[35%]">
                             <TextComponent text={item.status} />

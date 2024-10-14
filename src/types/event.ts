@@ -52,6 +52,7 @@ type EventsParams = {
     page?: number;
     size?: number;
     status?: 'active' | 'inactive';
+    time?: 'past' | 'ongoing' | 'upcoming';
 };
 
 type EventCheckInParams = {

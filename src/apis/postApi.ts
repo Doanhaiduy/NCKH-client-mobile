@@ -41,7 +41,7 @@ class PostAPI {
         );
     };
 
-    getDetailPost = async (id: string, option: AxiosRequestConfig = {}): Promise<PostDetails> => {
+    getDetailPost = async (id: string, option: AxiosRequestConfig = {}): Promise<Post> => {
         return await this.HandlePost(`/${id}`, undefined, 'get', option);
     };
 }

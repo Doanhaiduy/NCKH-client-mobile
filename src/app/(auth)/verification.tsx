@@ -100,7 +100,7 @@ export default function VerificationPage() {
             <SpaceComponent height={120} />
             <View className="px-8 pb-4 ">
                 <SectionComponent align="center">
-                    <TextComponent text="Xác minh email" title className="text-primary-400" />
+                    <TextComponent text="Xác minh email" title className="text-primary-500" />
                     <TextComponent
                         text={`Một mã OTP 6 chữ số đã được gửi đến email ${obfuscateEmail(OTP?.email || '')}.`}
                         className="text-center mt-4"
@@ -156,7 +156,7 @@ export default function VerificationPage() {
                         <SectionComponent align="center" className="w-full">
                             <TextComponent text="Chưa nhận được mã OTP?" className="text-sm" />
                             <TouchableOpacity onPress={handleResendOTP}>
-                                <TextComponent text="Gửi lại" className="text-sm text-primary-400" />
+                                <TextComponent text="Gửi lại" className="text-sm text-primary-500" />
                             </TouchableOpacity>
                         </SectionComponent>
                     )}

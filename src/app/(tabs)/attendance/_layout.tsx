@@ -17,7 +17,6 @@ export default function AttendanceLayout() {
                 }}
             />
             <Stack.Screen name="pending" />
-
             <Stack.Screen name="list" />
             <Stack.Screen name="[id]" />
         </Stack>

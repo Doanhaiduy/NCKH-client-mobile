@@ -11,13 +11,14 @@ import { colors } from '@/constants/colors';
 import { AttendanceOptionData } from '@/mockData';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQuery } from '@tanstack/react-query';
-import { router } from 'expo-router';
-import React from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function ListAttendance() {
     const { authData } = useSelector(authSelector);
+    const { back } = useLocalSearchParams();
 
     const { data, refetch, isFetching } = useQuery({
         queryKey: ['attendance-list', authData?.id],
@@ -28,15 +29,24 @@ export default function ListAttendance() {
             }),
     });
 
+    useEffect(() => {
+        refetch();
+        console.log(back);
+    }, []);
+
     return (
         <ContainerComponent
-            onBack={() => router.dismissAll()}
+            onBack={() => {
+                back === 'to_home' && router.navigate('/(home)');
+                back === 'to_attendance' && router.back();
+                back === 'to_scan' && router.dismissAll();
+            }}
             isScroll
             title="Đã điểm danh"
             handleRefresh={refetch}
             _refreshing={isFetching}
             iconLeft="back"
-            search
+            notification
         >
             <SectionComponent className="items-center">
                 <TextComponent
@@ -48,7 +58,7 @@ export default function ListAttendance() {
                 <RowComponent className="ml-auto mb-4">
                     <DropDownComponent title="" data={AttendanceOptionData} onSelect={() => {}} width={230} />
                 </RowComponent>
-                <TableComponent data={data?.attendances || []} />
+                <TableComponent data={data?.attendances.reverse() || []} />
             </SectionComponent>
         </ContainerComponent>
     );
