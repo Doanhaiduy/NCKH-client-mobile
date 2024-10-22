@@ -82,14 +82,25 @@ export default function UploadImage() {
     }, [isFocused]);
 
     useEffect(() => {
+        console.log('data', data);
         if (data) {
-            const parserImages = data.data.map((item: ResponseEvidence) => ({
+            const parserImages: ImagePicker.ImagePickerAsset[] = data.data.map((item: ResponseEvidence) => ({
+                currentImage: true,
                 uri: item.url,
                 id: item.public_id,
+                fileName: item.url.split('/').pop(),
+                type: 'image',
+                width: 800,
+                height: 600,
             }));
-            setCurrentImages(parserImages);
+            setImages(parserImages);
         }
     }, [data]);
+
+    const checkNotChange = () => {
+        if (images.length !== data?.data.length) return true;
+        return images.some((image: any) => !image.currentImage);
+    };
 
     const handleUploadImages = async () => {
         setIsLoading(true);
@@ -100,26 +111,13 @@ export default function UploadImage() {
                 const postData = {
                     name: newImageUri.split('/').pop(),
                     uri: newImageUri,
-                    type: (await mime.getType(newImageUri)) || '',
+                    type: image.currentImage ? 'image/jpeg' : (await mime.getType(newImageUri)) || '',
                 };
                 formData.append('evidence', postData as any);
             });
             console.log(formData);
-
-            // const res = await userAPI.HandleUser<
-            //     {
-            //         public_id: string;
-            //         url: string;
-            //     }[]
-            // >('/upload-multiple', formData, 'post', {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data',
-            //     },
-            // });
             const res = await trainingPointAPI.updateCriteriaEvidence(id?.toString() ?? '', formData);
-
             console.log(res);
-
             if (res) {
                 Alert.alert('Thông báo', 'Tải ảnh lên thành công');
                 console.log(res);
@@ -128,11 +126,12 @@ export default function UploadImage() {
             }
             setIsLoading(false);
         } catch (error) {
-            console.log('error ~ ', error);
+            console.log('error', error);
             Alert.alert('Lỗi', 'Tải ảnh lên thất bại');
             setIsLoading(false);
         }
     };
+
     return (
         <ContainerComponent
             title="Tải lên ảnh"
@@ -143,6 +142,10 @@ export default function UploadImage() {
             iconRight={
                 <TouchableOpacity
                     onPress={() => {
+                        if (!checkNotChange()) {
+                            router.back();
+                            return;
+                        }
                         if (images.length <= 0) {
                             Alert.alert('Lỗi', 'Vui lòng chọn ảnh để tải lên');
                             return;
@@ -176,27 +179,6 @@ export default function UploadImage() {
                 />
                 <TextComponent text="Tải lên minh chứng mục 1.2" color={colors.text400} className="mt-2" size={16} />
             </SectionComponent>
-            {currentImages.length > 0 && (
-                <SectionComponent>
-                    <TextComponent text="Ảnh đã tải lên" size={20} />
-                    <View className="w-full flex-row gap-3 flex-wrap ">
-                        {currentImages.map((image: any, index: number) => (
-                            <View key={index} className="w-[80px] h-[80px] relative">
-                                <ImageComponent url={image.uri} rounded={4} />
-                                <TouchableOpacity
-                                    className="absolute right-1 top-1"
-                                    onPress={() => {
-                                        const newImages = currentImages.filter((_: any, i: number) => i !== index);
-                                        setCurrentImages(newImages);
-                                    }}
-                                >
-                                    {/* <Ionicons name='close-circle' size={24} color={colors.white} /> */}
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    </View>
-                </SectionComponent>
-            )}
             {images.length <= 0 ? (
                 <SectionComponent>
                     <TouchableOpacity
@@ -214,13 +196,13 @@ export default function UploadImage() {
                             <View key={index} className="w-[80px] h-[80px] relative">
                                 <ImageComponent url={image.uri} rounded={4} />
                                 <TouchableOpacity
-                                    className="absolute right-1 top-1"
+                                    className="absolute right-0 top-0"
                                     onPress={() => {
                                         const newImages = images.filter((_: any, i: number) => i !== index);
                                         setImages(newImages);
                                     }}
                                 >
-                                    <Ionicons name="close-circle" size={24} color={colors.white} />
+                                    <Ionicons name="close-circle-sharp" size={24} color={colors.text300} />
                                 </TouchableOpacity>
                             </View>
                         ))}

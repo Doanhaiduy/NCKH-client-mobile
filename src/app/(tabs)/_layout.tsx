@@ -62,7 +62,10 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color, size }) => (
                         <TouchableOpacity
                             activeOpacity={0.3}
-                            className="items-center justify-center h-14 w-14 rounded-full bg-primary-400 mb-10"
+                            className="items-center justify-center h-14 w-14  bg-primary-400 mb-10"
+                            style={{
+                                borderRadius: 99,
+                            }}
                             onPress={() => {
                                 router.navigate('/attendance');
                             }}

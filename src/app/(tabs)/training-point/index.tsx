@@ -85,7 +85,7 @@ export default function TrainingPoint() {
                 {data?.id ? (
                     <View className="w-[80%] justify-between items-center">
                         <View
-                            className="justify-between items-center border-primary-300 border-[1px] rounded-full w-[200px] aspect-square mb-10"
+                            className="justify-between items-center border-primary-300 border-[1px] w-[200px] aspect-square mb-10"
                             style={{
                                 shadowColor: colors.primary300,
                                 shadowOffset: {
@@ -96,6 +96,7 @@ export default function TrainingPoint() {
                                 shadowRadius: 50,
                                 elevation: 8,
                                 backgroundColor: colors.white,
+                                borderRadius: 99,
                             }}
                         >
                             <View
@@ -108,7 +109,7 @@ export default function TrainingPoint() {
                                 }}
                             >
                                 <TextComponent
-                                    text={data?.totalScore?.toString()}
+                                    text={data?.totalScore?.toString() || ''}
                                     size={96}
                                     color={colors.primary500}
                                     style={{
@@ -117,7 +118,7 @@ export default function TrainingPoint() {
                                     }}
                                 />
                                 <TextComponent
-                                    text={data.status}
+                                    text={data?.status || ''}
                                     size={20}
                                     color={colors.primary200}
                                     style={{
@@ -132,7 +133,7 @@ export default function TrainingPoint() {
                             title="Xem chi tiết"
                             type="primary"
                             size="large"
-                            onPress={() => router.push(`/training-point/${data.id}`)}
+                            onPress={() => router.push(`/training-point/${data?.id}`)}
                         />
                     </View>
                 ) : (

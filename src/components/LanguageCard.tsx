@@ -27,7 +27,14 @@ export default function LanguageCard(props: Props) {
     return (
         <TouchableOpacity onPress={() => onPress?.(lang ?? 'vi')} className={containerClasses}>
             <RowComponent>
-                <Image source={icon} className="h-9 w-9 rounded-full" resizeMode="cover" />
+                <Image
+                    source={icon}
+                    className="h-9 w-9"
+                    resizeMode="cover"
+                    style={{
+                        borderRadius: 99,
+                    }}
+                />
                 <TextComponent text={text} className="ml-[6px]" size={16} />
             </RowComponent>
             {active ? (

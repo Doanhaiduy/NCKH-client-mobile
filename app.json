@@ -21,7 +21,8 @@
       "backgroundImage": "./assets/splash-screen.png"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.doanhaiduy.mobile"
     },
     "android": {
       "adaptiveIcon": {

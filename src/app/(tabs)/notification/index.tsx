@@ -1,7 +1,6 @@
 import notificationAPI from '@/apis/notificationApi';
 import userAPI from '@/apis/userApi';
 import { ContainerComponent, NotificationCard } from '@/components';
-import { NotificationData } from '@/mockData';
 import { LoadingModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQuery } from '@tanstack/react-query';

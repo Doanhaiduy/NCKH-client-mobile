@@ -81,7 +81,12 @@ const SearchComponent = (props: Props) => {
     };
     return (
         <View className="w-full relative">
-            <View className="w-full py-4 px-3 pr-5 bg-primary-100 rounded-full flex-row items-center space-x-2">
+            <View
+                className="w-full py-4 px-3 pr-5 bg-primary-100 flex-row items-center space-x-2"
+                style={{
+                    borderRadius: 99,
+                }}
+            >
                 <Ionicons name="search" size={28} color="#000" />
                 <TextInput
                     placeholder={placeholder}

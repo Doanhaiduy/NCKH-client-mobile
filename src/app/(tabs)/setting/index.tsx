@@ -6,7 +6,7 @@ import { authSelector, logout } from '@/stores/reducers/authReducer';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, Touchable, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function SettingPage() {
@@ -26,14 +26,21 @@ export default function SettingPage() {
     return (
         <ContainerComponent isScroll title="Cài đặt" iconLeft="logo" notification>
             <SectionComponent className="flex-row flex-1 items-center mt-4">
-                <View className="border-1 border rounded-full border-primary-400 p-[2px]">
+                <View
+                    className="border-1 border border-primary-400 p-[2px]"
+                    style={{
+                        borderRadius: 99,
+                    }}
+                >
                     <ImageComponent url={authData?.avatar!} height={80} width={80} rounded={9999} />
                 </View>
                 <View className="ml-4 flex-1">
                     <TextComponent text={authData?.fullName || ''} className="text-xl" />
                     <TextComponent text={`MSSV: ${authData?.username}`} className="text-base text-gray-400" />
                 </View>
-                <Feather name="edit" size={24} color={colors.primary300} />
+                <TouchableOpacity onPress={() => router.push('setting/profile')}>
+                    <Feather name="edit" size={24} color={colors.primary500} />
+                </TouchableOpacity>
             </SectionComponent>
 
             <SectionComponent className="mt-4">

@@ -99,6 +99,7 @@ function InputComponent(props: Props) {
                         multiline={multiline}
                         className={inputClass}
                         readOnly={readOnly}
+                        showSoftInputOnFocus={!readOnly}
                         style={{
                             marginBottom: value && placeholder ? 10 : 0,
                             color: color ?? 'black',

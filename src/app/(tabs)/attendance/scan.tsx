@@ -209,7 +209,7 @@ export default function ScanQRScreen() {
                 }
             }
         } catch (error) {
-            setError('Mã QR không hợp lệ 3');
+            setError('Mã QR không hợp lệ');
             setScanned(true);
             modalizeRefFailed.current?.open();
         }
@@ -258,7 +258,12 @@ export default function ScanQRScreen() {
                 ref={modalizeRefFailed}
                 children={
                     <View className="shadow-xl gap-5 p-3 bg-white">
-                        <View className="border-[2px] border-white rounded-full items-center">
+                        <View
+                            className="border-[2px] border-white  items-center"
+                            style={{
+                                borderRadius: 99,
+                            }}
+                        >
                             <Ionicons name="close-circle" size={100} color={colors.error} />
                         </View>
                         <View className="justify-center items-center">
@@ -296,7 +301,12 @@ export default function ScanQRScreen() {
                 ref={modalizeRefSuccess}
                 children={
                     <View className="shadow-xl gap-5 p-3 bg-white">
-                        <View className="border-[2px] border-white rounded-full items-center">
+                        <View
+                            className="border-[2px] border-white items-center"
+                            style={{
+                                borderRadius: 99,
+                            }}
+                        >
                             <Ionicons name="checkmark-circle" size={100} color={colors.success} />
                         </View>
                         <View className="justify-center items-center">

@@ -64,11 +64,13 @@ export default function TrainingPointDetails() {
             </SectionComponent>
             <SectionComponent className="items-center">
                 <TableBorderComponent data={data?.criteria} />
-                <SpaceComponent height={40} />
+            </SectionComponent>
+            <SpaceComponent height={40} />
+            {/* <SectionComponent className='w-full'>
                 <ButtonComponent
-                    title="Tải lên minh chứng"
-                    type="outline"
-                    size="large"
+                    title='Tải lên minh chứng'
+                    type='outline'
+                    size='large'
                     onPress={() =>
                         router.push({
                             pathname: '/training-point/upload',
@@ -76,8 +78,7 @@ export default function TrainingPointDetails() {
                         })
                     }
                 />
-            </SectionComponent>
-            {/* <LoadingModal visible={isRefetching} /> */}
+            </SectionComponent> */}
         </ContainerComponent>
     );
 }

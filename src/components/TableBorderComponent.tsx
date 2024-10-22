@@ -35,7 +35,7 @@ export default function TableBorderComponent(props: Props) {
     }, [data]);
     return (
         <View className="min-w-full px-2">
-            <View className="flex-row flex-nowrap  border-text-200 border-y-[1px] ">
+            <View className="flex-row flex-nowrap border-text-200 border-y-[1px] ">
                 <View className="w-[10%] items-start border-text-200 py-3 px-1 border-x-[1px]">
                     <TextComponent text="Mã TC" fontBold />
                 </View>

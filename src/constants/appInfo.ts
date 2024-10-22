@@ -10,6 +10,6 @@ export const appInfo = Object.freeze({
         default: Platform.OS === 'android' ? 80 : 102,
         onScroll: Platform.OS === 'android' ? 80 : 102,
     },
-    base_url: 'http://192.168.1.8:3000/api/v1',
-    // base_url: 'https://nckhserver.duydemo.io.vn/api/v1',
+    // base_url: 'http://192.168.1.36:3000/api/v1',
+    base_url: 'https://nckhserver.duydemo.io.vn/api/v1',
 });

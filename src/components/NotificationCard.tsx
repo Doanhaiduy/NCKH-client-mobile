@@ -25,7 +25,14 @@ export default function NotificationCard(props: Props) {
         >
             <RowComponent className="justify-between">
                 <TextComponent text={data?.message?.toString()} size={20} className="font-interMd" />
-                {isNew && <View className="w-2 h-2 rounded-full bg-primary-400"></View>}
+                {isNew && (
+                    <View
+                        className="w-2 h-2 bg-primary-400"
+                        style={{
+                            borderRadius: 99,
+                        }}
+                    ></View>
+                )}
             </RowComponent>
             <TextComponent text={data?.description?.toString() || ''} numberOfLines={1} className="pr-5 py-1" />
             <RowComponent className="justify-between pr-5">

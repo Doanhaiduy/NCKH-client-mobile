@@ -113,7 +113,7 @@ export default function ContainerComponent(props: Props) {
                 >
                     {iconLeft === 'back' && (
                         <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())}>
-                            <Ionicons name="chevron-back" size={24} color={colors['primary400']} />
+                            <Ionicons name="chevron-back" size={24} color={colors.primary500} />
                         </TouchableOpacity>
                     )}
                     {iconLeft === 'logo' && (
@@ -164,7 +164,7 @@ export default function ContainerComponent(props: Props) {
             {iconLeft === 'back' && (
                 <RowComponent style={{ paddingTop: heightBar, paddingBottom: 8, paddingLeft: 16 }}>
                     <TouchableOpacity onPress={() => router.back()}>
-                        <Ionicons name="chevron-back" size={35} color={'#444'} />
+                        <Ionicons name="chevron-back" size={35} color={colors.text200} />
                     </TouchableOpacity>
                 </RowComponent>
             )}
