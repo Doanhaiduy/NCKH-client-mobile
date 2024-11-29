@@ -1,11 +1,15 @@
-import { ContainerComponent } from '@/components';
+import { ActionListComponents, ContainerComponent, SectionComponent, TextComponent } from '@/components';
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 
 export default function UserGuide() {
     return (
-        <ContainerComponent iconLeft="back">
-            <Text>UserGuide</Text>
+        <ContainerComponent iconLeft="back" title="Hướng dẫn sử dụng" notification>
+            <SectionComponent className="flex-1" title="Chúng tôi có thể giúp gì cho bạn?" titleCenter>
+                <ScrollView>
+                    <ActionListComponents full isHelper />
+                </ScrollView>
+            </SectionComponent>
         </ContainerComponent>
     );
 }

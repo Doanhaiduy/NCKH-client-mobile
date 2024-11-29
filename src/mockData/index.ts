@@ -62,7 +62,6 @@ const AttendanceOptionData = [
         title: 'HK: II, NH: 2022 - 2023',
         value: 'HK: II, NH: 2022 - 2023',
     },
-
     {
         title: 'HK: I, NH: 2023 - 2024',
         value: 'HK: I, NH: 2023 - 2024',

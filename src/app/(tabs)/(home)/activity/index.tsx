@@ -7,24 +7,26 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useRefreshing } from '@/hooks/useRefreshing';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, View } from 'react-native';
 
 export default function ActivityScreen() {
-    const [SearchValue, setSearchValue] = React.useState('');
+    const [searchValue, setSearchValue] = React.useState('');
+    const debouncedSearchValue = useDebounce(searchValue, 500);
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
-            queryKey: ['activity'],
+            queryKey: ['activity', debouncedSearchValue],
             initialPageParam: 1,
             queryFn: ({ pageParam }) =>
                 postAPI.getPosts({
                     page: pageParam,
                     size: 10,
                     category: 'activity',
-                    search: SearchValue,
+                    search: debouncedSearchValue,
                 }),
             getNextPageParam: (lastPage, pages) => {
                 const nextPage = parseInt(lastPage.page) + 1;
@@ -40,48 +42,19 @@ export default function ActivityScreen() {
         }
     };
 
-    const handleSubmit = async (text?: string) => {
-        const searchItemAsync = AsyncStorage.getItem('searchItem');
-        const textValue = text ? text : SearchValue;
-        console.log('====================', textValue);
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
 
-        searchItemAsync.then((value) => {
-            if (value) {
-                const searchItem = JSON.parse(value);
-
-                if (searchItem.includes(textValue)) {
-                    searchItem.splice(searchItem.indexOf(textValue), 1);
-                }
-                if (textValue === '') {
-                    refetch();
-                    return;
-                }
-                searchItem.push(textValue);
-                AsyncStorage.setItem('searchItem', JSON.stringify(searchItem));
-                setSearchValue(textValue);
-                refetch();
-            } else {
-                AsyncStorage.setItem('searchItem', JSON.stringify([textValue]));
-                setSearchValue(textValue);
-                refetch();
-            }
-        });
-    };
+    React.useEffect(() => {
+        refetch();
+    }, [debouncedSearchValue]);
 
     return (
-        <ContainerComponent
-            title="Hoạt động"
-            iconLeft="back"
-            handleRefresh={refetch}
-            _refreshing={isFetching}
-            notification
-        >
+        <ContainerComponent title="Hoạt động" iconLeft="back" notification>
             <SpaceComponent height={16} />
             <SectionComponent>
                 <SearchComponent
-                    value={SearchValue}
+                    value={searchValue}
                     onChangeText={setSearchValue}
-                    onSubmit={handleSubmit}
                     onClear={() => setSearchValue('')}
                     placeholder="Tìm kiếm hoạt động"
                 />
@@ -89,14 +62,14 @@ export default function ActivityScreen() {
             <SectionComponent
                 className="flex-1"
                 style={{
-                    zIndex: -1,
+                    zIndex: Platform.OS === 'ios' ? -1 : 0,
                 }}
             >
                 <FlatList
                     keyExtractor={(item, index) => index.toString()}
                     data={data?.pages.map((page) => page.posts).flat()}
                     showsVerticalScrollIndicator={false}
-                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
                     removeClippedSubviews={true}
                     initialNumToRender={10}
                     ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}

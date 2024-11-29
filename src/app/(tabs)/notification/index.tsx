@@ -1,7 +1,8 @@
 import notificationAPI from '@/apis/notificationApi';
 import userAPI from '@/apis/userApi';
 import { ContainerComponent, NotificationCard } from '@/components';
-import { LoadingModal } from '@/modals';
+import { useRefreshing } from '@/hooks/useRefreshing';
+import { LoadingModal, NotificationModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
@@ -10,13 +11,18 @@ import { useSelector } from 'react-redux';
 
 export default function NotificationPage() {
     const { authData } = useSelector(authSelector);
+    const [visible, setVisible] = React.useState(false);
 
     const { data, isFetching, refetch } = useQuery<_Notification[]>({
         queryKey: ['notifications', authData?.id],
         queryFn: () => userAPI.getNotifications(authData?.id || ''),
     });
 
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
+
     const handleReadNotification = async (id: string, isRead: boolean) => {
+        setVisible(true);
+
         if (isRead) return;
         try {
             const res = await notificationAPI.readNotification({ id, userId: authData?.id || '' });
@@ -34,8 +40,8 @@ export default function NotificationPage() {
             title="Thông báo"
             notification
             isScroll
-            handleRefresh={refetch}
-            _refreshing={isFetching}
+            handleRefresh={handleRefresh}
+            _refreshing={refreshing}
         >
             {(data ?? []).length > 0 ? (
                 data?.map((item, index) => (
@@ -49,7 +55,8 @@ export default function NotificationPage() {
             ) : (
                 <Text>Không có thông báo nào</Text>
             )}
-            <LoadingModal visible={isFetching} />
+            {isFetching && <LoadingModal />}
+            <NotificationModal visible={visible} onClose={() => setVisible(false)} onDetails={() => {}} />
         </ContainerComponent>
     );
 }

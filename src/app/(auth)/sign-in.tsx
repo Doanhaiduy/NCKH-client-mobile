@@ -7,6 +7,7 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { LoadingModal } from '@/modals';
 import { authSelector, login, setAuth } from '@/stores/reducers/authReducer';
 import { checkHasErr } from '@/utils';
@@ -31,6 +32,7 @@ type FormFields = z.infer<typeof schema>;
 export default function LoginPage() {
     const dispatch = useDispatch<any>();
     const { authData } = useSelector(authSelector);
+    const { expoPushToken, notification } = usePushNotifications();
 
     const checkAuth = async () => {
         const auth = await AsyncStorage.getItem('auth');
@@ -75,7 +77,8 @@ export default function LoginPage() {
     });
 
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
-        mutate(data);
+        const Token = expoPushToken?.data;
+        mutate({ ...data, expoPushToken: Token });
     };
 
     return (
@@ -150,7 +153,7 @@ export default function LoginPage() {
                     />
                 </SectionComponent>
             </KeyboardAwareScrollView>
-            <LoadingModal visible={isPending} />
+            {isPending && <LoadingModal />}
         </ContainerComponent>
     );
 }

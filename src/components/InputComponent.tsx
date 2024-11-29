@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import clsx from 'clsx';
 import React from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, Text, TextInput, View } from 'react-native';
 import TextComponent from './TextComponent';
 import RowComponent from './RowComponent';
 interface Props {
@@ -53,14 +53,19 @@ function InputComponent(props: Props) {
     console.log('InputComponent: value', value);
 
     const containerClass = clsx(
-        'w-full max-w-full rounded-[10px] border-[1px] border-primary-400 h-[56px]  min-h-[56px] justify-between  bg-white flex-row items-center',
+        'w-full max-w-full rounded-[10px] border-[1px] border-primary-400 h-[56px]  min-h-[56px] justify-between  bg-white flex-row items-center ',
         {
             'border-error': err,
+            'pb-2': value && placeholder,
+            'pt-2': multiline,
         },
     );
 
     const inputClass = clsx(
-        'flex-1  w-full font-inter text-sm text-black px-5 placeholder:text-base placeholder:text-text-100 placeholder:font-inter',
+        'flex-1 w-full font-inter text-sm text-black px-5 placeholder:text-base placeholder:text-text-100 placeholder:font-inter',
+        {
+            'mb-2': labelTop && Platform.OS === 'ios',
+        },
     );
 
     return (
@@ -78,7 +83,7 @@ function InputComponent(props: Props) {
                     height: height ?? 'auto',
                 }}
             >
-                <View className="flex-col flex-1">
+                <View className="flex-col flex-1 ">
                     {value && placeholder && !labelTop && (
                         <Text className="px-5 pt-1 text-[12px] text-black font-inter">{placeholder}</Text>
                     )}
@@ -99,9 +104,10 @@ function InputComponent(props: Props) {
                         multiline={multiline}
                         className={inputClass}
                         readOnly={readOnly}
+                        textAlignVertical={multiline ? 'top' : 'center'}
                         showSoftInputOnFocus={!readOnly}
                         style={{
-                            marginBottom: value && placeholder ? 10 : 0,
+                            paddingVertical: 0,
                             color: color ?? 'black',
                             height: height ?? 'auto',
                         }}
@@ -122,7 +128,10 @@ function InputComponent(props: Props) {
                 )}
 
                 {value && isPassword && (
-                    <Pressable onPress={() => setIsShowPassword(!isShowPassword)} className="mr-5">
+                    <Pressable
+                        onPress={() => setIsShowPassword(!isShowPassword)}
+                        className="mr-1 p-[10px] mt-2 items-center justify-center "
+                    >
                         {isShowPassword ? (
                             <Ionicons name="eye" size={18} color={color ?? 'black'} />
                         ) : (

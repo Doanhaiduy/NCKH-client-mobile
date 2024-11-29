@@ -1,4 +1,3 @@
-import trainingPointAPI from '@/apis/trainingPointApi';
 import userAPI from '@/apis/userApi';
 import {
     ButtonComponent,
@@ -9,19 +8,25 @@ import {
     TextComponent,
 } from '@/components';
 import { colors } from '@/constants/colors';
+import { useRefreshing } from '@/hooks/useRefreshing';
 import { SemesterData, YearData } from '@/mockData';
 import { LoadingModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
-import { Ionicons } from '@expo/vector-icons';
+import { getSemesterYears } from '@/utils';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function TrainingPoint() {
     const [selectedYear, setSelectedYear] = useState<String>(YearData[3].value.toString());
     const [selectedSemester, setSelectedSemester] = useState<String>(SemesterData[0].value.toString());
+    const [trainingPointOption, setTrainingPointOption] = useState<{
+        year: Year[];
+        semester: Semester[];
+    }>();
     const { authData } = useSelector(authSelector);
 
     const { data, refetch, isFetching } = useQuery<TrainingPoint>({
@@ -40,7 +45,15 @@ export default function TrainingPoint() {
                 }),
     });
 
-    console.log(data);
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
+
+    useEffect(() => {
+        const optionData = getSemesterYears(authData?.username!);
+        setTrainingPointOption({
+            year: optionData.YearOptionData,
+            semester: optionData.SemesterOptionData,
+        });
+    }, [authData?.username]);
 
     return (
         <ContainerComponent
@@ -48,8 +61,8 @@ export default function TrainingPoint() {
             iconLeft="back"
             notification
             isScroll
-            handleRefresh={refetch}
-            _refreshing={isFetching}
+            handleRefresh={handleRefresh}
+            _refreshing={refreshing}
         >
             <SectionComponent className="items-center justify-center">
                 <SpaceComponent height={16} />
@@ -64,19 +77,19 @@ export default function TrainingPoint() {
             <SpaceComponent height={16} />
             <SectionComponent className="flex-row justify-center flex-wrap">
                 <DropDownComponent
-                    data={YearData}
+                    data={trainingPointOption?.year || []}
                     title="Năm học"
                     onSelect={(selectedItem, index) => {
-                        setSelectedYear(selectedItem.value);
+                        setSelectedYear(selectedItem.value as string);
                     }}
                 />
                 <SpaceComponent width={10} />
                 <DropDownComponent
-                    data={SemesterData}
+                    data={trainingPointOption?.semester || []}
                     title="Học kỳ"
                     width={70}
                     onSelect={(selectedItem, index) => {
-                        setSelectedSemester(selectedItem.value);
+                        setSelectedSemester(selectedItem.value as string);
                     }}
                 />
             </SectionComponent>
@@ -84,6 +97,27 @@ export default function TrainingPoint() {
                 <SpaceComponent height={16} />
                 {data?.id ? (
                     <View className="w-[80%] justify-between items-center">
+                        <View
+                            className="absolute -top-6 -right-10 bg-white  p-4 py-2 shadow-lg  justify-center items-center border-primary-300 border-[1px]"
+                            style={{
+                                zIndex: 999,
+                                borderRadius: 32,
+                                borderBottomLeftRadius: 0,
+                            }}
+                        >
+                            <TextComponent
+                                text="Điểm tự đánh giá"
+                                size={14}
+                                color={colors.primary400}
+                                className="font-semibold"
+                            />
+                            <TextComponent
+                                text={data.tempScore.toString()}
+                                color={colors.primary400}
+                                className="mt-2 font-semibold"
+                                size={24}
+                            />
+                        </View>
                         <View
                             className="justify-between items-center border-primary-300 border-[1px] w-[200px] aspect-square mb-10"
                             style={{
@@ -142,7 +176,30 @@ export default function TrainingPoint() {
                     </View>
                 )}
             </SectionComponent>
-            <LoadingModal visible={isFetching} />
+            <SectionComponent>
+                <View
+                    className="flex-row  bg-primary-100 p-4 flex-1 w-full justify-around"
+                    style={{
+                        borderRadius: 24,
+                    }}
+                >
+                    <View>
+                        <TextComponent
+                            text="Thời gian tự đánh giá"
+                            size={20}
+                            color={colors.primary400}
+                            className="font-interSemi"
+                        />
+                        <SpaceComponent height={10} />
+                        <TextComponent color={colors.error} text="Ngày bắt đầu: 01/09/2021" />
+                        <TextComponent color={colors.error} text="Ngày kết thúc: 01/09/2021" />
+                    </View>
+                    <View className="rotate-12">
+                        <MaterialCommunityIcons name="timer-sand" size={80} color={colors.primary500} />
+                    </View>
+                </View>
+            </SectionComponent>
+            {isFetching && <LoadingModal />}
         </ContainerComponent>
     );
 }

@@ -1,3 +1,6 @@
+if (__DEV__) {
+    require('../../ReactotronConfig');
+}
 import store from '@/stores/store';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
@@ -11,6 +14,18 @@ import { Provider } from 'react-redux';
 import '../../global.css';
 import { Host } from 'react-native-portalize';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
+
+// This is the default configuration
+configureReanimatedLogger({
+    level: ReanimatedLogLevel.warn,
+    strict: false,
+});
+
+// SplashScreen.setOptions({
+//     duration: 1000,
+//     fade: true,
+// });
 
 SplashScreen.preventAutoHideAsync();
 

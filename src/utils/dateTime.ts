@@ -9,6 +9,13 @@ export const getSecondTimeLimit = (time: number) => {
     return Math.floor((expired.getTime() - now.getTime()) / 1000);
 };
 
+export const dateTimeFormat = (time: string) => {
+    if (time === '') return '';
+    return format(new Date(time), 'HH:mm dd/MM/yyyy ', {
+        locale: vi,
+    });
+};
+
 export const dateFormat = (time: string) => {
     if (time === '') return '';
     return format(new Date(time), 'dd/MM/yyyy', {
@@ -28,10 +35,7 @@ export const convertDateToVNTime = (time: string) => {
         locale: vi,
     });
 };
-export const checkTimeActive = (startAt: string | number, endAt: string | number) => {
-    const now = new Date();
-    const start = convertDateToVNTime(startAt.toString());
-    const end = convertDateToVNTime(endAt.toString());
-
-    return now >= new Date(start) && now <= new Date(end);
+export const checkTimeActive = (startAt: number | string, endAt: number | string) => {
+    const now = new Date().getTime();
+    return now >= +startAt && now <= +endAt;
 };

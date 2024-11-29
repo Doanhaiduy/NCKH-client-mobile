@@ -1,10 +1,10 @@
 type TrainingPoint = {
     user: string;
-    semester: number;
-    year: number;
+    semesterYear: SemesterYear;
     criteria: Criteria[];
     status: string;
     totalScore: number;
+    tempScore: number;
     id: string;
 };
 
@@ -15,6 +15,8 @@ type Criteria = {
     description: string;
     maxScore: number;
     totalScore: number;
+    tempScore: number;
+    isAutoScore: boolean;
     evidenceType: string;
     evidence?: Evidence;
     subCriteria: Criteria[] | [];
@@ -39,4 +41,28 @@ type Evidence = {
 type ResponseEvidence = {
     url: string;
     public_id: string;
+};
+
+type SemesterYear = {
+    semester: number;
+    year: number;
+    id: string;
+};
+
+type CriteriaScoreParams = {
+    criteriaId: string;
+    score: number;
+};
+
+type flattenCriteria = {
+    id: string;
+    title: string;
+    maxScore: number;
+    totalScore: number;
+    tempScore: number;
+    require: boolean;
+    level: number;
+    criteriaCode: string;
+    evidence?: Evidence;
+    activeChange?: boolean;
 };

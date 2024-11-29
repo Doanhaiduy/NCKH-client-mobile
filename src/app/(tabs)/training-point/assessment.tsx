@@ -11,16 +11,17 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { romanize } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import { useRefreshing } from '@/hooks/useRefreshing';
+import { LoadingModal } from '@/modals';
 
-export default function Upload() {
+export default function Assessment() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
-    const { data, refetch, isRefetching } = useQuery({
+    const { data, refetch, isFetching } = useQuery({
         queryKey: ['training-points', id],
         queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
     });
@@ -28,6 +29,7 @@ export default function Upload() {
     const { refreshing, handleRefresh } = useRefreshing(refetch);
 
     const isFocused = useIsFocused();
+    const tableBorderRef = useRef(null);
 
     useEffect(() => {
         if (isFocused) {
@@ -39,7 +41,7 @@ export default function Upload() {
 
     return (
         <ContainerComponent
-            title="Tải lên minh chứng"
+            title="Tự đánh giá"
             iconLeft="back"
             isScroll
             handleRefresh={handleRefresh}
@@ -54,7 +56,14 @@ export default function Upload() {
                             },
                             {
                                 text: 'Đồng ý',
-                                onPress: () => {
+                                onPress: async () => {
+                                    if (tableBorderRef.current) {
+                                        // @ts-ignore
+                                        const updated = await tableBorderRef.current.handleSubmit();
+                                        if (!updated) {
+                                            return;
+                                        }
+                                    }
                                     router.back();
                                 },
                             },
@@ -82,7 +91,12 @@ export default function Upload() {
                 />
             </SectionComponent>
             <SectionComponent className="items-center">
-                <TableBorderComponent isUpload data={data?.criteria} />
+                <TableBorderComponent
+                    data={data?.criteria}
+                    isAssessment
+                    ref={tableBorderRef}
+                    idTrainingPoint={data?.id}
+                />
             </SectionComponent>
         </ContainerComponent>
     );

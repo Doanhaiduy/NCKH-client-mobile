@@ -25,6 +25,7 @@ type OTP = {
 type FormLogin = {
     username: string;
     password: string;
+    expoPushToken?: string;
 };
 
 type FormResetPassword = {

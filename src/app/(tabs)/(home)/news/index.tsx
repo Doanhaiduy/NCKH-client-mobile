@@ -7,14 +7,17 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useRefreshing } from '@/hooks/useRefreshing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, View } from 'react-native';
 
 export default function NewsScreen() {
-    const [SearchValue, setSearchValue] = React.useState('');
+    const [searchValue, setSearchValue] = React.useState('');
+    const debouncedSearchValue = useDebounce(searchValue, 500);
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
             queryKey: ['news'],
@@ -24,7 +27,7 @@ export default function NewsScreen() {
                     page: pageParam,
                     size: 10,
                     category: 'news',
-                    search: SearchValue,
+                    search: debouncedSearchValue,
                 }),
             getNextPageParam: (lastPage, pages) => {
                 const nextPage = parseInt(lastPage.page) + 1;
@@ -34,47 +37,25 @@ export default function NewsScreen() {
             },
         });
 
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
+
     const loadMore = () => {
         if (hasNextPage) {
             fetchNextPage();
         }
     };
 
-    const handleSubmit = async (text?: string) => {
-        const searchItemAsync = AsyncStorage.getItem('searchItem');
-        const textValue = text ? text : SearchValue;
-
-        searchItemAsync.then((value) => {
-            if (value) {
-                const searchItem = JSON.parse(value);
-
-                if (searchItem.includes(textValue)) {
-                    searchItem.splice(searchItem.indexOf(textValue), 1);
-                }
-                if (textValue === '') {
-                    refetch();
-                    return;
-                }
-                searchItem.push(textValue);
-                AsyncStorage.setItem('searchItem', JSON.stringify(searchItem));
-                setSearchValue(textValue);
-                refetch();
-            } else {
-                AsyncStorage.setItem('searchItem', JSON.stringify([textValue]));
-                setSearchValue(textValue);
-                refetch();
-            }
-        });
-    };
+    useEffect(() => {
+        refetch();
+    }, [debouncedSearchValue]);
 
     return (
-        <ContainerComponent title="Tin tức" iconLeft="back" handleRefresh={refetch} _refreshing={isFetching}>
+        <ContainerComponent title="Tin tức" iconLeft="back" notification>
             <SpaceComponent height={16} />
             <SectionComponent>
                 <SearchComponent
-                    value={SearchValue}
+                    value={searchValue}
                     onChangeText={setSearchValue}
-                    onSubmit={handleSubmit}
                     onClear={() => setSearchValue('')}
                     placeholder="Tìm kiếm hoạt động"
                 />
@@ -82,14 +63,14 @@ export default function NewsScreen() {
             <SectionComponent
                 className="flex-1"
                 style={{
-                    zIndex: -1,
+                    zIndex: Platform.OS === 'ios' ? -1 : 0,
                 }}
             >
                 <FlatList
                     keyExtractor={(item, index) => index.toString()}
                     data={data?.pages.map((page) => page.posts).flat()}
                     showsVerticalScrollIndicator={false}
-                    refreshControl={<RefreshControl refreshing={isFetching} onRefresh={refetch} />}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
                     removeClippedSubviews={true}
                     initialNumToRender={10}
                     ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}

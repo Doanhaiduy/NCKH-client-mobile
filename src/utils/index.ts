@@ -10,19 +10,26 @@ export const checkHasErr = (data: object) => {
 
 export const decryptData = (cipherText: string): EncryptedEventDetails | null => {
     try {
-        const bytes = CryptoJS.AES.decrypt(cipherText, process.env.EXPO_PUBLIC_CRYPTO_SECRET_KEY);
-        const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
+        const key = process.env.EXPO_PUBLIC_CRYPTO_SECRET_KEY!;
+        const [iv, encrypted] = cipherText.split(':');
 
-        if (!decryptedString) {
+        const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
+            iv: CryptoJS.enc.Hex.parse(iv),
+        });
+
+        const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+
+        if (!decryptedText) {
             return null;
         }
         try {
-            const decryptedData = JSON.parse(decryptedString);
+            const decryptedData = JSON.parse(decryptedText);
             return decryptedData;
         } catch (jsonError) {
             return null;
         }
     } catch (error) {
+        console.log('Error decrypting data', error);
         return null;
     }
 };
@@ -80,16 +87,7 @@ export const romanize = (num: string) => {
 };
 
 export const flattenCriteria = (criteria: Criteria[]) => {
-    let result: {
-        id: string;
-        title: string;
-        maxScore: number;
-        totalScore: number;
-        require: boolean;
-        level: number;
-        criteriaCode: string;
-        evidence?: Evidence;
-    }[] = [];
+    let result: flattenCriteria[] = [];
 
     const traverse = (criteria: Criteria[]) => {
         criteria?.forEach((item) => {
@@ -102,6 +100,8 @@ export const flattenCriteria = (criteria: Criteria[]) => {
                 require: item.evidenceType !== 'none',
                 evidence: item.evidenceType === 'none' ? undefined : item.evidence ? item.evidence : undefined,
                 criteriaCode: item.criteriaCode,
+                tempScore: item.tempScore,
+                activeChange: item.subCriteria.length === 0 && !item.isAutoScore,
             });
 
             if (item.subCriteria && item.subCriteria.length > 0) {
@@ -112,4 +112,55 @@ export const flattenCriteria = (criteria: Criteria[]) => {
 
     traverse(criteria);
     return result;
+};
+
+export const getSemesterYears = (username: string) => {
+    const prefix = parseInt(username.slice(0, 2));
+    const referenceYear = 2021;
+    const referencePrefix = 63;
+
+    const startYear = referenceYear - (referencePrefix - prefix);
+    const endYear = startYear + 3;
+
+    const SemesterOptionData: Semester[] = [
+        {
+            title: 'I',
+            value: '1',
+        },
+        {
+            title: 'II',
+            value: '2',
+        },
+    ];
+
+    const YearOptionData: Year[] = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+        YearOptionData.push({
+            title: `${year} - ${year + 1}`,
+            value: `${year}`,
+        });
+    }
+
+    const AttendanceOptionData: AttendanceOption[] = [];
+    for (let year = startYear; year <= endYear; year++) {
+        AttendanceOptionData.push(
+            {
+                title: `HK: I, NH: ${year} - ${year + 1}`,
+                value: {
+                    year: `${year}`,
+                    semester: '1',
+                },
+            },
+            {
+                title: `HK: II, NH: ${year} - ${year + 1}`,
+                value: {
+                    year: `${year}`,
+                    semester: '2',
+                },
+            },
+        );
+    }
+
+    return { AttendanceOptionData, SemesterOptionData, YearOptionData };
 };

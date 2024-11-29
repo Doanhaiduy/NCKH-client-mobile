@@ -5,6 +5,7 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { router } from 'expo-router';
+import feedbackAPI from '@/apis/feedbackApi';
 
 export default function feedback() {
     const { authData } = useSelector(authSelector);
@@ -23,9 +24,22 @@ export default function feedback() {
             },
             {
                 text: 'Gửi',
-                onPress: () => {
-                    router.back();
-                    Alert.alert('Gửi góp ý', 'Gửi góp ý thành công');
+                onPress: async () => {
+                    try {
+                        const res = await feedbackAPI.submitFeedback({
+                            user: authData?.id || '',
+                            feedback: content,
+                        });
+                        if (res) {
+                            router.back();
+                            Alert.alert('Gửi góp ý', 'Gửi góp ý thành công');
+                            setContent('');
+                        } else {
+                            Alert.alert('Gửi góp ý', `Gửi góp ý thất bại`);
+                        }
+                    } catch (error: any) {
+                        Alert.alert('Gửi góp ý', `Gửi góp ý thất bại, ${error}`);
+                    }
                 },
             },
         ]);
@@ -44,36 +58,29 @@ export default function feedback() {
         >
             <KeyboardAwareScrollView>
                 <SectionComponent>
-                    <View>
-                        <InputComponent
-                            value={authData?.username ?? ''}
-                            onChange={() => {}}
-                            labelTop="Mã số sinh viên"
-                            readOnly
-                        />
-                        <InputComponent
-                            value={authData?.fullName ?? ''}
-                            onChange={() => {}}
-                            labelTop="Họ và tên sinh viên"
-                            readOnly
-                        />
-                        <InputComponent
-                            value={authData?.sclassName ?? ''}
-                            onChange={() => {}}
-                            labelTop="Lớp"
-                            readOnly
-                        />
-                        <InputComponent value={'Công nghệ thông tin'} onChange={() => {}} labelTop="Khoa" readOnly />
-                        <InputComponent
-                            value={content}
-                            onChange={setContent}
-                            multiline
-                            placeholder="Nhập nội dung tại đây"
-                            labelTop="Nội dung góp ý"
-                            height={130}
-                            required
-                        />
-                    </View>
+                    <InputComponent
+                        value={authData?.username ?? ''}
+                        onChange={() => {}}
+                        labelTop="Mã số sinh viên"
+                        readOnly
+                    />
+                    <InputComponent
+                        value={authData?.fullName ?? ''}
+                        onChange={() => {}}
+                        labelTop="Họ và tên sinh viên"
+                        readOnly
+                    />
+                    <InputComponent value={authData?.sclassName ?? ''} onChange={() => {}} labelTop="Lớp" readOnly />
+                    <InputComponent value={'Công nghệ thông tin'} onChange={() => {}} labelTop="Khoa" readOnly />
+                    <InputComponent
+                        value={content}
+                        onChange={setContent}
+                        multiline
+                        placeholder="Nhập nội dung tại đây"
+                        labelTop="Nội dung góp ý"
+                        height={130}
+                        required
+                    />
                 </SectionComponent>
             </KeyboardAwareScrollView>
         </ContainerComponent>

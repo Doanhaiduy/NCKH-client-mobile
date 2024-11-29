@@ -1,19 +1,29 @@
 import eventAPI from '@/apis/eventApi';
-import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
+import {
+    ButtonComponent,
+    ContainerComponent,
+    ItemCardList,
+    SectionComponent,
+    SpaceComponent,
+    TextComponent,
+} from '@/components';
+import { authSelector } from '@/stores/reducers/authReducer';
 import { useQueries } from '@tanstack/react-query';
 import { router, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 export default function Attendance() {
     const navigation = useNavigation();
+    const { authData } = useSelector(authSelector);
 
     const [eventActive, eventInactive] = useQueries({
         queries: [
             {
                 queryKey: ['events-ongoing'],
                 queryFn: () =>
-                    eventAPI.getEvents({
+                    eventAPI.getEvents(authData?.id || '', {
                         page: 1,
                         size: 10,
                         status: 'active',
@@ -23,7 +33,7 @@ export default function Attendance() {
             {
                 queryKey: ['events-past'],
                 queryFn: () =>
-                    eventAPI.getEvents({
+                    eventAPI.getEvents(authData?.id || '', {
                         page: 1,
                         size: 10,
                         status: 'active',

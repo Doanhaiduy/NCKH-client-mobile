@@ -108,7 +108,7 @@ export default function ForGotPassWord() {
                     />
                 </SectionComponent>
             </View>
-            <LoadingModal visible={isPending} />
+            {isPending && <LoadingModal />}
         </ContainerComponent>
     );
 }

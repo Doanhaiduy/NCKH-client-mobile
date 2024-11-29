@@ -89,7 +89,7 @@ export default function SetPassword() {
                     onPress={handleSetPassword}
                 />
             </SectionComponent>
-            <LoadingModal visible={isPending} />
+            {isPending && <LoadingModal />}
         </ContainerComponent>
     );
 }

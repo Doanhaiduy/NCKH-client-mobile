@@ -25,12 +25,8 @@ type EventDetails = {
 };
 
 type EncryptedEventDetails = {
-    distanceLimit: number;
     endAt: string;
     eventCode: string;
-    location: EventLocation;
-    maxAttendees: number;
-    name: string;
     startAt: string;
 };
 
@@ -53,6 +49,8 @@ type EventsParams = {
     size?: number;
     status?: 'active' | 'inactive';
     time?: 'past' | 'ongoing' | 'upcoming';
+    semester?: string;
+    year?: string;
 };
 
 type EventCheckInParams = {
@@ -60,6 +58,7 @@ type EventCheckInParams = {
     distance: number;
     checkInAt: string;
     userId: string;
+    encryptedData: string;
 };
 
 type AttendanceDetails = {

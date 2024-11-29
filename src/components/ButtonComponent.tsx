@@ -55,7 +55,7 @@ export default function ButtonComponent(props: Props) {
                 className={clsx(variantContainer.default, variantContainer[type], {
                     'w-full min-h-[48px]': size === 'large',
                     'max-w-[168px] min-h-[38px] px-8': size === 'medium',
-                    'max-w-[115px] min-h-[32px] px-5': size === 'small',
+                    'max-w-[145px] min-h-[32px] px-5': size === 'small',
                     'opacity-70': disabled,
                 })}
             >

@@ -78,7 +78,7 @@ export default function SetPassword() {
                     />
                 </SectionComponent>
             </View>
-            <LoadingModal visible={isPending} />
+            {isPending && <LoadingModal />}
         </ContainerComponent>
     );
 }

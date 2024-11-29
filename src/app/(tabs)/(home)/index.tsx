@@ -1,38 +1,25 @@
 import postAPI from '@/apis/postApi';
 import {
     ActionListComponents,
-    ButtonComponent,
     ContainerComponent,
-    ItemCardGrid,
-    ItemCardList,
-    RowComponent,
+    PortalizeComponent,
     SectionComponent,
     SlideCardComponent,
-    SpaceComponent,
     TextComponent,
 } from '@/components';
-import { appInfo } from '@/constants/appInfo';
 import { colors } from '@/constants/colors';
-import { EventData } from '@/mockData';
-import { authSelector } from '@/stores/reducers/authReducer';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { Feather } from '@expo/vector-icons';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
-import {
-    FlatList,
-    Image,
-    RefreshControl,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function Home() {
-    const { authData } = useSelector(authSelector);
+    const modalizeRef = React.useRef<any>(null);
+    const { expoPushToken, notification } = usePushNotifications();
+    const data = JSON.stringify(notification, null, 2);
+    console.log('data', data, expoPushToken);
 
     const [posts, news] = useQueries({
         queries: [
@@ -83,8 +70,27 @@ export default function Home() {
             </SectionComponent>
             <SectionComponent className="flex-1">
                 <TextComponent text="Truy cập nhanh" fontBold />
-                <ActionListComponents />
+                <ActionListComponents
+                    onShowAll={() => {
+                        modalizeRef.current?.open();
+                    }}
+                />
             </SectionComponent>
+
+            <PortalizeComponent
+                ref={modalizeRef}
+                children={
+                    <View className="shadow-xl gap-5 p-3 pt-4 bg-white mx-auto">
+                        <TextComponent text="Truy cập nhanh" fontBold />
+                        <ActionListComponents
+                            full
+                            onClose={() => {
+                                modalizeRef.current?.close();
+                            }}
+                        />
+                    </View>
+                }
+            />
         </ContainerComponent>
     );
 }

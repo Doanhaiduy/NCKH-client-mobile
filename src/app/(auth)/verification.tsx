@@ -163,7 +163,7 @@ export default function VerificationPage() {
 
                     <SpaceComponent height={12} />
 
-                    <LoadingModal visible={isPending || isLoading || isVerifying} />
+                    {isPending || isLoading || isVerifying ? <LoadingModal /> : null}
                     <SpaceComponent height={50} />
                 </SectionComponent>
             </View>

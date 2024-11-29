@@ -1,6 +1,10 @@
-import { View, Text, ActivityIndicator, Image } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
 
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
+import { ImageModal } from '@/modals';
+import { useImage } from '@/hooks/useImage';
 interface Props {
     url: string;
     width?: number;
@@ -8,18 +12,43 @@ interface Props {
     imageClass?: string;
     rounded?: number;
     aspectRatio?: number;
+    showImageModal?: boolean;
 }
 
 const ImageComponent = (props: Props) => {
-    const { url, width, height, imageClass, rounded = 0 } = props;
-    const [imageUrl, setImageUrl] = useState(url);
+    const { url, width, height, imageClass, showImageModal = false, rounded = 0 } = props;
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [isDownloaded, setIsDownloaded] = useState(false);
 
-    useEffect(() => {
-        setImageUrl(url);
-    }, [url]);
+    const { imageUri, loading, error, retry } = useImage(url);
+
+    const openModal = () => setIsShowModal(true);
+
+    const handleDownload = async () => {
+        try {
+            setIsDownloaded(true);
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Permission to access media library is required!');
+                return;
+            }
+
+            const file = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + 'image.jpg');
+
+            const asset = await MediaLibrary.createAssetAsync(file.uri);
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+            Alert.alert('Tải ảnh thành công', 'Ảnh đã được tải xuống thư viện ảnh của bạn');
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsDownloaded(false);
+        }
+    };
+
+    const Wrapper = showImageModal ? TouchableOpacity : View;
 
     return (
-        <View
+        <Wrapper
             style={{
                 width: width || '100%',
                 backgroundColor: '#f0f0f0',
@@ -28,24 +57,46 @@ const ImageComponent = (props: Props) => {
                 borderRadius: rounded,
                 aspectRatio: props.aspectRatio,
             }}
+            onPress={() => openModal()}
             className={`${height ? 'h-[' + height + 'px]' : 'h-auto'} ${imageClass}`}
         >
-            <Image
-                source={{
-                    uri: imageUrl,
-                }}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    borderRadius: rounded,
-                }}
-                resizeMode="cover"
-                onError={() => {
-                    setImageUrl('https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png');
-                }}
-            />
-        </View>
+            {!imageUri ? (
+                <Image
+                    source={{
+                        uri: 'https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png',
+                    }}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: rounded,
+                    }}
+                    resizeMode="cover"
+                />
+            ) : (
+                <Image
+                    source={{
+                        uri: url || 'https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png',
+                    }}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: rounded,
+                    }}
+                    resizeMode="cover"
+                />
+            )}
+            {isShowModal && imageUri && (
+                <ImageModal
+                    url={url || 'https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png'}
+                    rounded={rounded}
+                    isShowModal={isShowModal}
+                    onClose={() => setIsShowModal(false)}
+                    onDownload={handleDownload}
+                />
+            )}
+        </Wrapper>
     );
 };
 

@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ContainerComponent, InputComponent, SectionComponent } from '@/components';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useSelector } from 'react-redux';
 import ImageComponent from '@/components/ImageComponent';
@@ -13,17 +12,17 @@ const details = (props: Props) => {
 
     return (
         <ContainerComponent title="Chi tiết tài khoản " iconLeft="back" notification isScroll>
-            <SectionComponent className="items-center justify-center my-4">
+            <SectionComponent className="items-center justify-center mt-4">
                 <View
                     className="border-1 border border-primary-400 p-[2px]"
                     style={{
                         borderRadius: 99,
                     }}
                 >
-                    <ImageComponent url={authData?.avatar!} height={80} width={80} rounded={9999} />
+                    <ImageComponent showImageModal url={authData?.avatar!} height={80} width={80} rounded={9999} />
                 </View>
             </SectionComponent>
-            <SectionComponent>
+            <SectionComponent className="-mt-4">
                 <View>
                     <InputComponent
                         value={authData?.username ?? ''}

@@ -1,6 +1,5 @@
 import { colors } from '@/constants/colors';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router';
 import React, { ReactNode, useEffect } from 'react';
 import {
@@ -59,16 +58,6 @@ export default function ContainerComponent(props: Props) {
         ...containerProps
     } = props;
 
-    const [refreshing, setRefreshing] = React.useState(false);
-
-    const onRefresh = () => {
-        setRefreshing(true);
-        handleRefresh && handleRefresh();
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 1000);
-    };
-
     const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 50 : StatusBar.currentHeight || 30) : 22;
     const ViewWrapper = isScroll ? ScrollView : View;
     const HeaderAuth = (
@@ -112,7 +101,7 @@ export default function ContainerComponent(props: Props) {
                     }}
                 >
                     {iconLeft === 'back' && (
-                        <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())}>
+                        <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())} className=" py-1 px-2">
                             <Ionicons name="chevron-back" size={24} color={colors.primary500} />
                         </TouchableOpacity>
                     )}
@@ -140,11 +129,13 @@ export default function ContainerComponent(props: Props) {
                         />
                     )}
                     {notification ? (
-                        <TouchableOpacity onPress={() => router.navigate('/notification')}>
+                        <TouchableOpacity onPress={() => router.navigate('/notification')} className="px-1">
                             <Feather name="bell" size={26} color={colors.primary500} />
                         </TouchableOpacity>
                     ) : iconRight ? null : (
-                        <Ionicons name="barbell" size={26} color="transparent" />
+                        <View className="py-1 px-2">
+                            <Ionicons name="chevron-back" size={24} color="transparent" />
+                        </View>
                     )}
                     {iconRight && iconRight}
                 </RowComponent>
@@ -178,16 +169,16 @@ export default function ContainerComponent(props: Props) {
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
                 refreshControl={
-                    Platform.OS === 'android' ? (
-                        <RefreshControl refreshing={_refreshing === undefined && refreshing} onRefresh={onRefresh} />
-                    ) : (
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                            size={20}
-                            tintColor={colors['primary400']}
-                        />
-                    )
+                    Platform.OS === 'android'
+                        ? handleRefresh && <RefreshControl refreshing={_refreshing!} onRefresh={handleRefresh} />
+                        : handleRefresh && (
+                              <RefreshControl
+                                  refreshing={_refreshing!}
+                                  onRefresh={handleRefresh}
+                                  size={20}
+                                  tintColor={colors['primary400']}
+                              />
+                          )
                 }
                 className="flex-1"
             >

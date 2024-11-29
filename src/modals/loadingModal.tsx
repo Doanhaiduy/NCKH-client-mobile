@@ -4,16 +4,15 @@ import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
 import { TextComponent } from '../components';
 
 interface Props {
-    visible: boolean;
     message?: string;
     // onClose: () => void;
 }
 
 export default function LoadingModal(props: Props) {
-    const { visible, message } = props;
+    const { message } = props;
 
     return (
-        <Modal className="flex-1" visible={visible} transparent statusBarTranslucent>
+        <Modal className="flex-1" visible={true} transparent statusBarTranslucent>
             <View className="flex-1 justify-center items-center bg-black/50">
                 <TextComponent color={colors.white} text={message || 'Đang tải...'} />
                 <ActivityIndicator size={32} color={colors.white} />

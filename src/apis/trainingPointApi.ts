@@ -55,6 +55,21 @@ class TrainingPointAPI {
             },
         });
     };
+
+    updateScoresAssessment = async (
+        id = '',
+        data: CriteriaScoreParams[],
+        option: AxiosRequestConfig = {},
+    ): Promise<any> => {
+        return await this.HandleTrainingPoint(
+            `/${id}/update-criteria-score-template`,
+            {
+                criteriaScores: data,
+            },
+            'put',
+            option,
+        );
+    };
 }
 
 const trainingPointAPI = new TrainingPointAPI();

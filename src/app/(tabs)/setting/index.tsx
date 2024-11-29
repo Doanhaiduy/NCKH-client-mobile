@@ -32,14 +32,14 @@ export default function SettingPage() {
                         borderRadius: 99,
                     }}
                 >
-                    <ImageComponent url={authData?.avatar!} height={80} width={80} rounded={9999} />
+                    <ImageComponent showImageModal url={authData?.avatar!} height={80} width={80} rounded={999} />
                 </View>
                 <View className="ml-4 flex-1">
                     <TextComponent text={authData?.fullName || ''} className="text-xl" />
                     <TextComponent text={`MSSV: ${authData?.username}`} className="text-base text-gray-400" />
                 </View>
                 <TouchableOpacity onPress={() => router.push('setting/profile')}>
-                    <Feather name="edit" size={24} color={colors.primary500} />
+                    <Feather name="info" size={24} color={colors.primary500} />
                 </TouchableOpacity>
             </SectionComponent>
 

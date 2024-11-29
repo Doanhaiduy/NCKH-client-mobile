@@ -6,40 +6,45 @@ import SelectDropdown from 'react-native-select-dropdown';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 
-type Data = {
-    title: string;
-    value: string;
-};
-
 interface Props {
     title: string;
-    data: Data[];
-    onSelect: (selectedItem: Data, index: number) => void;
+    data: (AttendanceOption | Semester | Year)[];
+    onSelect: (selectedItem: AttendanceOption | Semester | Year, index: number) => void;
     width?: number;
 }
 
 export default function DropDownComponent(props: Props) {
     const { title, data, onSelect, width = 140 } = props;
+
+    const currentSemesterYear = data.find((item) => {
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth();
+
+        if ('value' in item && typeof item.value === 'object') {
+            return (
+                item.value.year === `${month >= 9 || month <= 1 ? year : year - 1}` &&
+                item.value.semester === (month >= 9 || month <= 1 ? '1' : '2')
+            );
+        } else {
+            if (item.value === '1' || item.value == '2') {
+                return item.value === (month >= 9 || month <= 1 ? '1' : '2');
+            } else {
+                return item.value === year.toString();
+            }
+        }
+    });
+
     return (
         <RowComponent className="mt-2">
             {title && <TextComponent text={`${title}: `} />}
             <SelectDropdown
                 data={data}
-                onSelect={onSelect}
+                onSelect={(selectedItem, index) => onSelect(selectedItem, index)}
                 renderButton={(selectedItem, isOpened) => {
+                    const displayTitle = selectedItem?.title || currentSemesterYear?.title;
                     return (
-                        <View
-                            style={[
-                                styles.dropdownButtonStyle,
-                                {
-                                    width,
-                                },
-                            ]}
-                        >
-                            <TextComponent
-                                className=""
-                                text={(selectedItem && selectedItem.title) ?? data[3]?.title ?? data[0].title}
-                            />
+                        <View style={[styles.dropdownButtonStyle, { width }]}>
+                            <TextComponent text={displayTitle || ''} />
                             <Ionicons
                                 name={isOpened ? 'chevron-up' : 'chevron-down'}
                                 size={18}
@@ -48,18 +53,16 @@ export default function DropDownComponent(props: Props) {
                         </View>
                     );
                 }}
-                renderItem={(item, index, isSelected) => {
-                    return (
-                        <View
-                            style={{
-                                ...styles.dropdownItemStyle,
-                                ...(isSelected && { backgroundColor: '#03009926' }),
-                            }}
-                        >
-                            <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-                        </View>
-                    );
-                }}
+                renderItem={(item, index, isSelected) => (
+                    <View
+                        style={{
+                            ...styles.dropdownItemStyle,
+                            ...(isSelected && { backgroundColor: '#03009926' }),
+                        }}
+                    >
+                        <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+                    </View>
+                )}
                 showsVerticalScrollIndicator={false}
                 dropdownStyle={styles.dropdownMenuStyle}
             />

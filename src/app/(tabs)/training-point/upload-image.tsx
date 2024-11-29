@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useIsFocused } from '@react-navigation/native';
 import ImageComponent from '@/components/ImageComponent';
+import { useRefreshing } from '@/hooks/useRefreshing';
 
 export default function UploadImage() {
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
@@ -74,6 +75,8 @@ export default function UploadImage() {
         queryKey: ['training-points', id],
         queryFn: () => trainingPointAPI.getCriteriaEvidence(id?.toString() ?? ''),
     });
+
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
 
     useEffect(() => {
         if (isFocused) {
@@ -135,8 +138,8 @@ export default function UploadImage() {
     return (
         <ContainerComponent
             title="Tải lên ảnh"
-            handleRefresh={refetch}
-            _refreshing={isFetching}
+            handleRefresh={handleRefresh}
+            _refreshing={refreshing}
             isScroll
             iconLeft="back"
             iconRight={
@@ -182,7 +185,10 @@ export default function UploadImage() {
             {images.length <= 0 ? (
                 <SectionComponent>
                     <TouchableOpacity
-                        className="w-full h-[128px] border-[1px] border-dotted border-primary-400 rounded-[10px] items-center justify-center"
+                        className="w-full h-[128px] border-[1px] border-dotted border-primary-400  items-center justify-center"
+                        style={{
+                            borderRadius: 10,
+                        }}
                         onPress={() => modalizeRef.current?.open()}
                     >
                         <Feather name="image" size={32} color={colors.primary400} />
@@ -194,7 +200,7 @@ export default function UploadImage() {
                     <View className="w-full flex-row gap-3 flex-wrap ">
                         {images.map((image: any, index: number) => (
                             <View key={index} className="w-[80px] h-[80px] relative">
-                                <ImageComponent url={image.uri} rounded={4} />
+                                <ImageComponent url={image.uri} rounded={4} showImageModal />
                                 <TouchableOpacity
                                     className="absolute right-0 top-0"
                                     onPress={() => {
@@ -246,7 +252,9 @@ export default function UploadImage() {
                     </View>
                 }
             />
-            <LoadingModal visible={isLoading} message="Đang tải ảnh lên" />
+            {isLoading || isFetching ? (
+                <LoadingModal message={isFetching ? 'Đang tải dữ liệu' : 'Đang tải ảnh lên'} />
+            ) : null}
         </ContainerComponent>
     );
 }

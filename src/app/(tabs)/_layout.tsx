@@ -26,9 +26,6 @@ export default function TabsLayout() {
                 },
                 tabBarActiveTintColor: colors.primary400,
             }}
-            sceneContainerStyle={{
-                backgroundColor: '#fff',
-            }}
         >
             <Tabs.Screen
                 name="(home)"

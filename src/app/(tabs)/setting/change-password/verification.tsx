@@ -164,7 +164,7 @@ export default function verification() {
                     }}
                 />
             </SectionComponent>
-            <LoadingModal visible={isPending || isLoading || isVerifying} />
+            {isPending || isLoading || isVerifying ? <LoadingModal /> : null}
         </ContainerComponent>
     );
 }

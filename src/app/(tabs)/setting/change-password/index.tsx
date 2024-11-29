@@ -157,7 +157,7 @@ export default function ResetPassword() {
                     disabled={checkHasErr(errors)}
                 />
             </SectionComponent>
-            <LoadingModal visible={isPending || pendingOTP} />
+            {isPending || pendingOTP ? <LoadingModal /> : null}
         </ContainerComponent>
     );
 }

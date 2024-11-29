@@ -10,26 +10,10 @@ export default function SettingHelpsLayout() {
             }}
         >
             <Stack.Screen name="index" />
+            <Stack.Screen name="user-guide" />
+            <Stack.Screen name="terms-policies" />
             <Stack.Screen
-                name="user-guide"
-                options={{
-                    presentation: 'fullScreenModal',
-                }}
-            />
-            <Stack.Screen
-                name="faq"
-                options={{
-                    presentation: 'fullScreenModal',
-                }}
-            />
-            <Stack.Screen
-                name="support"
-                options={{
-                    presentation: 'fullScreenModal',
-                }}
-            />
-            <Stack.Screen
-                name="report-issue"
+                name="[id]"
                 options={{
                     presentation: 'fullScreenModal',
                 }}

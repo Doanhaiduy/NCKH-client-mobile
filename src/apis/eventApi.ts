@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
 import axiosClient from './index';
-import { API_URL } from '@/constants/apiUrl';
 import QueryString from 'qs';
 import { Platform } from 'react-native';
 import { appInfo } from '@/constants/appInfo';
@@ -20,10 +19,10 @@ class EventAPI {
         });
     };
 
-    getEvents = async (data?: EventsParams, option: AxiosRequestConfig = {}): Promise<Events> => {
+    getEvents = async (userId: string, data?: EventsParams, option: AxiosRequestConfig = {}): Promise<Events> => {
         if (Platform.OS === 'ios') {
             return await this.HandleEvent(
-                `${API_URL.event.getEvents}?${QueryString.stringify({
+                `/${userId}/get-all?${QueryString.stringify({
                     ...data,
                 })}`,
                 undefined,
@@ -33,7 +32,7 @@ class EventAPI {
         }
 
         return await this.HandleEvent(
-            `${API_URL.event.getEvents}`,
+            `${userId}/get-all`,
             {
                 ...data,
             },

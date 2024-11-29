@@ -8,32 +8,59 @@ import {
     TextComponent,
 } from '@/components';
 import { colors } from '@/constants/colors';
-import { AttendanceOptionData } from '@/mockData';
+import { useRefreshing } from '@/hooks/useRefreshing';
+import { LoadingModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
+import { getSemesterYears } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function ListAttendance() {
     const { authData } = useSelector(authSelector);
     const { back } = useLocalSearchParams();
+    const [semesterYear, setSemesterYear] = React.useState<AttendanceOption[]>();
+    const [selectedSemesterYear, setSelectedSemesterYear] = React.useState<{
+        year: string;
+        semester: string;
+    }>(() => {
+        const year = new Date().getFullYear();
+        const month = new Date().getMonth();
+        return {
+            year: year.toString(),
+            semester: month >= 9 || month <= 1 ? '1' : '2',
+        };
+    });
 
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ['attendance-list', authData?.id],
-        queryFn: () =>
-            userAPI.getAttendances(authData?.id!, {
+        queryKey: ['attendance-list', authData?.id, selectedSemesterYear],
+        queryFn: () => {
+            console.log({
+                id: authData?.id,
+                selectedSemesterYear: selectedSemesterYear,
+            });
+            return userAPI.getAttendances(authData?.id!, {
                 page: 1,
                 size: 10,
-            }),
+                year: selectedSemesterYear?.year,
+                semester: selectedSemesterYear?.semester,
+            });
+        },
     });
+
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
 
     useEffect(() => {
         refetch();
         console.log(back);
     }, []);
 
+    useEffect(() => {
+        const optionData = getSemesterYears(authData?.username!);
+        setSemesterYear(optionData.AttendanceOptionData);
+    }, [authData?.username]);
     return (
         <ContainerComponent
             onBack={() => {
@@ -43,8 +70,8 @@ export default function ListAttendance() {
             }}
             isScroll
             title="Đã điểm danh"
-            handleRefresh={refetch}
-            _refreshing={isFetching}
+            handleRefresh={handleRefresh}
+            _refreshing={refreshing}
             iconLeft="back"
             notification
         >
@@ -56,10 +83,24 @@ export default function ListAttendance() {
                     color={colors.primary400}
                 />
                 <RowComponent className="ml-auto mb-4">
-                    <DropDownComponent title="" data={AttendanceOptionData} onSelect={() => {}} width={230} />
+                    <DropDownComponent
+                        title=""
+                        data={semesterYear || []}
+                        onSelect={(selectedItem, index) => {
+                            console.log(selectedItem.value);
+                            setSelectedSemesterYear(selectedItem.value as { year: string; semester: string });
+                        }}
+                        width={230}
+                    />
                 </RowComponent>
-                <TableComponent data={data?.attendances.reverse() || []} />
+
+                {data?.attendances?.length! > 0 ? (
+                    <TableComponent data={data?.attendances.reverse() || []} />
+                ) : (
+                    <TextComponent text="Không có dữ liệu" />
+                )}
             </SectionComponent>
+            {isFetching && <LoadingModal />}
         </ContainerComponent>
     );
 }

@@ -32,14 +32,17 @@ export default function ItemCardGrid(props: Props) {
     return (
         <CardComponent onPress={onPress} className={containerClass} isShadow={isShadow}>
             <View>
-                <ImageComponent url={data.thumbnail!} imageClass={imageClass} rounded={10} />
+                <ImageComponent url={data?.thumbnail!} imageClass={imageClass} rounded={10} />
             </View>
 
             <View className={containerTextClass}>
-                <TextComponent className={textClass} numberOfLines={2} text={data.title} />
+                <TextComponent className={textClass} numberOfLines={2} text={data?.title} />
                 <RowComponent className="">
                     <Ionicons name="calendar" size={14} color={colors.black} />
-                    <TextComponent text={dateFormatLocale(data.createdAt)} className="ml-1 text-[13px] text-text-400" />
+                    <TextComponent
+                        text={dateFormatLocale(data?.createdAt)}
+                        className="ml-1 text-[13px] text-text-400"
+                    />
                 </RowComponent>
             </View>
         </CardComponent>

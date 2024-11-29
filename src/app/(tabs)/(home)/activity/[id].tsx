@@ -17,6 +17,7 @@ import { colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { dateFormat, dateFormatLocale } from '@/utils/dateTime';
 import ImageComponent from '@/components/ImageComponent';
+import { useRefreshing } from '@/hooks/useRefreshing';
 
 type Props = {};
 
@@ -28,6 +29,8 @@ const DetailsScreen = (props: Props) => {
         queryKey: ['post-details', id],
         queryFn: () => postAPI.getDetailPost(id!.toString()),
     });
+
+    const { refreshing, handleRefresh } = useRefreshing(refetch);
 
     useEffect(() => {
         if (data) {
@@ -41,46 +44,58 @@ const DetailsScreen = (props: Props) => {
             iconLeft="back"
             notification
             isScroll
-            _refreshing={isFetching}
-            handleRefresh={refetch}
+            _refreshing={refreshing}
+            handleRefresh={handleRefresh}
         >
-            <ImageComponent url={data?.thumbnail!} imageClass="w-full" aspectRatio={16 / 9} />
-            <SectionComponent>
-                <View className="flex-row justify-between mt-3 w-full">
-                    <RowComponent className="">
-                        <Ionicons name="calendar" size={14} color={colors.black} />
-                        <TextComponent
-                            text={dateFormat(data?.createdAt || '')}
-                            className="ml-1 text-[13px] text-text-400"
-                        />
-                    </RowComponent>
-                    <View className="flex-row items-center">
-                        <Pressable>
-                            <Ionicons name="share-social" size={24} color={colors.primary500} />
-                        </Pressable>
-                        <SpaceComponent width={12} />
-                        <ButtonComponent
-                            onPress={() => {}}
-                            title="Đăng ký"
-                            type="primary"
-                            size="small"
-                            icon={<Ionicons name="add-outline" size={16} color={colors.white} />}
-                            iconFlex="left"
-                        />
-                    </View>
+            {isFetching ? (
+                <View className="items-center mt-4 justify-center">
+                    <ActivityIndicator size={'large'} />
                 </View>
-                <TextComponent text={data?.title || ''} className="text-[20px] mt-4" color={colors.primary500} />
-            </SectionComponent>
+            ) : (
+                <>
+                    <ImageComponent showImageModal url={data?.thumbnail!} imageClass="w-full" aspectRatio={16 / 9} />
+                    <SectionComponent>
+                        <View className="flex-row justify-between mt-3 w-full">
+                            <RowComponent className="">
+                                <Ionicons name="calendar" size={14} color={colors.black} />
+                                <TextComponent
+                                    text={dateFormat(data?.createdAt || '')}
+                                    className="ml-1 text-[13px] text-text-400"
+                                />
+                            </RowComponent>
+                            <View className="flex-row items-center">
+                                <Pressable>
+                                    <Ionicons name="share-social" size={24} color={colors.primary500} />
+                                </Pressable>
+                                <SpaceComponent width={12} />
+                                <ButtonComponent
+                                    onPress={() => {}}
+                                    title="Đăng ký"
+                                    type="primary"
+                                    size="small"
+                                    icon={<Ionicons name="add-outline" size={16} color={colors.white} />}
+                                    iconFlex="left"
+                                />
+                            </View>
+                        </View>
+                        <TextComponent
+                            text={data?.title || ''}
+                            className="text-[20px] mt-4"
+                            color={colors.primary500}
+                        />
+                    </SectionComponent>
 
-            <SectionComponent>
-                {content ? (
-                    <RenderHtml contentWidth={appInfo.sizes.WIDTH} source={{ html: content }} />
-                ) : (
-                    <View className="items-center mt-4 justify-center w-full">
-                        <ActivityIndicator size={'large'} color={colors.primary500} />
-                    </View>
-                )}
-            </SectionComponent>
+                    <SectionComponent>
+                        {content ? (
+                            <RenderHtml contentWidth={appInfo.sizes.WIDTH} source={{ html: content }} />
+                        ) : (
+                            <View className="items-center mt-4 justify-center w-full">
+                                <ActivityIndicator size={'large'} color={colors.primary500} />
+                            </View>
+                        )}
+                    </SectionComponent>
+                </>
+            )}
         </ContainerComponent>
     );
 };
