@@ -1,10 +1,10 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useRef } from 'react';
-import { router } from 'expo-router';
-import { colors } from '@/constants/colors';
-import { TextComponent } from '@/components';
-import { RoutesCategories } from '@/constants/routes';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { router } from "expo-router";
+import { colors } from "@/constants/colors";
+import { TextComponent } from "@/components";
+import { RoutesCategories } from "@/constants/routes";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface Props {
     routeName?: string;
@@ -37,18 +37,18 @@ export default function CategoriesList(props: Props) {
                     }}
                     key={index}
                 >
-                    <TextComponent text={item.name} color={routeName === item.name ? '#FFD000' : colors.white} />
+                    <TextComponent text={item.name} color={routeName === item.name ? "#FFD000" : colors.white} />
                     <View
                         style={{
-                            width: '100%',
+                            width: "100%",
                             height: 4,
                             borderRadius: 5,
                             backgroundColor:
-                                routeName === 'index' && item.name === 'Tất cả'
-                                    ? '#FFD000'
-                                    : routeName === item.route.split('/')[1]
-                                      ? '#FFD000'
-                                      : 'transparent',
+                                routeName === "index" && item.name === "Tất cả"
+                                    ? "#FFD000"
+                                    : routeName === item.route.split("/")[1]
+                                      ? "#FFD000"
+                                      : "transparent",
                             marginTop: 6,
                         }}
                     />

@@ -20,7 +20,10 @@
         },
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "com.doanhaiduy.mobile"
+            "bundleIdentifier": "com.doanhaiduy.mobile",
+            "infoPlist": {
+                "NSFaceIDUsageDescription": "Ứng dụng cần sử dụng FaceID để xác thực danh tính của bạn."
+            }
         },
         "android": {
             "adaptiveIcon": {
@@ -34,7 +37,25 @@
             "favicon": "./assets/favicon.png",
             "bundler": "metro"
         },
-        "plugins": ["expo-router", "expo-font"],
+        "plugins": [
+            "expo-router",
+            "expo-font",
+            [
+                "react-native-vision-camera",
+                {
+                    "cameraPermissionText": "app needs access to your Camera.",
+                    "enableMicrophonePermission": true,
+                    "microphonePermissionText": "app needs access to your Microphone."
+                }
+            ],
+            [
+                "expo-local-authentication",
+                {
+                    "faceIDPermission": "Allow ntuApp to use Face ID.",
+                    "faceIDPermissionPrompt": "Allow $(PRODUCT_NAME) to use Face ID"
+                }
+            ]
+        ],
         "extra": {
             "eas": {
                 "projectId": "61b61d09-d739-4c06-a399-e6562f8b6fce"

@@ -1,50 +1,53 @@
-import eventAPI from '@/apis/eventApi';
-import {
-    ButtonComponent,
-    ContainerComponent,
-    ItemCardList,
-    SectionComponent,
-    SpaceComponent,
-    TextComponent,
-} from '@/components';
-import { authSelector } from '@/stores/reducers/authReducer';
-import { useQueries } from '@tanstack/react-query';
-import { router, useNavigation } from 'expo-router';
-import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import eventAPI from "@/apis/eventApi";
+import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from "@/components";
+import { authSelector } from "@/stores/reducers/authReducer";
+import { useQueries } from "@tanstack/react-query";
+import { router, useNavigation } from "expo-router";
+import React, { useEffect } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 
 export default function Attendance() {
     const navigation = useNavigation();
-    const { authData } = useSelector(authSelector);
 
-    const [eventActive, eventInactive] = useQueries({
+    const [eventActive, eventInactive, eventRegistered] = useQueries({
         queries: [
             {
-                queryKey: ['events-ongoing'],
+                queryKey: ["events-ongoing"],
                 queryFn: () =>
-                    eventAPI.getEvents(authData?.id || '', {
+                    eventAPI.getEvents({
                         page: 1,
                         size: 10,
-                        status: 'active',
-                        time: 'ongoing',
+                        status: "active",
+                        time: "ongoing",
+                        typeEvent: "mandatory",
                     }),
             },
             {
-                queryKey: ['events-past'],
+                queryKey: ["events-past"],
                 queryFn: () =>
-                    eventAPI.getEvents(authData?.id || '', {
+                    eventAPI.getEvents({
                         page: 1,
                         size: 10,
-                        status: 'active',
-                        time: 'past',
+                        status: "active",
+                        time: "past",
+                    }),
+            },
+            {
+                queryKey: ["events-registered"],
+                queryFn: () =>
+                    eventAPI.getEvents({
+                        page: 1,
+                        size: 10,
+                        status: "active",
+                        time: "ongoing",
+                        typeEvent: "optional",
                     }),
             },
         ],
     });
 
     useEffect(() => {
-        navigation.addListener('beforeRemove', (e) => {
+        navigation.addListener("beforeRemove", (e) => {
             e.preventDefault();
             navigation.dispatch(e.data.action);
         });
@@ -55,11 +58,12 @@ export default function Attendance() {
             iconLeft="logo"
             title="Điểm danh"
             isScroll
-            _refreshing={eventActive.isFetching || eventInactive.isFetching}
+            _refreshing={eventActive.isFetching || eventInactive.isFetching || eventRegistered.isFetching}
             notification
             handleRefresh={() => {
                 eventActive.refetch();
                 eventInactive.refetch();
+                eventRegistered.refetch();
             }}
         >
             <SectionComponent>
@@ -70,7 +74,38 @@ export default function Attendance() {
                 <View className="w-full">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
+                        ListEmptyComponent={() => (
+                            <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                        )}
                         data={eventActive?.data?.events}
+                        showsVerticalScrollIndicator={false}
+                        scrollEnabled={false}
+                        renderItem={({ item }) => (
+                            <ItemCardList
+                                data={item}
+                                onPress={() => {}}
+                                onPressButton={() => {
+                                    router.push(`/attendance/${item.id}`);
+                                }}
+                                isAction
+                            />
+                        )}
+                    />
+                </View>
+            </SectionComponent>
+
+            <SectionComponent className="border-t-[1px] border-text-200 flex-1">
+                <TextComponent
+                    text="Hoạt động đã đăng ký"
+                    className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
+                />
+                <View className="w-full">
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        data={eventRegistered.data?.events}
+                        ListEmptyComponent={() => (
+                            <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                        )}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
                         renderItem={({ item }) => (
@@ -91,25 +126,16 @@ export default function Attendance() {
                     text="Hoạt động đã diễn ra"
                     className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
                 />
-                <View className="">
+                <View className="w-full">
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={eventInactive.data?.events}
+                        ListEmptyComponent={() => (
+                            <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                        )}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
-                        renderItem={({ item }) => (
-                            <ItemCardList
-                                data={item}
-                                // onPressButton={() => {
-                                //     router.push({
-                                //         pathname: `/attendance/${item.id}`,
-                                //         params: {
-                                //             eventName: item.title,
-                                //         },
-                                //     });
-                                // }}
-                            />
-                        )}
+                        renderItem={({ item }) => <ItemCardList data={item} />}
                     />
                 </View>
             </SectionComponent>
@@ -120,9 +146,9 @@ export default function Attendance() {
                     type="primary"
                     onPress={() => {
                         router.push({
-                            pathname: '/attendance/list',
+                            pathname: "/attendance/list",
                             params: {
-                                back: 'to_attendance',
+                                back: "to_attendance",
                             },
                         });
                     }}

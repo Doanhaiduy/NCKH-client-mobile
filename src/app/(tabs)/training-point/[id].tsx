@@ -1,4 +1,4 @@
-import trainingPointAPI from '@/apis/trainingPointApi';
+import trainingPointAPI from "@/apis/trainingPointApi";
 import {
     ButtonComponent,
     ContainerComponent,
@@ -7,25 +7,25 @@ import {
     SpaceComponent,
     TableBorderComponent,
     TextComponent,
-} from '@/components';
-import { colors } from '@/constants/colors';
-import { authSelector } from '@/stores/reducers/authReducer';
-import { romanize } from '@/utils';
-import { Feather } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useIsFocused } from '@react-navigation/native';
-import { LoadingModal } from '@/modals';
+} from "@/components";
+import { colors } from "@/constants/colors";
+import { authSelector } from "@/stores/reducers/authReducer";
+import { romanize } from "@/utils";
+import { Feather } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect } from "react";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { LoadingModal } from "@/modals";
 
 export default function TrainingPointDetails() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
     const { data, error, refetch, isFetching, isRefetching } = useQuery({
-        queryKey: ['training-points', id],
-        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
+        queryKey: ["training-points", id],
+        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ""),
     });
 
     const isFocused = useIsFocused();
@@ -38,19 +38,23 @@ export default function TrainingPointDetails() {
 
     return (
         <ContainerComponent
-            title="Chi tiết kết quả rèn luyện"
+            title="Kết quả rèn luyện"
             iconLeft="back"
             isScroll
             handleRefresh={refetch}
             _refreshing={isRefetching}
             iconRight={
                 <TouchableOpacity
-                    onPress={() =>
-                        router.push({
-                            pathname: '/training-point/upload',
-                            params: { id },
-                        })
-                    }
+                    onPress={() => {
+                        if (data?.isLocked) {
+                            Alert.alert("Thông báo", "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau");
+                        } else {
+                            router.push({
+                                pathname: "/training-point/upload",
+                                params: { id },
+                            });
+                        }
+                    }}
                 >
                     <Feather name="upload" size={24} color={colors.primary400} />
                 </TouchableOpacity>
@@ -77,24 +81,38 @@ export default function TrainingPointDetails() {
                         title="Tự đánh giá"
                         type="primary"
                         size="small"
-                        onPress={() =>
-                            router.push({
-                                pathname: '/training-point/assessment',
-                                params: { id },
-                            })
-                        }
+                        onPress={() => {
+                            if (data?.isLocked) {
+                                Alert.alert(
+                                    "Thông báo",
+                                    "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau",
+                                );
+                            } else {
+                                router.push({
+                                    pathname: "/training-point/assessment",
+                                    params: { id },
+                                });
+                            }
+                        }}
                     />
                     <SpaceComponent width={10} />
                     <ButtonComponent
                         title="Tải minh chứng"
                         type="primary"
                         size="small"
-                        onPress={() =>
-                            router.push({
-                                pathname: '/training-point/upload',
-                                params: { id },
-                            })
-                        }
+                        onPress={() => {
+                            if (data?.isLocked) {
+                                Alert.alert(
+                                    "Thông báo",
+                                    "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau",
+                                );
+                            } else {
+                                router.push({
+                                    pathname: "/training-point/upload",
+                                    params: { id },
+                                });
+                            }
+                        }}
                     />
                 </RowComponent>
             </SectionComponent>

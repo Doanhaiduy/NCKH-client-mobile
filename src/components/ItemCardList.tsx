@@ -1,13 +1,13 @@
-import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
-import ButtonComponent from './ButtonComponent';
-import CardComponent from './CardComponent';
-import RowComponent from './RowComponent';
-import TextComponent from './TextComponent';
-import { dateFormatLocale } from '@/utils/dateTime';
-import ImageComponent from './ImageComponent';
+import { colors } from "@/constants/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Image, StyleSheet, View } from "react-native";
+import ButtonComponent from "./ButtonComponent";
+import CardComponent from "./CardComponent";
+import RowComponent from "./RowComponent";
+import TextComponent from "./TextComponent";
+import { dateFormatLocale } from "@/utils/dateTime";
+import ImageComponent from "./ImageComponent";
 
 interface Props {
     data: EventCard | CardItemData;

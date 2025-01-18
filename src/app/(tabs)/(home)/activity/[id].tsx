@@ -1,10 +1,10 @@
-import { View, Text, Image, Pressable, ActivityIndicator } from 'react-native';
-import React, { useEffect } from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { useQuery } from '@tanstack/react-query';
-import postAPI from '@/apis/postApi';
-import RenderHtml from 'react-native-render-html';
-import { appInfo } from '@/constants/appInfo';
+import { View, Text, Image, Pressable, ActivityIndicator, Share, Alert, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import postAPI from "@/apis/postApi";
+import RenderHtml from "react-native-render-html";
+import { appInfo } from "@/constants/appInfo";
 import {
     ButtonComponent,
     ContainerComponent,
@@ -12,31 +12,124 @@ import {
     SectionComponent,
     SpaceComponent,
     TextComponent,
-} from '@/components';
-import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
-import { dateFormat, dateFormatLocale } from '@/utils/dateTime';
-import ImageComponent from '@/components/ImageComponent';
-import { useRefreshing } from '@/hooks/useRefreshing';
+} from "@/components";
+import { colors } from "@/constants/colors";
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { dateFormat, dateFormatLocale } from "@/utils/dateTime";
+import ImageComponent from "@/components/ImageComponent";
+import { useRefreshing } from "@/hooks/useRefreshing";
+import eventAPI from "@/apis/eventApi";
 
 type Props = {};
 
 const DetailsScreen = (props: Props) => {
     const { id } = useLocalSearchParams();
-    const [content, setContent] = React.useState<string>('');
+    const [content, setContent] = React.useState<string>("");
+    const [btnTypeAction, setBtnTypeAction] = React.useState<"none" | "register" | "unregister" | "full" | "already">(
+        "none",
+    );
 
     const { data, isFetching, refetch } = useQuery<Post>({
-        queryKey: ['post-details', id],
+        queryKey: ["post-details", id],
         queryFn: () => postAPI.getDetailPost(id!.toString()),
     });
 
     const { refreshing, handleRefresh } = useRefreshing(refetch);
 
     useEffect(() => {
+        console.log(data);
         if (data) {
-            setContent(data.content || '');
+            setContent(data.content || "");
+            setBtnTypeAction(data.typeAction!);
         }
     }, [data]);
+
+    const handleAction = async () => {
+        try {
+            if (btnTypeAction === "register") {
+                const res = await eventAPI.registerEvent(data?.event?.toString()!);
+                if (res) {
+                    setBtnTypeAction("unregister");
+                }
+            } else if (btnTypeAction === "unregister") {
+                const res = await eventAPI.unRegisterEvent(data?.event?.toString()!);
+                if (res) {
+                    setBtnTypeAction("register");
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleShare = async () => {
+        try {
+            const result = await Share.share({
+                message: `https://www.doanhaiduy.dev/posts/${data?._id}`,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const renderBtn = () => {
+        switch (btnTypeAction) {
+            case "none":
+                return <></>;
+            case "unregister":
+                return (
+                    <ButtonComponent
+                        onPress={handleAction}
+                        title="Hủy đăng ký"
+                        type="grey"
+                        size="small"
+                        icon={<AntDesign name="closecircleo" size={16} color={colors.white} />}
+                        iconFlex="left"
+                        iconContainerClass="mr-2"
+                    />
+                );
+            case "register":
+                return (
+                    <ButtonComponent
+                        onPress={handleAction}
+                        title="Đăng ký"
+                        type="primary"
+                        size="small"
+                        icon={<Ionicons name="add-outline" size={16} color={colors.white} />}
+                        iconFlex="left"
+                        iconContainerClass="mr-2"
+                    />
+                );
+            case "full":
+                return (
+                    <ButtonComponent
+                        onPress={() => {}}
+                        disabled
+                        title="Đã đủ số lượng"
+                        type="grey"
+                        size="small"
+                        icon={<MaterialIcons name="bar-chart" size={16} color={colors.white} />}
+                        iconFlex="left"
+                        iconContainerClass="mr-2"
+                    />
+                );
+            case "already":
+                return (
+                    <ButtonComponent
+                        onPress={() => {}}
+                        disabled
+                        title="Đã điểm danh"
+                        type="grey"
+                        size="small"
+                        icon={<Feather name="user-check" size={16} color={colors.white} />}
+                        iconFlex="left"
+                        iconContainerClass="mr-2"
+                    />
+                );
+            default:
+                return <></>;
+        }
+    };
 
     return (
         <ContainerComponent
@@ -49,9 +142,9 @@ const DetailsScreen = (props: Props) => {
         >
             {isFetching ? (
                 <View className="items-center mt-4 justify-center">
-                    <ActivityIndicator size={'large'} />
+                    <ActivityIndicator size={"large"} />
                 </View>
-            ) : (
+            ) : data ? (
                 <>
                     <ImageComponent showImageModal url={data?.thumbnail!} imageClass="w-full" aspectRatio={16 / 9} />
                     <SectionComponent>
@@ -59,27 +152,20 @@ const DetailsScreen = (props: Props) => {
                             <RowComponent className="">
                                 <Ionicons name="calendar" size={14} color={colors.black} />
                                 <TextComponent
-                                    text={dateFormat(data?.createdAt || '')}
+                                    text={dateFormatLocale(data?.createdAt || "")}
                                     className="ml-1 text-[13px] text-text-400"
                                 />
                             </RowComponent>
                             <View className="flex-row items-center">
-                                <Pressable>
+                                <TouchableOpacity onPress={handleShare} className="p-2">
                                     <Ionicons name="share-social" size={24} color={colors.primary500} />
-                                </Pressable>
+                                </TouchableOpacity>
                                 <SpaceComponent width={12} />
-                                <ButtonComponent
-                                    onPress={() => {}}
-                                    title="Đăng ký"
-                                    type="primary"
-                                    size="small"
-                                    icon={<Ionicons name="add-outline" size={16} color={colors.white} />}
-                                    iconFlex="left"
-                                />
+                                {renderBtn()}
                             </View>
                         </View>
                         <TextComponent
-                            text={data?.title || ''}
+                            text={data?.title || ""}
                             className="text-[20px] mt-4"
                             color={colors.primary500}
                         />
@@ -90,11 +176,13 @@ const DetailsScreen = (props: Props) => {
                             <RenderHtml contentWidth={appInfo.sizes.WIDTH} source={{ html: content }} />
                         ) : (
                             <View className="items-center mt-4 justify-center w-full">
-                                <ActivityIndicator size={'large'} color={colors.primary500} />
+                                <ActivityIndicator size={"large"} color={colors.primary500} />
                             </View>
                         )}
                     </SectionComponent>
                 </>
+            ) : (
+                <TextComponent className="text-center" text="Không có dữ liệu" />
             )}
         </ContainerComponent>
     );

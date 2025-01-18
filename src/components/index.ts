@@ -1,24 +1,25 @@
-import { ImageComponent } from 'react-native';
-import ActionListComponents from './ActionListComponents';
-import ButtonComponent from './ButtonComponent';
-import CardComponent from './CardComponent';
-import ContainerComponent from './ContainerComponent';
-import DropDownComponent from './DropDownComponent';
-import DropdownItem from './DropdownItem';
-import InputComponent from './InputComponent';
-import ItemCardGrid from './ItemCardGrid';
-import ItemCardList from './ItemCardList';
-import LanguageCard from './LanguageCard';
-import NotificationCard from './NotificationCard';
-import PortalizeComponent from './PortalizeComponent';
-import RowComponent from './RowComponent';
-import SearchComponent from './SearchComponent';
-import SectionComponent from './SectionComponent';
-import SlideCardComponent from './SlideCardComponent';
-import SpaceComponent from './SpaceComponent';
-import TableBorderComponent from './TableBorderComponent';
-import TableComponent from './TableComponent';
-import TextComponent from './TextComponent';
+import ActionListComponents from "./ActionListComponents";
+import ButtonComponent from "./ButtonComponent";
+import CardComponent from "./CardComponent";
+import ContainerComponent from "./ContainerComponent";
+import DropDownComponent from "./DropDownComponent";
+import DropdownItem from "./DropdownItem";
+import InputComponent from "./InputComponent";
+import ItemCardGrid from "./ItemCardGrid";
+import ItemCardList from "./ItemCardList";
+import LanguageCard from "./LanguageCard";
+import NotificationCard from "./NotificationCard";
+import PortalizeComponent from "./PortalizeComponent";
+import RowComponent from "./RowComponent";
+import SearchComponent from "./SearchComponent";
+import SectionComponent from "./SectionComponent";
+import SlideCardComponent from "./SlideCardComponent";
+import SpaceComponent from "./SpaceComponent";
+import TableBorderComponent from "./TableBorderComponent";
+import TableComponent from "./TableComponent";
+import TextComponent from "./TextComponent";
+import CollapsibleComponent from "./CollapsibleComponent";
+import ImageComponent from "./ImageComponent";
 
 export {
     ButtonComponent,
@@ -42,4 +43,5 @@ export {
     PortalizeComponent,
     SearchComponent,
     ImageComponent,
+    CollapsibleComponent,
 };

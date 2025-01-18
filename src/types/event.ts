@@ -47,10 +47,11 @@ type EventCard = {
 type EventsParams = {
     page?: number;
     size?: number;
-    status?: 'active' | 'inactive';
-    time?: 'past' | 'ongoing' | 'upcoming';
+    status?: "active" | "inactive";
+    time?: "past" | "ongoing" | "upcoming";
     semester?: string;
     year?: string;
+    typeEvent?: "optional" | "mandatory";
 };
 
 type EventCheckInParams = {

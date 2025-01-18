@@ -1,17 +1,17 @@
-const CryptoJS = require('crypto-js');
+const CryptoJS = require("crypto-js");
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const checkHasErr = (data: object) => {
     return Object.values({ ...data }).some(
-        (value, index) => value !== undefined && Object.keys(data)[index] !== 'root',
+        (value, index) => value !== undefined && Object.keys(data)[index] !== "root",
     );
 };
 
 export const decryptData = (cipherText: string): EncryptedEventDetails | null => {
     try {
         const key = process.env.EXPO_PUBLIC_CRYPTO_SECRET_KEY!;
-        const [iv, encrypted] = cipherText.split(':');
+        const [iv, encrypted] = cipherText.split(":");
 
         const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
             iv: CryptoJS.enc.Hex.parse(iv),
@@ -29,7 +29,7 @@ export const decryptData = (cipherText: string): EncryptedEventDetails | null =>
             return null;
         }
     } catch (error) {
-        console.log('Error decrypting data', error);
+        console.log("Error decrypting data", error);
         return null;
     }
 };
@@ -43,47 +43,47 @@ export const Regex = {
 };
 
 export const obfuscateEmail = (email: string): string => {
-    return email.replace(/^(.)(.*)(.@.*)$/, (_, a, b, c) => a + b.replace(/./g, '*') + c);
+    return email.replace(/^(.)(.*)(.@.*)$/, (_, a, b, c) => a + b.replace(/./g, "*") + c);
 };
 
 export const romanize = (num: string) => {
-    var digits = String(+num).split(''),
+    var digits = String(+num).split(""),
         key = [
-            '',
-            'C',
-            'CC',
-            'CCC',
-            'CD',
-            'D',
-            'DC',
-            'DCC',
-            'DCCC',
-            'CM',
-            '',
-            'X',
-            'XX',
-            'XXX',
-            'XL',
-            'L',
-            'LX',
-            'LXX',
-            'LXXX',
-            'XC',
-            '',
-            'I',
-            'II',
-            'III',
-            'IV',
-            'V',
-            'VI',
-            'VII',
-            'VIII',
-            'IX',
+            "",
+            "C",
+            "CC",
+            "CCC",
+            "CD",
+            "D",
+            "DC",
+            "DCC",
+            "DCCC",
+            "CM",
+            "",
+            "X",
+            "XX",
+            "XXX",
+            "XL",
+            "L",
+            "LX",
+            "LXX",
+            "LXXX",
+            "XC",
+            "",
+            "I",
+            "II",
+            "III",
+            "IV",
+            "V",
+            "VI",
+            "VII",
+            "VIII",
+            "IX",
         ],
-        roman = '',
+        roman = "",
         i = 3;
-    while (i--) roman = (key[+digits.pop()! + i * 10] || '') + roman;
-    return Array(+digits.join('') + 1).join('M') + roman;
+    while (i--) roman = (key[+digits.pop()! + i * 10] || "") + roman;
+    return Array(+digits.join("") + 1).join("M") + roman;
 };
 
 export const flattenCriteria = (criteria: Criteria[]) => {
@@ -97,8 +97,8 @@ export const flattenCriteria = (criteria: Criteria[]) => {
                 maxScore: item.maxScore,
                 totalScore: item.totalScore,
                 level: item.level,
-                require: item.evidenceType !== 'none',
-                evidence: item.evidenceType === 'none' ? undefined : item.evidence ? item.evidence : undefined,
+                require: item.evidenceType !== "none",
+                evidence: item.evidenceType === "none" ? undefined : item.evidence ? item.evidence : undefined,
                 criteriaCode: item.criteriaCode,
                 tempScore: item.tempScore,
                 activeChange: item.subCriteria.length === 0 && !item.isAutoScore,
@@ -120,16 +120,17 @@ export const getSemesterYears = (username: string) => {
     const referencePrefix = 63;
 
     const startYear = referenceYear - (referencePrefix - prefix);
-    const endYear = startYear + 3;
+    // fix this to  +3
+    const endYear = startYear + 4;
 
     const SemesterOptionData: Semester[] = [
         {
-            title: 'I',
-            value: '1',
+            title: "I",
+            value: "1",
         },
         {
-            title: 'II',
-            value: '2',
+            title: "II",
+            value: "2",
         },
     ];
 
@@ -149,18 +150,36 @@ export const getSemesterYears = (username: string) => {
                 title: `HK: I, NH: ${year} - ${year + 1}`,
                 value: {
                     year: `${year}`,
-                    semester: '1',
+                    semester: "1",
                 },
             },
             {
                 title: `HK: II, NH: ${year} - ${year + 1}`,
                 value: {
                     year: `${year}`,
-                    semester: '2',
+                    semester: "2",
                 },
             },
         );
     }
 
     return { AttendanceOptionData, SemesterOptionData, YearOptionData };
+};
+
+export const getCurrentSemesterYear = () => {
+    const date = new Date();
+    let semester = 1;
+    let year = date.getFullYear();
+    const month = date.getMonth();
+
+    if (month >= 2 && month <= 7) {
+        semester = 2;
+        year -= 1;
+    } else if (month >= 8) {
+        semester = 1;
+    } else {
+        year -= 1;
+    }
+
+    return { semester, year };
 };

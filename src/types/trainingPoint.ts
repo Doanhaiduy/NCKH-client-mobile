@@ -6,6 +6,10 @@ type TrainingPoint = {
     totalScore: number;
     tempScore: number;
     id: string;
+    isLocked: boolean;
+    AssessmentStartTime: string;
+    AssessmentEndTime: string;
+    _id?: string;
 };
 
 type Criteria = {

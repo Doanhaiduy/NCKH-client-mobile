@@ -8,6 +8,7 @@ type Posts = {
 
 type Post = {
     id: string;
+    _id?: string;
     author: Author;
     title: string;
     thumbnail: string;
@@ -16,6 +17,8 @@ type Post = {
     type: string;
     category: string;
     createdAt: string;
+    typeAction?: "none" | "register" | "unregister" | "full" | "already";
+    event?: string;
 };
 
 type PostDetails = {
@@ -41,7 +44,7 @@ type CardItemData = {
 type PostsParams = {
     page?: number;
     size?: number;
-    category?: 'news' | 'activity';
+    category?: "news" | "activity";
     search?: string;
 };
 type Author = {

@@ -1,11 +1,11 @@
-import { colors } from '@/constants/colors';
-import { RoutesDrawerDropDown } from '@/constants/routes';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { DrawerItem } from '@react-navigation/drawer';
-import { router } from 'expo-router';
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import TextComponent from './TextComponent';
+import { colors } from "@/constants/colors";
+import { RoutesDrawerDropDown } from "@/constants/routes";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { DrawerItem } from "@react-navigation/drawer";
+import { router } from "expo-router";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import TextComponent from "./TextComponent";
 
 export default function DropdownItem() {
     return (
@@ -21,8 +21,8 @@ export default function DropdownItem() {
                             width: 600,
                             marginLeft: -20,
                             fontSize: 16,
-                            fontWeight: 'normal',
-                            fontFamily: 'Inter',
+                            fontWeight: "normal",
+                            fontFamily: "Inter",
                         }}
                         key={index}
                         icon={({ color, size }) => <Ionicons name="chevron-forward" color={colors.text200} />}

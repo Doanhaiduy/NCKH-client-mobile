@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import TextComponent from './TextComponent';
-import { dateFormatLocale } from '@/utils/dateTime';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import TextComponent from "./TextComponent";
+import { dateFormatLocale } from "@/utils/dateTime";
 
 interface Props {
     data: AttendanceDetails[];
@@ -11,42 +11,33 @@ export default function TableComponent(props: Props) {
     const { data } = props;
 
     return (
-        <View className="min-w-full flex-1 px-2">
-            <View className="flex-row flex-nowrap flex-1 border-y-[1px] py-5 gap-x-4">
-                <View className="w-[5%] items-start">
+        <View className="min-w-full flex-1 px-2 ml-4">
+            <View className="flex-row flex-nowrap flex-1 border-text-200 border-[1px] gap-x-4">
+                <View className="w-[10%] items-start py-4 border-text-200 border-r-[1px]">
                     <TextComponent text="#" fontBold />
                 </View>
-                <View className="items-start w-[20%]">
-                    <TextComponent text="Mã" fontBold />
-                </View>
-                <View className="flex-1 items-start max-w-[30%]">
+                <View className="flex-1 items-start py-4 border-text-200 border-r-[1px] max-w-[45%]">
                     <TextComponent text="Tên hoạt động " fontBold />
                 </View>
-                <View className="flex-1 items-start max-w-[35%]">
+                <View className="flex-1 items-start py-4 max-w-[45%]">
                     <TextComponent text="Thời gian" fontBold />
-                </View>
-                <View className="flex-1 items-start max-w-[35%]">
-                    <TextComponent text="Trạng thái" fontBold />
                 </View>
             </View>
             {/* Body */}
             <View className="flex-1">
                 {data.map((item, index) => (
-                    <View key={item.id} className="flex-row flex-nowrap flex-1 gap-x-4 py-5">
-                        <View className="w-[5%] items-start">
+                    <View
+                        key={item.id}
+                        className="flex-row flex-nowrap flex-1 gap-x-4 border-[1px] border-text-200 border-t-0"
+                    >
+                        <View className="w-[10%] items-start border-text-200 border-r-[1px] pr-2 py-2">
                             <TextComponent text={`${index + 1}`} />
                         </View>
-                        <View className=" items-start w-[20%]">
-                            <TextComponent text={item.event.eventCode} />
-                        </View>
-                        <View className="flex-1 items-start max-w-[30%]">
+                        <View className="flex-1 items-start border-text-200 border-r-[1px] pr-2 py-2 max-w-[45%]">
                             <TextComponent text={item.event.name} />
                         </View>
-                        <View className="flex-1 items-start max-w-[35%]">
+                        <View className="flex-1 items-start pr-2 py-2 max-w-[45%]">
                             <TextComponent text={dateFormatLocale(item.checkInAt)} />
-                        </View>
-                        <View className="flex-1 items-start max-w-[35%]">
-                            <TextComponent text={item.status} />
                         </View>
                     </View>
                 ))}

@@ -1,4 +1,4 @@
-import userAPI from '@/apis/userApi';
+import userAPI from "@/apis/userApi";
 import {
     ContainerComponent,
     DropDownComponent,
@@ -6,17 +6,16 @@ import {
     SectionComponent,
     TableComponent,
     TextComponent,
-} from '@/components';
-import { colors } from '@/constants/colors';
-import { useRefreshing } from '@/hooks/useRefreshing';
-import { LoadingModal } from '@/modals';
-import { authSelector } from '@/stores/reducers/authReducer';
-import { getSemesterYears } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useSelector } from 'react-redux';
+} from "@/components";
+import { colors } from "@/constants/colors";
+import { useRefreshing } from "@/hooks/useRefreshing";
+import { authSelector } from "@/stores/reducers/authReducer";
+import { getCurrentSemesterYear, getSemesterYears } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function ListAttendance() {
     const { authData } = useSelector(authSelector);
@@ -26,16 +25,15 @@ export default function ListAttendance() {
         year: string;
         semester: string;
     }>(() => {
-        const year = new Date().getFullYear();
-        const month = new Date().getMonth();
+        const currentSY = getCurrentSemesterYear();
         return {
-            year: year.toString(),
-            semester: month >= 9 || month <= 1 ? '1' : '2',
+            year: currentSY.year.toString(),
+            semester: currentSY.semester.toString(),
         };
     });
 
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ['attendance-list', authData?.id, selectedSemesterYear],
+        queryKey: ["attendance-list", authData?.id, selectedSemesterYear],
         queryFn: () => {
             console.log({
                 id: authData?.id,
@@ -64,9 +62,9 @@ export default function ListAttendance() {
     return (
         <ContainerComponent
             onBack={() => {
-                back === 'to_home' && router.navigate('/(home)');
-                back === 'to_attendance' && router.back();
-                back === 'to_scan' && router.dismissAll();
+                back === "to_home" && router.navigate("/(home)");
+                back === "to_attendance" && router.back();
+                back === "to_scan" && router.dismissAll();
             }}
             isScroll
             title="Đã điểm danh"
@@ -97,10 +95,10 @@ export default function ListAttendance() {
                 {data?.attendances?.length! > 0 ? (
                     <TableComponent data={data?.attendances.reverse() || []} />
                 ) : (
-                    <TextComponent text="Không có dữ liệu" />
+                    <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
                 )}
             </SectionComponent>
-            {isFetching && <LoadingModal />}
+            {/* {isFetching && <LoadingModal />} */}
         </ContainerComponent>
     );
 }
