@@ -1,29 +1,29 @@
-import trainingPointAPI from '@/apis/trainingPointApi';
+import trainingPointAPI from "@/apis/trainingPointApi";
 import {
     ContainerComponent,
     SectionComponent,
     SpaceComponent,
     TableBorderComponent,
     TextComponent,
-} from '@/components';
-import { colors } from '@/constants/colors';
-import { authSelector } from '@/stores/reducers/authReducer';
-import { romanize } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
-import { useIsFocused } from '@react-navigation/native';
-import { useRefreshing } from '@/hooks/useRefreshing';
-import { LoadingModal } from '@/modals';
+} from "@/components";
+import { colors } from "@/constants/colors";
+import { authSelector } from "@/stores/reducers/authReducer";
+import { romanize } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useEffect, useRef } from "react";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { useRefreshing } from "@/hooks/useRefreshing";
+import { LoadingModal } from "@/modals";
 
 export default function Assessment() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ['training-points', id],
-        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
+        queryKey: ["training-points", id],
+        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ""),
     });
 
     const { refreshing, handleRefresh } = useRefreshing(refetch);
@@ -37,8 +37,6 @@ export default function Assessment() {
         }
     }, [isFocused]);
 
-    console.log(id);
-
     return (
         <ContainerComponent
             title="Tự đánh giá"
@@ -49,13 +47,13 @@ export default function Assessment() {
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
-                        Alert.alert('Thông báo', 'Gửi minh chứng?', [
+                        Alert.alert("Thông báo", "Gửi minh chứng?", [
                             {
-                                text: 'Hủy',
-                                style: 'cancel',
+                                text: "Hủy",
+                                style: "cancel",
                             },
                             {
-                                text: 'Đồng ý',
+                                text: "Đồng ý",
                                 onPress: async () => {
                                     if (tableBorderRef.current) {
                                         // @ts-ignore
@@ -95,7 +93,7 @@ export default function Assessment() {
                     data={data?.criteria}
                     isAssessment
                     ref={tableBorderRef}
-                    idTrainingPoint={data?.id}
+                    idTrainingPoint={data?._id ?? data?._id}
                 />
             </SectionComponent>
         </ContainerComponent>

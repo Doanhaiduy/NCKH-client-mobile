@@ -68,7 +68,7 @@ export default function SlideCardComponent(props: Props) {
                             key={index}
                             data={item}
                             onPress={() => {
-                                router.push(`/activity/${item.id}`);
+                                router.push(`/activity/${item._id}`);
                             }}
                         />
                     </View>

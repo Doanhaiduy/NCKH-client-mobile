@@ -73,7 +73,7 @@ export default function ScanQRScreen() {
                 {
                     checkInAt: new Date().toISOString(),
                     location: currentLocation!,
-                    userId: authData?.id!,
+                    userId: authData?._id!,
                     distance: getDistance(
                         { latitude: currentLocation?.lat!, longitude: currentLocation?.lng! },
                         {

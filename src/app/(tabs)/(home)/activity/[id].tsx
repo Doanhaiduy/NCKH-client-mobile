@@ -25,9 +25,9 @@ type Props = {};
 const DetailsScreen = (props: Props) => {
     const { id } = useLocalSearchParams();
     const [content, setContent] = React.useState<string>("");
-    const [btnTypeAction, setBtnTypeAction] = React.useState<"none" | "register" | "unregister" | "full" | "already">(
-        "none",
-    );
+    const [btnTypeAction, setBtnTypeAction] = React.useState<
+        "none" | "register" | "unregister" | "expired" | "full" | "already"
+    >("none");
 
     const { data, isFetching, refetch } = useQuery<Post>({
         queryKey: ["post-details", id],
@@ -65,7 +65,7 @@ const DetailsScreen = (props: Props) => {
     const handleShare = async () => {
         try {
             const result = await Share.share({
-                message: `https://www.doanhaiduy.dev/posts/${data?._id}`,
+                message: `${appInfo.base_view_url}/posts/${data?.slug ?? data?._id}`,
             });
         } catch (error) {
             console.log(error);
@@ -113,6 +113,20 @@ const DetailsScreen = (props: Props) => {
                         iconContainerClass="mr-2"
                     />
                 );
+            case "expired":
+                return (
+                    <ButtonComponent
+                        onPress={() => {}}
+                        disabled
+                        title="Hết hạn đăng ký"
+                        type="grey"
+                        size="small"
+                        icon={<MaterialCommunityIcons name="timer-off" size={16} color={colors.white} />}
+                        iconFlex="left"
+                        iconContainerClass="mr-2"
+                    />
+                );
+
             case "already":
                 return (
                     <ButtonComponent

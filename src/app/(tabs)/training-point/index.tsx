@@ -31,10 +31,10 @@ export default function TrainingPoint() {
     const { authData } = useSelector(authSelector);
 
     const { data, refetch, isFetching } = useQuery<TrainingPoint>({
-        queryKey: ["training-point", selectedYear, selectedSemester, authData?.id],
+        queryKey: ["training-point", selectedYear, selectedSemester, authData?._id],
         queryFn: () =>
             userAPI
-                .getTrainingPoints(authData?.id!, {
+                .getTrainingPoints(authData?._id!, {
                     year: +selectedYear.split("-")[0],
                     semester: +selectedSemester as 1 | 2,
                 })

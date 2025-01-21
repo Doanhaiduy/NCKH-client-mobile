@@ -30,8 +30,7 @@
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "package": "com.doanhaiduy.mobile",
-            "googleServicesFile": "./android/app/google-services.json"
+            "package": "com.doanhaiduy.mobile"
         },
         "web": {
             "favicon": "./assets/favicon.png",
@@ -40,14 +39,6 @@
         "plugins": [
             "expo-router",
             "expo-font",
-            [
-                "react-native-vision-camera",
-                {
-                    "cameraPermissionText": "app needs access to your Camera.",
-                    "enableMicrophonePermission": true,
-                    "microphonePermissionText": "app needs access to your Microphone."
-                }
-            ],
             [
                 "expo-local-authentication",
                 {

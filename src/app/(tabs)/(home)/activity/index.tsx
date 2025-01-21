@@ -89,7 +89,7 @@ export default function ActivityScreen() {
                             data={item}
                             onPress={() => {
                                 router.push({
-                                    pathname: `/activity/${item.id}`,
+                                    pathname: `/activity/${item._id}`,
                                 });
                             }}
                         />

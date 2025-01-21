@@ -84,7 +84,7 @@ export default function NewsScreen() {
                             data={item}
                             onPress={() => {
                                 router.push({
-                                    pathname: `/news/${item.id}`,
+                                    pathname: `/news/${item._id}`,
                                     params: {
                                         eventName: "Hoạt động ngoại khóa",
                                     },

@@ -1,12 +1,12 @@
-import { colors } from '@/constants/colors';
-import { Feather } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import React, { useEffect, useImperativeHandle } from 'react';
-import { Alert, StyleSheet, TextInput, View } from 'react-native';
-import ButtonComponent from './ButtonComponent';
-import TextComponent from './TextComponent';
-import { flattenCriteria, romanize } from '@/utils';
-import trainingPointAPI from '@/apis/trainingPointApi';
+import { colors } from "@/constants/colors";
+import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
+import React, { useEffect, useImperativeHandle } from "react";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
+import ButtonComponent from "./ButtonComponent";
+import TextComponent from "./TextComponent";
+import { flattenCriteria, romanize } from "@/utils";
+import trainingPointAPI from "@/apis/trainingPointApi";
 
 interface Props {
     data?: Criteria[];
@@ -19,10 +19,10 @@ interface Props {
 function TableBorderComponent(props: Props, ref: any) {
     const { numOfColumns = 3, isUpload, data, isAssessment, idTrainingPoint } = props;
     const [flattenedData, setFlattenedData] = React.useState<flattenCriteria[] | null>(null);
+    console.log("value", flattenedData);
 
     const handleChange = (value: number, id: string) => {
-        const maxScore = flattenedData?.find((item) => item.id === id)?.maxScore;
-
+        const maxScore = flattenedData?.find((item) => item._id === id)?.maxScore;
         if (value > maxScore!) {
             return;
         }
@@ -32,7 +32,8 @@ function TableBorderComponent(props: Props, ref: any) {
         }
 
         const newData = flattenedData?.map((item) => {
-            if (item.id === id) {
+            if (item._id === id) {
+                console.log("item", item);
                 return { ...item, tempScore: value };
             }
             return item;
@@ -50,16 +51,16 @@ function TableBorderComponent(props: Props, ref: any) {
                 ?.filter((item) => item.activeChange)
                 ?.filter((item) => item.tempScore !== item.totalScore)
                 ?.map((item) => {
-                    return { criteriaId: item.id, score: item.tempScore };
+                    return { criteriaId: item._id, score: item.tempScore };
                 });
-
+            console.log("newData", newData);
             const res = await trainingPointAPI.updateScoresAssessment(idTrainingPoint, newData!);
             if (res) {
-                console.log('res', res);
+                console.log("res", res);
                 return true;
             }
         } catch (error: any) {
-            Alert.alert('Thông báo', error);
+            Alert.alert("Thông báo", error);
             return false;
         }
     };
@@ -109,7 +110,7 @@ function TableBorderComponent(props: Props, ref: any) {
                             key={index}
                             className="flex-row flex-nowrap  border-text-200 border-b-[1px] "
                             style={{
-                                backgroundColor: index % 2 === 0 ? '#F3F4F6' : '#fff',
+                                backgroundColor: index % 2 === 0 ? "#F3F4F6" : "#fff",
                             }}
                         >
                             <View className="w-[10%] items-start justify-center py-3 px-1 border-text-200 border-x-[1px] ">
@@ -119,7 +120,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                             ? romanize(item.criteriaCode)
                                             : item.level === 2
                                               ? item.criteriaCode
-                                              : ''
+                                              : ""
                                     }
                                 />
                             </View>
@@ -132,7 +133,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                 <TextComponent
                                     text={`${item.title}`}
                                     style={{
-                                        fontWeight: item.level === 1 ? 'bold' : item.level === 2 ? 'normal' : 'normal',
+                                        fontWeight: item.level === 1 ? "bold" : item.level === 2 ? "normal" : "normal",
                                     }}
                                 />
                             </View>
@@ -143,8 +144,8 @@ function TableBorderComponent(props: Props, ref: any) {
                                         <ButtonComponent
                                             onPress={() => {
                                                 router.push({
-                                                    pathname: '/training-point/upload-image',
-                                                    params: { id: item.id },
+                                                    pathname: "/training-point/upload-image",
+                                                    params: { id: item._id },
                                                 });
                                             }}
                                             title="Tải lên"
@@ -158,8 +159,8 @@ function TableBorderComponent(props: Props, ref: any) {
                                         <ButtonComponent
                                             onPress={() => {
                                                 router.push({
-                                                    pathname: '/training-point/upload-image',
-                                                    params: { id: item.id },
+                                                    pathname: "/training-point/upload-image",
+                                                    params: { id: item._id },
                                                 });
                                             }}
                                             title="Đã tải lên"
@@ -189,20 +190,20 @@ function TableBorderComponent(props: Props, ref: any) {
                             ) : isAssessment ? (
                                 <>
                                     <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] justify-center">
-                                        <TextComponent text={item?.maxScore.toString() || ''} />
+                                        <TextComponent text={item?.maxScore.toString() || ""} />
                                     </View>
                                     <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] justify-center">
                                         <TextInput
                                             className="text-center border-text-200 border-[1px] rounded-md py-3 px-4"
                                             style={{
-                                                textAlign: 'center',
-                                                backgroundColor: item.activeChange ? '#fff' : '#eee',
+                                                textAlign: "center",
+                                                backgroundColor: item.activeChange ? "#fff" : "#eee",
                                             }}
                                             keyboardType="number-pad"
                                             readOnly={!item.activeChange}
-                                            value={item?.tempScore.toString() === '0' ? '' : item?.tempScore.toString()}
+                                            value={item?.tempScore.toString() === "0" ? "" : item?.tempScore.toString()}
                                             onChange={(e) => {
-                                                handleChange(+e.nativeEvent.text, item.id);
+                                                handleChange(+e.nativeEvent.text, item._id);
                                             }}
                                         />
                                     </View>
@@ -210,13 +211,13 @@ function TableBorderComponent(props: Props, ref: any) {
                             ) : (
                                 <>
                                     <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
-                                        <TextComponent text={item?.maxScore.toString() || ''} />
+                                        <TextComponent text={item?.maxScore.toString() || ""} />
                                     </View>
                                     <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
-                                        <TextComponent text={item?.totalScore.toString() || ''} />
+                                        <TextComponent text={item?.totalScore.toString() || ""} />
                                     </View>
                                     <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
-                                        <TextComponent text={item?.tempScore.toString() || ''} />
+                                        <TextComponent text={item?.tempScore.toString() || ""} />
                                     </View>
                                 </>
                             )}

@@ -7,7 +7,6 @@ type Posts = {
 };
 
 type Post = {
-    id: string;
     _id?: string;
     author: Author;
     title: string;
@@ -17,8 +16,9 @@ type Post = {
     type: string;
     category: string;
     createdAt: string;
-    typeAction?: "none" | "register" | "unregister" | "full" | "already";
+    typeAction?: "none" | "register" | "unregister" | "expired" | "full" | "already";
     event?: string;
+    slug?: string;
 };
 
 type PostDetails = {
@@ -30,11 +30,11 @@ type PostDetails = {
     type: string;
     createdAt: string;
     updatedAt: string;
-    id: string;
+    _id: string;
 };
 
 type CardItemData = {
-    id: number;
+    _id: number;
     title: string;
     createdAt: string;
     thumbnail?: string;
@@ -48,7 +48,7 @@ type PostsParams = {
     search?: string;
 };
 type Author = {
-    id: string;
+    _id: string;
     email: string;
     fullName: string;
 };

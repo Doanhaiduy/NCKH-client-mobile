@@ -27,7 +27,7 @@ export default function TableComponent(props: Props) {
             <View className="flex-1">
                 {data.map((item, index) => (
                     <View
-                        key={item.id}
+                        key={item._id}
                         className="flex-row flex-nowrap flex-1 gap-x-4 border-[1px] border-text-200 border-t-0"
                     >
                         <View className="w-[10%] items-start border-text-200 border-r-[1px] pr-2 py-2">

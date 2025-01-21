@@ -33,13 +33,13 @@ export default function ListAttendance() {
     });
 
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ["attendance-list", authData?.id, selectedSemesterYear],
+        queryKey: ["attendance-list", authData?._id, selectedSemesterYear],
         queryFn: () => {
             console.log({
-                id: authData?.id,
+                id: authData?._id,
                 selectedSemesterYear: selectedSemesterYear,
             });
-            return userAPI.getAttendances(authData?.id!, {
+            return userAPI.getAttendances(authData?._id!, {
                 page: 1,
                 size: 10,
                 year: selectedSemesterYear?.year,

@@ -15,14 +15,12 @@ import { useQueries } from "@tanstack/react-query";
 import { router } from "expo-router";
 import React from "react";
 import { StatusBar, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Camera, useCameraDevice, useCameraDevices } from "react-native-vision-camera";
 
 export default function Home() {
     const modalizeRef = React.useRef<any>(null);
     const { expoPushToken, notification } = usePushNotifications();
     const data = JSON.stringify(notification, null, 2);
     console.log("data", data, expoPushToken);
-    // const device = useCameraDevice('back');
 
     const [posts, news] = useQueries({
         queries: [

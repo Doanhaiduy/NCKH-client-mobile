@@ -92,7 +92,7 @@ export const flattenCriteria = (criteria: Criteria[]) => {
     const traverse = (criteria: Criteria[]) => {
         criteria?.forEach((item) => {
             result.push({
-                id: item.id,
+                _id: item._id,
                 title: item.title,
                 maxScore: item.maxScore,
                 totalScore: item.totalScore,

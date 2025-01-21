@@ -5,7 +5,6 @@ type TrainingPoint = {
     status: string;
     totalScore: number;
     tempScore: number;
-    id: string;
     isLocked: boolean;
     AssessmentStartTime: string;
     AssessmentEndTime: string;
@@ -24,7 +23,7 @@ type Criteria = {
     evidenceType: string;
     evidence?: Evidence;
     subCriteria: Criteria[] | [];
-    id: string;
+    _id: string;
 };
 
 type TrainingPointsParams = {
@@ -37,7 +36,7 @@ type Evidence = {
     name: string;
     dataType: string;
     data: ResponseEvidence[];
-    id: string;
+    _id: string;
     status: string;
     createdAt: string;
 };
@@ -50,7 +49,7 @@ type ResponseEvidence = {
 type SemesterYear = {
     semester: number;
     year: number;
-    id: string;
+    _id: string;
 };
 
 type CriteriaScoreParams = {
@@ -59,7 +58,7 @@ type CriteriaScoreParams = {
 };
 
 type flattenCriteria = {
-    id: string;
+    _id: string;
     title: string;
     maxScore: number;
     totalScore: number;

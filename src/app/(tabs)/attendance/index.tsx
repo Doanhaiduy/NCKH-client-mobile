@@ -85,7 +85,7 @@ export default function Attendance() {
                                 data={item}
                                 onPress={() => {}}
                                 onPressButton={() => {
-                                    router.push(`/attendance/${item.id}`);
+                                    router.push(`/attendance/${item._id}`);
                                 }}
                                 isAction
                             />
@@ -113,7 +113,7 @@ export default function Attendance() {
                                 data={item}
                                 onPress={() => {}}
                                 onPressButton={() => {
-                                    router.push(`/attendance/${item.id}`);
+                                    router.push(`/attendance/${item._id}`);
                                 }}
                                 isAction
                             />

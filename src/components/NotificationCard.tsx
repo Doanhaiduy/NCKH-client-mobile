@@ -1,10 +1,10 @@
-import { colors } from '@/constants/colors';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import RowComponent from './RowComponent';
-import TextComponent from './TextComponent';
-import { NotificationData } from '@/mockData';
-import { dateFormatLocale } from '@/utils/dateTime';
+import { colors } from "@/constants/colors";
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import RowComponent from "./RowComponent";
+import TextComponent from "./TextComponent";
+import { NotificationData } from "@/mockData";
+import { dateFormatLocale } from "@/utils/dateTime";
 
 interface Props {
     data: _Notification;
@@ -19,7 +19,7 @@ export default function NotificationCard(props: Props) {
         <TouchableOpacity
             className="px-4 py-2 flex-1 border-b-[1px] border-text-200"
             style={{
-                backgroundColor: isNew ? '#03009908' : '#fff',
+                backgroundColor: isNew ? "#03009908" : "#fff",
             }}
             onPress={onPress}
         >
@@ -34,9 +34,9 @@ export default function NotificationCard(props: Props) {
                     ></View>
                 )}
             </RowComponent>
-            <TextComponent text={data?.description?.toString() || ''} numberOfLines={1} className="pr-5 py-1" />
+            <TextComponent text={data?.description?.toString() || ""} numberOfLines={1} className="pr-5 py-1" />
             <RowComponent className="justify-between pr-5">
-                <TextComponent text={dateFormatLocale(data.createdAt)} color={colors.text400} />
+                <TextComponent text={dateFormatLocale(data?.createdAt)} color={colors.text400} />
             </RowComponent>
         </TouchableOpacity>
     );

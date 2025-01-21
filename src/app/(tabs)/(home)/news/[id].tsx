@@ -41,7 +41,7 @@ const DetailsScreen = (props: Props) => {
     const handleShare = async () => {
         try {
             const result = await Share.share({
-                message: `https://www.doanhaiduy.dev/posts/${data?._id}`,
+                message: `${appInfo.base_view_url}/posts/${data?.slug ?? data?._id}`,
             });
         } catch (error) {
             console.log(error);

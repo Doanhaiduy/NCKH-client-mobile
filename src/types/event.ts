@@ -21,7 +21,7 @@ type EventDetails = {
     post: any;
     status: string;
     createdAt: string;
-    id: string;
+    _id: string;
 };
 
 type EncryptedEventDetails = {
@@ -37,7 +37,7 @@ type EventLocation = {
 };
 
 type EventCard = {
-    id: number;
+    _id: number;
     name: string;
     startAt: string;
     thumbnail?: string;
@@ -63,7 +63,7 @@ type EventCheckInParams = {
 };
 
 type AttendanceDetails = {
-    id: string;
+    _id: string;
     event: {
         id: string;
         name: string;

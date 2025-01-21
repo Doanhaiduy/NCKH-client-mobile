@@ -8,5 +8,5 @@ type Feedback = {
     user: string;
     status: string;
     createdAt: string;
-    id: string;
+    _id: string;
 };

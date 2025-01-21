@@ -26,7 +26,7 @@ export default function feedback() {
                 onPress: async () => {
                     try {
                         const res = await feedbackAPI.submitFeedback({
-                            user: authData?.id || "",
+                            user: authData?._id || "",
                             feedback: content,
                         });
                         if (res) {
