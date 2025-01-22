@@ -1,56 +1,43 @@
 {
-    "expo": {
-        "name": "NTU Student",
-        "slug": "ntu_student",
-        "scheme": "ntustudent",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "backgroundColor": "#ffffff",
-        "experiments": {
-            "tsconfigPaths": true
-        },
-        "newArchEnabled": true,
-        "platforms": ["ios", "android"],
-        "splash": {
-            "image": "./assets/splash-screen.png",
-            "resizeMode": "cover",
-            "backgroundImage": "./assets/splash-screen.png"
-        },
-        "ios": {
-            "supportsTablet": true,
-            "bundleIdentifier": "com.doanhaiduy.mobile",
-            "infoPlist": {
-                "NSFaceIDUsageDescription": "Ứng dụng cần sử dụng FaceID để xác thực danh tính của bạn."
-            }
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "package": "com.doanhaiduy.mobile"
-        },
-        "web": {
-            "favicon": "./assets/favicon.png",
-            "bundler": "metro"
-        },
-        "plugins": [
-            "expo-router",
-            "expo-font",
-            [
-                "expo-local-authentication",
-                {
-                    "faceIDPermission": "Allow ntuApp to use Face ID.",
-                    "faceIDPermissionPrompt": "Allow $(PRODUCT_NAME) to use Face ID"
-                }
-            ]
-        ],
-        "extra": {
-            "eas": {
-                "projectId": "61b61d09-d739-4c06-a399-e6562f8b6fce"
-            }
-        }
+  "expo": {
+    "name": "mobile",
+    "slug": "mobile",
+    "scheme": "mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#ffffff",
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "splash": {
+      "image": "./assets/splash-screen.png",
+      "resizeMode": "cover",
+      "backgroundImage": "./assets/splash-screen-background.png"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.doanhaiduy.mobile"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "96f5fe0d-9a28-4f2d-9709-daa64204ff37"
+      }
     }
+  }
 }
