@@ -6,4 +6,5 @@ type _Notification = {
     type: string;
     createdAt: string;
     isRead: boolean;
+    actionId?: string;
 };

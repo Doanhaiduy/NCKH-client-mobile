@@ -42,16 +42,17 @@ type EventCard = {
     startAt: string;
     thumbnail?: string;
     type?: string;
+    post?: string;
 };
 
 type EventsParams = {
     page?: number;
     size?: number;
-    status?: "active" | "inactive";
-    time?: "past" | "ongoing" | "upcoming";
+    status?: 'active' | 'inactive';
+    time?: 'past' | 'ongoing' | 'upcoming';
     semester?: string;
     year?: string;
-    typeEvent?: "optional" | "mandatory";
+    typeEvent?: 'optional' | 'mandatory';
 };
 
 type EventCheckInParams = {

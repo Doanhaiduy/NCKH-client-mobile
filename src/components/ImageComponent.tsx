@@ -1,10 +1,10 @@
-import { View, Image, TouchableOpacity, Alert } from "react-native";
-import React, { useCallback, useState } from "react";
+import { View, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useCallback, useState } from 'react';
 
-import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
-import { ImageModal } from "@/modals";
-import { useImage } from "@/hooks/useImage";
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
+import { ImageModal } from '@/modals';
+import { useImage } from '@/hooks/useImage';
 interface Props {
     url: string;
     width?: number;
@@ -24,7 +24,7 @@ const ImageComponent = (props: Props) => {
     const { imageUri, loading, error, retry } = useImage(url);
 
     const openModal = () => {
-        console.log("openModal");
+        console.log('openModal');
         if (!isShowModal) setIsShowModal(true);
     };
 
@@ -32,16 +32,16 @@ const ImageComponent = (props: Props) => {
         try {
             setIsDownloaded(true);
             const { status } = await MediaLibrary.requestPermissionsAsync();
-            if (status !== "granted") {
-                alert("Permission to access media library is required!");
+            if (status !== 'granted') {
+                alert('Permission to access media library is required!');
                 return;
             }
 
-            const file = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + "image.jpg");
+            const file = await FileSystem.downloadAsync(url, FileSystem.documentDirectory + 'image.jpg');
 
             const asset = await MediaLibrary.createAssetAsync(file.uri);
-            await MediaLibrary.createAlbumAsync("Download", asset, false);
-            Alert.alert("Tải ảnh thành công", "Ảnh đã được tải xuống thư viện ảnh của bạn");
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+            Alert.alert('Tải ảnh thành công', 'Ảnh đã được tải xuống thư viện ảnh của bạn');
         } catch (error) {
             console.log(error);
         } finally {
@@ -49,34 +49,33 @@ const ImageComponent = (props: Props) => {
         }
     };
 
-    const containerStyles = `${height ? `h-[${height}px]` : "h-auto"} ${imageClass}`;
-
     const Wrapper = showImageModal ? TouchableOpacity : View;
 
     return (
         <Wrapper
             style={{
-                width: width || "100%",
-                backgroundColor: "#f0f0f0",
-                justifyContent: "center",
-                alignItems: "center",
+                width: width || '100%',
+                backgroundColor: '#f0f0f0',
+                justifyContent: 'center',
+                alignItems: 'center',
                 borderRadius: rounded,
-                aspectRatio: props.aspectRatio,
+                ...(height && { height: height }),
+                ...(props.aspectRatio && { aspectRatio: props.aspectRatio }),
             }}
             onPress={() => {
                 openModal();
             }}
-            className={containerStyles}
+            className={imageClass}
         >
             {!imageUri ? (
                 <Image
                     source={{
-                        uri: "https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png",
+                        uri: 'https://firebasestorage.googleapis.com/v0/b/snap-share-78f51.appspot.com/o/post%2F%C4%90o%C3%A0n%20H%E1%BA%A3i%20Duy%2F0ef97e94-e5ee-4405-b1ed-afc06f985f8e%2Ffallback.png0ef97e94-e5ee-4405-b1ed-afc06f985f8e?alt=media&token=388d0ebf-9824-4532-a790-d04ec1baaf5d',
                     }}
                     style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
                         borderRadius: rounded,
                     }}
                     resizeMode="cover"
@@ -84,12 +83,14 @@ const ImageComponent = (props: Props) => {
             ) : (
                 <Image
                     source={{
-                        uri: imageUri || "https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png",
+                        uri:
+                            imageUri ||
+                            'https://firebasestorage.googleapis.com/v0/b/snap-share-78f51.appspot.com/o/post%2F%C4%90o%C3%A0n%20H%E1%BA%A3i%20Duy%2F0ef97e94-e5ee-4405-b1ed-afc06f985f8e%2Ffallback.png0ef97e94-e5ee-4405-b1ed-afc06f985f8e?alt=media&token=388d0ebf-9824-4532-a790-d04ec1baaf5d',
                     }}
                     style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
                         borderRadius: rounded,
                     }}
                     resizeMode="cover"
@@ -97,7 +98,10 @@ const ImageComponent = (props: Props) => {
             )}
             {isShowModal && imageUri && (
                 <ImageModal
-                    url={imageUri || "https://i.ibb.co/Tg5fP9v/screenshot-1728441269.png"}
+                    url={
+                        imageUri ||
+                        'https://firebasestorage.googleapis.com/v0/b/snap-share-78f51.appspot.com/o/post%2F%C4%90o%C3%A0n%20H%E1%BA%A3i%20Duy%2F0ef97e94-e5ee-4405-b1ed-afc06f985f8e%2Ffallback.png0ef97e94-e5ee-4405-b1ed-afc06f985f8e?alt=media&token=388d0ebf-9824-4532-a790-d04ec1baaf5d'
+                    }
                     rounded={rounded}
                     isShowModal={isShowModal}
                     onClose={() => setIsShowModal(false)}

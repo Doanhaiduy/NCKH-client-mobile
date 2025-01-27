@@ -1,4 +1,4 @@
-import userAPI from "@/apis/userApi";
+import userAPI from '@/apis/userApi';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -6,20 +6,21 @@ import {
     SectionComponent,
     SpaceComponent,
     TextComponent,
-} from "@/components";
-import { colors } from "@/constants/colors";
-import { useRefreshing } from "@/hooks/useRefreshing";
-import { SemesterData, YearData } from "@/mockData";
-import { LoadingModal } from "@/modals";
-import { authSelector } from "@/stores/reducers/authReducer";
-import { getCurrentSemesterYear, getSemesterYears } from "@/utils";
-import { dateFormat } from "@/utils/dateTime";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { View } from "react-native";
-import { useSelector } from "react-redux";
+} from '@/components';
+import { colors } from '@/constants/colors';
+import { useRefreshing } from '@/hooks/useRefreshing';
+import { SemesterData, YearData } from '@/mockData';
+import { LoadingModal } from '@/modals';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { setTrainingPointRefresh } from '@/stores/reducers/refreshReducer';
+import { getCurrentSemesterYear, getSemesterYears } from '@/utils';
+import { dateFormat } from '@/utils/dateTime';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function TrainingPoint() {
     const [selectedYear, setSelectedYear] = useState<String>(YearData[3].value.toString());
@@ -29,13 +30,16 @@ export default function TrainingPoint() {
         semester: Semester[];
     }>();
     const { authData } = useSelector(authSelector);
+    const { trainingPointRefresh } = useSelector((state: any) => state.refresh);
+
+    const dispatch = useDispatch();
 
     const { data, refetch, isFetching } = useQuery<TrainingPoint>({
-        queryKey: ["training-point", selectedYear, selectedSemester, authData?._id],
+        queryKey: ['training-point', selectedYear, selectedSemester, authData?._id],
         queryFn: () =>
             userAPI
                 .getTrainingPoints(authData?._id!, {
-                    year: +selectedYear.split("-")[0],
+                    year: +selectedYear.split('-')[0],
                     semester: +selectedSemester as 1 | 2,
                 })
                 .then((res) => {
@@ -56,8 +60,12 @@ export default function TrainingPoint() {
         });
     }, [authData?.username]);
 
-    console.log(data);
-
+    useEffect(() => {
+        if (trainingPointRefresh) {
+            refetch();
+            dispatch(setTrainingPointRefresh(false));
+        }
+    }, [trainingPointRefresh]);
     return (
         <ContainerComponent
             title="Kết quả rèn luyện"
@@ -138,28 +146,28 @@ export default function TrainingPoint() {
                         >
                             <View
                                 style={{
-                                    position: "absolute",
-                                    top: "50%",
+                                    position: 'absolute',
+                                    top: '50%',
                                     transform: [{ translateY: -40 }],
-                                    justifyContent: "center",
-                                    alignItems: "center",
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
                                 }}
                             >
                                 <TextComponent
-                                    text={data?.totalScore?.toString() || ""}
+                                    text={data?.totalScore?.toString() || ''}
                                     size={96}
                                     color={colors.primary500}
                                     style={{
                                         lineHeight: 96,
-                                        fontWeight: "semibold",
+                                        fontWeight: 'semibold',
                                     }}
                                 />
                                 <TextComponent
-                                    text={data?.status || ""}
+                                    text={data?.status || ''}
                                     size={20}
                                     color={colors.primary200}
                                     style={{
-                                        textTransform: "capitalize",
+                                        textTransform: 'capitalize',
                                     }}
                                 />
                             </View>
@@ -196,11 +204,11 @@ export default function TrainingPoint() {
                         <SpaceComponent height={10} />
                         <TextComponent
                             color={colors.error}
-                            text={`Ngày bắt đầu: ${data?.AssessmentStartTime ? dateFormat(data?.AssessmentStartTime) : "Đang cập nhật..."}`}
+                            text={`Ngày bắt đầu: ${data?.AssessmentStartTime ? dateFormat(data?.AssessmentStartTime) : 'Đang cập nhật...'}`}
                         />
                         <TextComponent
                             color={colors.error}
-                            text={`Ngày kết thúc: ${data?.AssessmentEndTime ? dateFormat(data?.AssessmentEndTime) : "Đang cập nhật..."}`}
+                            text={`Ngày kết thúc: ${data?.AssessmentEndTime ? dateFormat(data?.AssessmentEndTime) : 'Đang cập nhật...'}`}
                         />
                     </View>
                     <View className="rotate-12">

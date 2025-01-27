@@ -1,57 +1,70 @@
-import eventAPI from "@/apis/eventApi";
-import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from "@/components";
-import { authSelector } from "@/stores/reducers/authReducer";
-import { useQueries } from "@tanstack/react-query";
-import { router, useNavigation } from "expo-router";
-import React, { useEffect } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import eventAPI from '@/apis/eventApi';
+import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { resetRefreshEventFlag } from '@/stores/reducers/refreshReducer';
+import { useQueries } from '@tanstack/react-query';
+import { router, useNavigation } from 'expo-router';
+import React, { useEffect } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Attendance() {
     const navigation = useNavigation();
 
+    const { eventNeedsRefresh } = useSelector((state: any) => state.refresh);
+    const dispatch = useDispatch();
     const [eventActive, eventInactive, eventRegistered] = useQueries({
         queries: [
             {
-                queryKey: ["events-ongoing"],
+                queryKey: ['events-ongoing'],
                 queryFn: () =>
                     eventAPI.getEvents({
                         page: 1,
                         size: 10,
-                        status: "active",
-                        time: "ongoing",
-                        typeEvent: "mandatory",
+                        status: 'active',
+                        time: 'ongoing',
+                        typeEvent: 'mandatory',
                     }),
             },
             {
-                queryKey: ["events-past"],
+                queryKey: ['events-past'],
                 queryFn: () =>
                     eventAPI.getEvents({
                         page: 1,
                         size: 10,
-                        status: "active",
-                        time: "past",
+                        status: 'active',
+                        time: 'past',
                     }),
             },
             {
-                queryKey: ["events-registered"],
+                queryKey: ['events-registered'],
                 queryFn: () =>
                     eventAPI.getEvents({
                         page: 1,
                         size: 10,
-                        status: "active",
-                        time: "ongoing",
-                        typeEvent: "optional",
+                        status: 'active',
+                        time: 'ongoing',
+                        typeEvent: 'optional',
                     }),
             },
         ],
     });
 
     useEffect(() => {
-        navigation.addListener("beforeRemove", (e) => {
+        navigation.addListener('beforeRemove', (e) => {
             e.preventDefault();
             navigation.dispatch(e.data.action);
         });
     }, []);
+
+    useEffect(() => {
+        if (eventNeedsRefresh) {
+            eventActive.refetch();
+            eventInactive.refetch();
+            eventRegistered.refetch();
+            dispatch(resetRefreshEventFlag());
+        }
+    }, [eventNeedsRefresh, dispatch, eventActive, eventInactive, eventRegistered]);
 
     return (
         <ContainerComponent
@@ -83,7 +96,6 @@ export default function Attendance() {
                         renderItem={({ item }) => (
                             <ItemCardList
                                 data={item}
-                                onPress={() => {}}
                                 onPressButton={() => {
                                     router.push(`/attendance/${item._id}`);
                                 }}
@@ -111,7 +123,9 @@ export default function Attendance() {
                         renderItem={({ item }) => (
                             <ItemCardList
                                 data={item}
-                                onPress={() => {}}
+                                onPress={() => {
+                                    router.push(`/activity/${item.post}`);
+                                }}
                                 onPressButton={() => {
                                     router.push(`/attendance/${item._id}`);
                                 }}
@@ -146,9 +160,9 @@ export default function Attendance() {
                     type="primary"
                     onPress={() => {
                         router.push({
-                            pathname: "/attendance/list",
+                            pathname: '/attendance/list',
                             params: {
-                                back: "to_attendance",
+                                back: 'to_attendance',
                             },
                         });
                     }}

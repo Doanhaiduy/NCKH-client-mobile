@@ -6,17 +6,15 @@
     "build": {
         "development": {
             "developmentClient": true,
-            "distribution": "internal"
+            "distribution": "internal",
+            "channel": "development"
         },
         "preview": {
-            "ios": {
-                "simulator": true
-            },
-            "android": {
-                "buildType": "app-bundle",
-                "gradleCommand": ":app:assembleRelease"
-            },
             "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            },
+            "channel": "preview",
             "env": {
                 "EXPO_PUBLIC_BASE_URL": "http://192.168.1.84:3000/api/v1",
                 "EXPO_PUBLIC_CRYPTO_SECRET_KEY": "7488e9f6650c9fe7eef741f6abf3a67aaf4e6f15ac9e002aca011d585a30f08e",
@@ -24,10 +22,22 @@
             }
         },
         "production": {
-            "autoIncrement": true
+            "distribution": "store",
+            "autoIncrement": true,
+            "env": {
+                "EXPO_PUBLIC_BASE_URL": "http://192.168.1.84:3000/api/v1",
+                "EXPO_PUBLIC_CRYPTO_SECRET_KEY": "7488e9f6650c9fe7eef741f6abf3a67aaf4e6f15ac9e002aca011d585a30f08e",
+                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY"
+            },
+            "channel": "production"
         }
     },
     "submit": {
-        "production": {}
+        "production": {
+            "android": {
+                "serviceAccountKeyPath": "./service_play_console.json",
+                "track": "alpha"
+            }
+        }
     }
 }

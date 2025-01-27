@@ -23,6 +23,7 @@ interface Props {
     readOnly?: boolean;
     height?: number;
     required?: boolean;
+    testID?: string;
 }
 
 function InputComponent(props: Props) {
@@ -48,6 +49,7 @@ function InputComponent(props: Props) {
         readOnly,
         height,
         required,
+        testID,
         ...inputProps
     } = props;
     console.log('InputComponent: value', value);
@@ -88,6 +90,7 @@ function InputComponent(props: Props) {
                         <Text className="px-5 pt-1 text-[12px] text-black font-inter">{placeholder}</Text>
                     )}
                     <TextInput
+                        testID={testID ?? ''}
                         ref={inputRef}
                         autoCapitalize="none"
                         {...inputProps}

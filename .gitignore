@@ -40,3 +40,6 @@ yarn-error.*
 # build eas
 eas.json
 
+
+service_play_console.json
+google-services.json

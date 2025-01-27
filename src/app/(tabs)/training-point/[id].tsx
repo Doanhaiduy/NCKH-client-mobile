@@ -1,4 +1,4 @@
-import trainingPointAPI from "@/apis/trainingPointApi";
+import trainingPointAPI from '@/apis/trainingPointApi';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -7,34 +7,32 @@ import {
     SpaceComponent,
     TableBorderComponent,
     TextComponent,
-} from "@/components";
-import { colors } from "@/constants/colors";
-import { authSelector } from "@/stores/reducers/authReducer";
-import { romanize } from "@/utils";
-import { Feather } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
-import { Alert, StyleSheet, TouchableOpacity } from "react-native";
-import { useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
-import { LoadingModal } from "@/modals";
+} from '@/components';
+import { colors } from '@/constants/colors';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { romanize } from '@/utils';
+import { Feather } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
+import { LoadingModal } from '@/modals';
 
 export default function TrainingPointDetails() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
+    const { trainingPointRefresh } = useSelector((state: any) => state.refresh);
     const { data, error, refetch, isFetching, isRefetching } = useQuery({
-        queryKey: ["training-points", id],
-        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ""),
+        queryKey: ['training-points', id],
+        queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
     });
 
-    const isFocused = useIsFocused();
-
     useEffect(() => {
-        if (isFocused) {
+        if (trainingPointRefresh) {
             refetch();
         }
-    }, [isFocused]);
+    }, [trainingPointRefresh]);
 
     return (
         <ContainerComponent
@@ -47,10 +45,10 @@ export default function TrainingPointDetails() {
                 <TouchableOpacity
                     onPress={() => {
                         if (data?.isLocked) {
-                            Alert.alert("Thông báo", "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau");
+                            Alert.alert('Thông báo', 'Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau');
                         } else {
                             router.push({
-                                pathname: "/training-point/upload",
+                                pathname: '/training-point/upload',
                                 params: { id },
                             });
                         }
@@ -84,12 +82,12 @@ export default function TrainingPointDetails() {
                         onPress={() => {
                             if (data?.isLocked) {
                                 Alert.alert(
-                                    "Thông báo",
-                                    "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau",
+                                    'Thông báo',
+                                    'Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau',
                                 );
                             } else {
                                 router.push({
-                                    pathname: "/training-point/assessment",
+                                    pathname: '/training-point/assessment',
                                     params: { id },
                                 });
                             }
@@ -103,12 +101,12 @@ export default function TrainingPointDetails() {
                         onPress={() => {
                             if (data?.isLocked) {
                                 Alert.alert(
-                                    "Thông báo",
-                                    "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau",
+                                    'Thông báo',
+                                    'Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau',
                                 );
                             } else {
                                 router.push({
-                                    pathname: "/training-point/upload",
+                                    pathname: '/training-point/upload',
                                     params: { id },
                                 });
                             }

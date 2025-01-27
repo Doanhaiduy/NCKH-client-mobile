@@ -20,6 +20,8 @@ import { useRefreshing } from '@/hooks/useRefreshing';
 export default function Upload() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
+    const { trainingPointRefresh } = useSelector((state: any) => state.refresh);
+
     const { data, refetch, isRefetching } = useQuery({
         queryKey: ['training-points', id],
         queryFn: () => trainingPointAPI.getTrainingPointById(id?.toString() ?? ''),
@@ -30,10 +32,10 @@ export default function Upload() {
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        if (isFocused) {
+        if (trainingPointRefresh) {
             refetch();
         }
-    }, [isFocused]);
+    }, [trainingPointRefresh]);
 
     console.log(id);
 

@@ -1,10 +1,10 @@
-import { View, Text, Image, Pressable, ActivityIndicator, Share, Alert, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
-import postAPI from "@/apis/postApi";
-import RenderHtml from "react-native-render-html";
-import { appInfo } from "@/constants/appInfo";
+import { View, Text, Image, Pressable, ActivityIndicator, Share, Alert, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import postAPI from '@/apis/postApi';
+import RenderHtml from 'react-native-render-html';
+import { appInfo } from '@/constants/appInfo';
 import {
     ButtonComponent,
     ContainerComponent,
@@ -12,25 +12,29 @@ import {
     SectionComponent,
     SpaceComponent,
     TextComponent,
-} from "@/components";
-import { colors } from "@/constants/colors";
-import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { dateFormat, dateFormatLocale } from "@/utils/dateTime";
-import ImageComponent from "@/components/ImageComponent";
-import { useRefreshing } from "@/hooks/useRefreshing";
-import eventAPI from "@/apis/eventApi";
+} from '@/components';
+import { colors } from '@/constants/colors';
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { dateFormat, dateFormatLocale } from '@/utils/dateTime';
+import ImageComponent from '@/components/ImageComponent';
+import { useRefreshing } from '@/hooks/useRefreshing';
+import eventAPI from '@/apis/eventApi';
+import { useDispatch } from 'react-redux';
+import { setEventNeedsRefresh } from '@/stores/reducers/refreshReducer';
 
 type Props = {};
 
 const DetailsScreen = (props: Props) => {
     const { id } = useLocalSearchParams();
-    const [content, setContent] = React.useState<string>("");
+    const [content, setContent] = React.useState<string>('');
+    const dispatch = useDispatch();
+
     const [btnTypeAction, setBtnTypeAction] = React.useState<
-        "none" | "register" | "unregister" | "expired" | "full" | "already"
-    >("none");
+        'none' | 'register' | 'unregister' | 'expired' | 'full' | 'already' | 'preventUnregister'
+    >('none');
 
     const { data, isFetching, refetch } = useQuery<Post>({
-        queryKey: ["post-details", id],
+        queryKey: ['post-details', id],
         queryFn: () => postAPI.getDetailPost(id!.toString()),
     });
 
@@ -39,22 +43,24 @@ const DetailsScreen = (props: Props) => {
     useEffect(() => {
         console.log(data);
         if (data) {
-            setContent(data.content || "");
+            setContent(data.content || '');
             setBtnTypeAction(data.typeAction!);
         }
     }, [data]);
 
     const handleAction = async () => {
         try {
-            if (btnTypeAction === "register") {
+            if (btnTypeAction === 'register') {
                 const res = await eventAPI.registerEvent(data?.event?.toString()!);
                 if (res) {
-                    setBtnTypeAction("unregister");
+                    dispatch(setEventNeedsRefresh(true));
+                    setBtnTypeAction('unregister');
                 }
-            } else if (btnTypeAction === "unregister") {
+            } else if (btnTypeAction === 'unregister') {
                 const res = await eventAPI.unRegisterEvent(data?.event?.toString()!);
                 if (res) {
-                    setBtnTypeAction("register");
+                    dispatch(setEventNeedsRefresh(true));
+                    setBtnTypeAction('register');
                 }
             }
         } catch (error) {
@@ -74,21 +80,22 @@ const DetailsScreen = (props: Props) => {
 
     const renderBtn = () => {
         switch (btnTypeAction) {
-            case "none":
+            case 'none':
                 return <></>;
-            case "unregister":
+            case 'unregister':
                 return (
                     <ButtonComponent
+                        containerClass="ml-4"
                         onPress={handleAction}
                         title="Hủy đăng ký"
-                        type="grey"
+                        type="primary"
                         size="small"
                         icon={<AntDesign name="closecircleo" size={16} color={colors.white} />}
                         iconFlex="left"
                         iconContainerClass="mr-2"
                     />
                 );
-            case "register":
+            case 'register':
                 return (
                     <ButtonComponent
                         onPress={handleAction}
@@ -98,9 +105,10 @@ const DetailsScreen = (props: Props) => {
                         icon={<Ionicons name="add-outline" size={16} color={colors.white} />}
                         iconFlex="left"
                         iconContainerClass="mr-2"
+                        containerClass="ml-4"
                     />
                 );
-            case "full":
+            case 'full':
                 return (
                     <ButtonComponent
                         onPress={() => {}}
@@ -111,9 +119,10 @@ const DetailsScreen = (props: Props) => {
                         icon={<MaterialIcons name="bar-chart" size={16} color={colors.white} />}
                         iconFlex="left"
                         iconContainerClass="mr-2"
+                        containerClass="ml-4"
                     />
                 );
-            case "expired":
+            case 'expired':
                 return (
                     <ButtonComponent
                         onPress={() => {}}
@@ -124,10 +133,11 @@ const DetailsScreen = (props: Props) => {
                         icon={<MaterialCommunityIcons name="timer-off" size={16} color={colors.white} />}
                         iconFlex="left"
                         iconContainerClass="mr-2"
+                        containerClass="ml-4"
                     />
                 );
 
-            case "already":
+            case 'already':
                 return (
                     <ButtonComponent
                         onPress={() => {}}
@@ -138,6 +148,22 @@ const DetailsScreen = (props: Props) => {
                         icon={<Feather name="user-check" size={16} color={colors.white} />}
                         iconFlex="left"
                         iconContainerClass="mr-2"
+                        containerClass="ml-4"
+                    />
+                );
+            case 'preventUnregister':
+                return (
+                    <ButtonComponent
+                        onPress={() => {
+                            Alert.alert('Thông báo', 'Không thể hủy đăng ký khi sự kiện sắp diễn ra', [{ text: 'OK' }]);
+                        }}
+                        title="Hủy đăng ký"
+                        type="primary"
+                        size="small"
+                        icon={<AntDesign name="closecircleo" size={16} color={colors.white} />}
+                        iconFlex="left"
+                        iconContainerClass="mr-2"
+                        containerClass="ml-4"
                     />
                 );
             default:
@@ -156,7 +182,7 @@ const DetailsScreen = (props: Props) => {
         >
             {isFetching ? (
                 <View className="items-center mt-4 justify-center">
-                    <ActivityIndicator size={"large"} />
+                    <ActivityIndicator size={'large'} />
                 </View>
             ) : data ? (
                 <>
@@ -166,7 +192,7 @@ const DetailsScreen = (props: Props) => {
                             <RowComponent className="">
                                 <Ionicons name="calendar" size={14} color={colors.black} />
                                 <TextComponent
-                                    text={dateFormatLocale(data?.createdAt || "")}
+                                    text={dateFormatLocale(data?.createdAt || '')}
                                     className="ml-1 text-[13px] text-text-400"
                                 />
                             </RowComponent>
@@ -174,12 +200,11 @@ const DetailsScreen = (props: Props) => {
                                 <TouchableOpacity onPress={handleShare} className="p-2">
                                     <Ionicons name="share-social" size={24} color={colors.primary500} />
                                 </TouchableOpacity>
-                                <SpaceComponent width={12} />
-                                {renderBtn()}
+                                <View className="">{renderBtn()}</View>
                             </View>
                         </View>
                         <TextComponent
-                            text={data?.title || ""}
+                            text={data?.title || ''}
                             className="text-[20px] mt-4"
                             color={colors.primary500}
                         />
@@ -190,7 +215,7 @@ const DetailsScreen = (props: Props) => {
                             <RenderHtml contentWidth={appInfo.sizes.WIDTH} source={{ html: content }} />
                         ) : (
                             <View className="items-center mt-4 justify-center w-full">
-                                <ActivityIndicator size={"large"} color={colors.primary500} />
+                                <ActivityIndicator size={'large'} color={colors.primary500} />
                             </View>
                         )}
                     </SectionComponent>

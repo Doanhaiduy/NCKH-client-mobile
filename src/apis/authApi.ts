@@ -41,15 +41,16 @@ class AuthAPI {
     changePassword = async (data: FormChangePassword, option: AxiosRequestConfig = {}): Promise<{ email: string }> => {
         return await this.HandleAuth(API_URL.auth.changePassword, data, 'post', option);
     };
-    logout = async (data = {}, option: AxiosRequestConfig = {}): Promise<{ email: string }> => {
+    logout = async (
+        data = {
+            refreshToken: '',
+        },
+        option: AxiosRequestConfig = {},
+    ): Promise<{ email: string }> => {
         const authStorage = await AsyncStorage.getItem('auth');
+        console.log('authStorage.', authStorage);
         const refreshToken = authStorage && JSON.parse(authStorage).refreshToken;
-        option = {
-            headers: {
-                refresh_token: `Bearer ${refreshToken}`,
-            },
-            ...option,
-        };
+        data.refreshToken = refreshToken;
         return await this.HandleAuth(API_URL.auth.logout, data, 'post', option);
     };
 }
