@@ -22,6 +22,7 @@ import { setTrainingPointRefresh } from '@/stores/reducers/refreshReducer';
 export default function Assessment() {
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
+    const [isLoading, setIsLoading] = React.useState(false);
     const dispatch = useDispatch();
 
     const { data, refetch, isFetching } = useQuery({
@@ -58,6 +59,7 @@ export default function Assessment() {
                             {
                                 text: 'Đồng ý',
                                 onPress: async () => {
+                                    setIsLoading(true);
                                     if (tableBorderRef.current) {
                                         // @ts-ignore
                                         const updated = await tableBorderRef.current.handleSubmit();
@@ -66,6 +68,7 @@ export default function Assessment() {
                                         }
                                     }
                                     dispatch(setTrainingPointRefresh(true));
+                                    setIsLoading(false);
                                     router.back();
                                 },
                             },
@@ -100,6 +103,7 @@ export default function Assessment() {
                     idTrainingPoint={data?._id ?? data?._id}
                 />
             </SectionComponent>
+            {isLoading && <LoadingModal message="Đang xử lý" />}
         </ContainerComponent>
     );
 }

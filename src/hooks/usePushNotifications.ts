@@ -10,17 +10,17 @@ export interface PushNotificationState {
 }
 
 export const usePushNotifications = (): PushNotificationState => {
-    Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-            shouldPlaySound: true,
-            shouldShowAlert: true,
-            shouldSetBadge: false,
-        }),
-    });
-
     const [expoPushToken, setExpoPushToken] = useState<Notifications.ExpoPushToken | undefined>();
 
     const [notification, setNotification] = useState<Notifications.Notification | undefined>();
+
+    Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+    });
+
+    Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+    });
 
     // @ts-ignore
     const notificationListener = useRef<Notifications.Subscription>();
@@ -38,7 +38,6 @@ export const usePushNotifications = (): PushNotificationState => {
                 finalStatus = status;
             }
             if (finalStatus !== 'granted') {
-                alert('Failed to get push token for push notification');
                 return;
             }
 
@@ -50,9 +49,9 @@ export const usePushNotifications = (): PushNotificationState => {
         }
 
         if (Platform.OS === 'android') {
-            Notifications.setNotificationChannelAsync('default', {
-                name: 'default',
-                importance: Notifications.AndroidImportance.MAX,
+            Notifications.setNotificationChannelAsync('ntu_student_channel_v1', {
+                name: 'NTU Student Channel V1',
+                importance: Notifications.AndroidImportance.HIGH,
                 vibrationPattern: [0, 250, 250, 250],
                 lightColor: '#FF231F7C',
             });

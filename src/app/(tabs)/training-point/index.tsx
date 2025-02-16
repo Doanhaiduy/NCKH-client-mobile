@@ -13,8 +13,8 @@ import { SemesterData, YearData } from '@/mockData';
 import { LoadingModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { setTrainingPointRefresh } from '@/stores/reducers/refreshReducer';
-import { getCurrentSemesterYear, getSemesterYears } from '@/utils';
-import { dateFormat } from '@/utils/dateTime';
+import { getSemesterYears } from '@/utils';
+import { dateTimeFormat } from '@/utils/dateTime';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -202,14 +202,22 @@ export default function TrainingPoint() {
                             className="font-interSemi"
                         />
                         <SpaceComponent height={10} />
-                        <TextComponent
-                            color={colors.error}
-                            text={`Ngày bắt đầu: ${data?.AssessmentStartTime ? dateFormat(data?.AssessmentStartTime) : 'Đang cập nhật...'}`}
-                        />
-                        <TextComponent
-                            color={colors.error}
-                            text={`Ngày kết thúc: ${data?.AssessmentEndTime ? dateFormat(data?.AssessmentEndTime) : 'Đang cập nhật...'}`}
-                        />
+                        {data?.AssessmentStartTime && data.AssessmentEndTime ? (
+                            <>
+                                <TextComponent
+                                    color={colors.error}
+                                    fontBold
+                                    text={`Từ: ${dateTimeFormat(data?.AssessmentStartTime!)}`}
+                                />
+                                <TextComponent
+                                    color={colors.error}
+                                    fontBold
+                                    text={`Đến: ${dateTimeFormat(data?.AssessmentEndTime!)}`}
+                                />
+                            </>
+                        ) : (
+                            <TextComponent color={colors.error} fontBold text="Chưa đến thời gian đánh giá" />
+                        )}
                     </View>
                     <View className="rotate-12">
                         <MaterialCommunityIcons name="timer-sand" size={80} color={colors.primary500} />

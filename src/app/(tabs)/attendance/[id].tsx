@@ -14,6 +14,7 @@ export default function Details() {
     const { data, refetch, isFetching } = useQuery({
         queryKey: ['event', id],
         queryFn: () => eventAPI.getDetailEvents(id?.toString() || ''),
+        refetchInterval: 60000,
     });
 
     const { refreshing, handleRefresh } = useRefreshing(refetch);

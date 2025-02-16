@@ -48,24 +48,24 @@ let ActionDataTemp: {
         path: '/setting',
     },
     {
-        icon: require('../assets/images/home/icon_assessment.png'),
-        text: 'Kết quả rèn luyện',
-        path: '/training-point',
+        icon: require('../assets/images/logo-login.png'),
+        text: 'Nothing',
+        path: '',
     },
     {
-        icon: require('../assets/images/home/icon_help.png'),
-        text: 'Trợ giúp',
-        path: '/setting/helps',
+        icon: require('../assets/images/logo-login.png'),
+        text: 'Nothing',
+        path: '',
     },
     {
-        icon: require('../assets/images/home/icon_feedback.png'),
-        text: 'Góp ý',
-        path: '/feedback',
+        icon: require('../assets/images/logo-login.png'),
+        text: 'Nothing',
+        path: '',
     },
     {
-        icon: require('../assets/images/home/icon_setting.png'),
-        text: 'Cài đặt',
-        path: '/setting',
+        icon: require('../assets/images/logo-login.png'),
+        text: 'Nothing',
+        path: '',
     },
 ];
 

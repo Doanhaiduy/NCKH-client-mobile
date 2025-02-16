@@ -26,6 +26,12 @@ import { Modalize } from 'react-native-modalize';
 import { colors } from '@/constants/colors';
 import { LoadingModal } from '@/modals';
 import { setEventNeedsRefresh } from '@/stores/reducers/refreshReducer';
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { Buffer } from 'buffer';
+import jsQR from 'jsqr';
+import jpeg from 'jpeg-js';
+const PNG = require('pngjs/browser').PNG;
 
 export default function ScanQRScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -55,7 +61,7 @@ export default function ScanQRScreen() {
                 .getDetailEvents(id.toString())
                 .then((data) => {
                     setEventDetails(data);
-                    console.log('==== eventDetails ====', data);
+                    // console.log('==== eventDetails ====', data);
                 })
                 .catch((error) => {
                     Alert.alert('Thông báo', 'Không tìm thấy sự kiện', [
@@ -145,7 +151,7 @@ export default function ScanQRScreen() {
         try {
             const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VN&apiKey=${process
                 .env.EXPO_PUBLIC_HERE_LOCATION_API_KEY!}`;
-            console.log(api);
+            // console.log(api);
             const res = await axios<{ items: GeoLocation[] }>(api);
             if (res && res.status === 200) {
                 setCurrentLocation({
@@ -163,6 +169,7 @@ export default function ScanQRScreen() {
             getCurrentLocation();
             return false;
         }
+
         if (eventCode !== dataDecrypt?.eventCode) {
             setError('Mã QR không hợp lệ');
             setScanned(true);
@@ -192,13 +199,107 @@ export default function ScanQRScreen() {
         return true;
     };
 
+    const handlePickImageAndScanQR = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert('Thông báo', 'Ứng dụng cần quyền truy cập thư viện ảnh để quét mã QR.', [
+                {
+                    text: 'Mở cài đặt',
+                    onPress: () => {
+                        Linking.openSettings();
+                        router.dismiss();
+                    },
+                },
+            ]);
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: 'images',
+            quality: 0.1,
+        });
+        if (!result.canceled && result.assets.length > 0) {
+            setIsLoading(true);
+            setScanned(false);
+            setLoadingMessage('Đang đọc mã QR');
+            try {
+                const manipulatedImage = await ImageManipulator.manipulateAsync(
+                    result.assets[0].uri,
+                    [{ resize: { width: 800 } }],
+                    {
+                        compress: 0.1,
+                        format:
+                            result.assets[0].mimeType === 'image/jpeg'
+                                ? ImageManipulator.SaveFormat.JPEG
+                                : ImageManipulator.SaveFormat.PNG,
+                        base64: true,
+                    },
+                );
+
+                const base64Buffer = Buffer.from(manipulatedImage.base64!, 'base64');
+                const image = result.assets[0];
+                let pixelData;
+                let imageBuffer;
+                console.log('image.mimeType', image.mimeType);
+                if (image.mimeType === 'image/jpeg' || image.uri.endsWith('.jpg')) {
+                    console.log('pixelData');
+                    pixelData = jpeg.decode(base64Buffer, { useTArray: true });
+                    imageBuffer = pixelData.data;
+                } else if (image.mimeType === 'image/png' || image.uri.endsWith('.png')) {
+                    pixelData = PNG.sync.read(base64Buffer);
+                    imageBuffer = pixelData.data;
+                } else {
+                    setIsLoading(false);
+                    setError('Không tìm thấy mã QR trong ảnh');
+                    setScanned(true);
+                    modalizeRefFailed.current?.open();
+                    return;
+                }
+
+                if (!pixelData || !pixelData.width || !pixelData.height) {
+                    setIsLoading(false);
+                    setError('Không tìm thấy mã QR trong ảnh');
+                    setScanned(true);
+                    modalizeRefFailed.current?.open();
+                    return;
+                }
+                const data = Uint8ClampedArray.from(imageBuffer);
+
+                try {
+                    const code = jsQR(data, pixelData.width, pixelData.height);
+                    if (code) {
+                        setIsLoading(false);
+                        handleBarCodeScanned({ type: 'qr', data: code.data });
+                    } else {
+                        setIsLoading(false);
+                        setError('Không tìm thấy mã QR trong ảnh');
+                        setScanned(true);
+                        modalizeRefFailed.current?.open();
+                    }
+                } catch (err) {
+                    setIsLoading(false);
+                    setError('Không tìm thấy mã QR trong ảnh');
+                    setScanned(true);
+                    modalizeRefFailed.current?.open();
+                }
+            } catch (error) {
+                setIsLoading(false);
+                setError('Không tìm thấy mã QR trong ảnh');
+                setScanned(true);
+                modalizeRefFailed.current?.open();
+            }
+        }
+        setIsLoading(false);
+        setScanned(true);
+    };
+
     const handleBarCodeScanned = async ({ type, data }: any) => {
         setScanned(true);
         try {
+            setLoadingMessage('Đang xử lý mã QR');
             await sleep(1000);
             const dataParse = JSON.parse(data);
             const dataDecrypt = decryptData(dataParse.data);
-
             setEncryptedData(dataParse.data);
             if (!dataDecrypt) {
                 setError('Mã QR không hợp lệ');
@@ -314,7 +415,7 @@ export default function ScanQRScreen() {
                     <View className="flex-1 items-center justify-center">
                         <TouchableOpacity
                             onPress={() => router.dismiss()}
-                            style={{ position: 'absolute', top: 60, left: 20 }}
+                            style={{ position: 'absolute', top: 60, right: 20 }}
                         >
                             <Ionicons name="close" size={44} color="white" />
                         </TouchableOpacity>
@@ -327,6 +428,12 @@ export default function ScanQRScreen() {
                             source={require('@/assets/images/scanner-action.png')}
                             style={{ width: 350, height: 350, alignSelf: 'center', opacity: 0.8 }}
                         />
+                        <TouchableOpacity
+                            onPress={handlePickImageAndScanQR}
+                            style={{ position: 'absolute', bottom: 60, left: 20 }}
+                        >
+                            <Ionicons name="images" size={44} color="white" />
+                        </TouchableOpacity>
                     </View>
                 </CameraView>
             )}

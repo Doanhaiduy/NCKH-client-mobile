@@ -48,7 +48,6 @@ class AuthAPI {
         option: AxiosRequestConfig = {},
     ): Promise<{ email: string }> => {
         const authStorage = await AsyncStorage.getItem('auth');
-        console.log('authStorage.', authStorage);
         const refreshToken = authStorage && JSON.parse(authStorage).refreshToken;
         data.refreshToken = refreshToken;
         return await this.HandleAuth(API_URL.auth.logout, data, 'post', option);

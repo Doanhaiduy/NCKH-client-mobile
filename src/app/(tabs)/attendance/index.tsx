@@ -25,6 +25,7 @@ export default function Attendance() {
                         time: 'ongoing',
                         typeEvent: 'mandatory',
                     }),
+                refetchInterval: 60000,
             },
             {
                 queryKey: ['events-past'],
@@ -35,6 +36,7 @@ export default function Attendance() {
                         status: 'active',
                         time: 'past',
                     }),
+                refetchInterval: 60000,
             },
             {
                 queryKey: ['events-registered'],
@@ -46,6 +48,7 @@ export default function Attendance() {
                         time: 'ongoing',
                         typeEvent: 'optional',
                     }),
+                refetchInterval: 60000,
             },
         ],
     });

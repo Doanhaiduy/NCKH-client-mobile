@@ -13,6 +13,16 @@ const getAccessToken = async () => {
 };
 
 let alertShown = false;
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const onRefreshed = (token: string) => {
+    refreshSubscribers.map((callback) => callback(token));
+};
+
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+    refreshSubscribers.push(callback);
+};
 
 const HandleExpiredToken = async () => {
     if (!alertShown) {
@@ -33,6 +43,16 @@ const HandleExpiredToken = async () => {
 };
 
 const handleRefreshToken = async () => {
+    if (isRefreshing) {
+        return new Promise<string>((resolve) => {
+            addRefreshSubscriber((token) => {
+                resolve(token);
+            });
+        });
+    }
+
+    isRefreshing = true;
+
     try {
         const authStorage = await AsyncStorage.getItem('auth');
         const refreshToken = authStorage && JSON.parse(authStorage).refreshToken;
@@ -47,17 +67,24 @@ const handleRefreshToken = async () => {
             },
         });
         if (res.data.data.accessToken) {
-            await AsyncStorage.setItem('auth', JSON.stringify(res.data.data.accessToken));
-            return {
-                newAccessToken: res.data.data.accessToken,
-                newRefreshToken: res.data.data.refreshToken,
-            };
+            await AsyncStorage.setItem('auth', JSON.stringify(res.data.data));
+            store.dispatch(
+                updateToken({
+                    newAccessToken: res.data.data.accessToken,
+                    newRefreshToken: res.data.data.refreshToken,
+                }),
+            );
+            onRefreshed(res.data.data.accessToken);
+            return res.data.data.accessToken;
         }
         HandleExpiredToken();
         return null;
     } catch (error) {
         HandleExpiredToken();
         return null;
+    } finally {
+        isRefreshing = false;
+        refreshSubscribers = [];
     }
 };
 
@@ -86,17 +113,11 @@ axiosClient.interceptors.response.use(
     },
     async (error) => {
         console.log('error ~ 1 ', error);
-        if (error.response && error.response.status === 401) {
-            const tokenData = await handleRefreshToken();
-            if (tokenData) {
-                const config = error.config;
-                store.dispatch(
-                    updateToken({
-                        newAccessToken: tokenData.newAccessToken,
-                        newRefreshToken: tokenData.newRefreshToken,
-                    }),
-                );
-                config.headers['Authorization'] = `Bearer ${tokenData.newAccessToken}`;
+        const { config, response } = error;
+        if (response && response.status === 401) {
+            const newAccessToken = await handleRefreshToken();
+            if (newAccessToken) {
+                config.headers['Authorization'] = `Bearer ${newAccessToken}`;
                 return axiosClient.request(config);
             }
         }

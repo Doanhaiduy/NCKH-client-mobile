@@ -1,6 +1,6 @@
 {
     "name": "ntu-student",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "main": "expo-router/entry",
     "expo": {
         "doctor": {
@@ -44,7 +44,6 @@
         "expo-camera": "~16.0.10",
         "expo-constants": "~17.0.4",
         "expo-device": "~7.0.2",
-        "expo-file-system": "~18.0.7",
         "expo-font": "~13.0.3",
         "expo-image": "~2.0.4",
         "expo-image-manipulator": "~13.0.6",
@@ -60,8 +59,11 @@
         "expo-status-bar": "~2.0.1",
         "expo-updates": "~0.26.13",
         "geolib": "^3.3.4",
+        "jpeg-js": "^0.4.4",
+        "jsqr": "^1.4.0",
         "mime": "^4.0.4",
         "nativewind": "^2.0.11",
+        "pngjs": "^7.0.0",
         "qs": "^6.12.3",
         "react": "18.3.1",
         "react-dom": "18.3.1",

@@ -3,11 +3,11 @@
         "name": "NTU Student",
         "slug": "ntu_student",
         "scheme": "ntustudent",
-        "version": "1.0.1",
+        "version": "1.0.4",
         "orientation": "portrait",
         "userInterfaceStyle": "light",
-        "icon": "./assets/icon_v3.png",
-        "backgroundColor": "#ffffff",
+        "icon": "./assets/icon_v2.png",
+        "backgroundColor": "#030099",
         "experiments": {
             "tsconfigPaths": true
         },
@@ -16,8 +16,8 @@
         },
         "newArchEnabled": true,
         "splash": {
-            "image": "./assets/icon_v3.png",
-            "backgroundColor": "#000",
+            "image": "./assets/icon_v2.png",
+            "backgroundColor": "#030099",
             "resizeMode": "contain"
         },
         "ios": {
@@ -29,7 +29,7 @@
         },
         "android": {
             "adaptiveIcon": {
-                "foregroundImage": "./assets/splash-screen_v2.png"
+                "foregroundImage": "./assets/icon_v2.png"
             },
             "package": "com.doanhaiduy.mobile",
             "permissions": [
@@ -40,6 +40,7 @@
                 "CAMERA_ROLL"
             ],
             "googleServicesFile": "./google-services.json",
+            "useNextNotificationsApi": true,
             "plugins": [
                 [
                     "expo-notifications",
@@ -67,8 +68,9 @@
             [
                 "expo-splash-screen",
                 {
-                    "image": "./assets/icon_v3.png",
-                    "resizeMode": "contain"
+                    "image": "./assets/icon_v2.png",
+                    "resizeMode": "contain",
+                    "backgroundColor": "#030099"
                 }
             ],
             [

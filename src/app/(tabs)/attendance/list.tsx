@@ -1,4 +1,4 @@
-import userAPI from "@/apis/userApi";
+import userAPI from '@/apis/userApi';
 import {
     ContainerComponent,
     DropDownComponent,
@@ -6,16 +6,16 @@ import {
     SectionComponent,
     TableComponent,
     TextComponent,
-} from "@/components";
-import { colors } from "@/constants/colors";
-import { useRefreshing } from "@/hooks/useRefreshing";
-import { authSelector } from "@/stores/reducers/authReducer";
-import { getCurrentSemesterYear, getSemesterYears } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+} from '@/components';
+import { colors } from '@/constants/colors';
+import { useRefreshing } from '@/hooks/useRefreshing';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { getCurrentSemesterYear, getSemesterYears } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
 
 export default function ListAttendance() {
     const { authData } = useSelector(authSelector);
@@ -33,7 +33,7 @@ export default function ListAttendance() {
     });
 
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ["attendance-list", authData?._id, selectedSemesterYear],
+        queryKey: ['attendance-list', authData?._id, selectedSemesterYear],
         queryFn: () => {
             console.log({
                 id: authData?._id,
@@ -46,6 +46,7 @@ export default function ListAttendance() {
                 semester: selectedSemesterYear?.semester,
             });
         },
+        refetchInterval: 60000,
     });
 
     const { refreshing, handleRefresh } = useRefreshing(refetch);
@@ -62,9 +63,9 @@ export default function ListAttendance() {
     return (
         <ContainerComponent
             onBack={() => {
-                back === "to_home" && router.navigate("/(home)");
-                back === "to_attendance" && router.back();
-                back === "to_scan" && router.dismissAll();
+                back === 'to_home' && router.navigate('/(home)');
+                back === 'to_attendance' && router.back();
+                back === 'to_scan' && router.dismissAll();
             }}
             isScroll
             title="Đã điểm danh"

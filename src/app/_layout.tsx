@@ -15,6 +15,7 @@ import '../../global.css';
 import { Host } from 'react-native-portalize';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
+import * as Notifications from 'expo-notifications';
 
 // Block "react-native-render-html" error log
 LogBox.ignoreLogs(['Use JavaScript default parameters instead.']);
@@ -26,15 +27,23 @@ configureReanimatedLogger({
 });
 
 SplashScreen.preventAutoHideAsync();
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+        priority: Notifications.AndroidNotificationPriority.HIGH,
+    }),
+});
 
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            refetchOnWindowFocus: false,
+            refetchOnWindowFocus: true,
             refetchOnMount: false,
-            refetchOnReconnect: false,
-            retry: false,
-            staleTime: 5 * 60 * 1000,
+            refetchOnReconnect: true,
+            retry: 3,
+            staleTime: 1000 * 60 * 1,
         },
     },
 });
