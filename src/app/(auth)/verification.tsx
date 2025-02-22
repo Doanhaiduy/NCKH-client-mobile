@@ -47,17 +47,7 @@ export default function VerificationPage() {
             setIsLoading(false);
             return;
         }
-
-        if (inputOtp == OTP?.otp) {
-            if (checkExpiredTime(OTP?.expiredIn || 0)) {
-                setError('Mã OTP đã hết hạn');
-            } else {
-                verifyOTP({ email: OTP?.email || '', otp: inputOtp });
-            }
-        } else {
-            setError('Mã OTP không chính xác');
-        }
-
+        verifyOTP({ email: OTP?.email || '', otp: inputOtp });
         setIsLoading(false);
     };
 
@@ -96,18 +86,18 @@ export default function VerificationPage() {
     };
 
     return (
-        <ContainerComponent isAuth isScroll iconLeft="back">
+        <ContainerComponent isAuth isScroll iconLeft='back'>
             <SpaceComponent height={120} />
-            <View className="px-8 pb-4 ">
-                <SectionComponent align="center">
-                    <TextComponent text="Xác minh email" title className="text-primary-500" />
+            <View className='px-8 pb-4 '>
+                <SectionComponent align='center'>
+                    <TextComponent text='Xác minh email' title className='text-primary-500' />
                     <TextComponent
                         text={`Một mã OTP 6 chữ số đã được gửi đến email ${obfuscateEmail(OTP?.email || '')}.`}
-                        className="text-center mt-4"
+                        className='text-center mt-4'
                     />
-                    <TextComponent text="Vui lòng kiểm tra và nhập mã." className="text-center" />
+                    <TextComponent text='Vui lòng kiểm tra và nhập mã.' className='text-center' />
                 </SectionComponent>
-                <SectionComponent className="items-center">
+                <SectionComponent className='items-center'>
                     <SpaceComponent height={24} />
                     <OtpInput
                         ref={otpRef}
@@ -137,10 +127,10 @@ export default function VerificationPage() {
                     {error ? <TextComponent text={error} size={11} color={colors.error} /> : null}
                     <SpaceComponent height={12} />
                     <ButtonComponent
-                        title="Xác minh"
+                        title='Xác minh'
                         disabled={otp.length < 6}
-                        size="large"
-                        type="primary"
+                        size='large'
+                        type='primary'
                         onPress={() => handleVerification(undefined)}
                     />
 
@@ -153,10 +143,10 @@ export default function VerificationPage() {
                             color={colors.error}
                         />
                     ) : (
-                        <SectionComponent align="center" className="w-full">
-                            <TextComponent text="Chưa nhận được mã OTP?" className="text-sm" />
+                        <SectionComponent align='center' className='w-full'>
+                            <TextComponent text='Chưa nhận được mã OTP?' className='text-sm' />
                             <TouchableOpacity onPress={handleResendOTP}>
-                                <TextComponent text="Gửi lại" className="text-sm text-primary-500" />
+                                <TextComponent text='Gửi lại' className='text-sm text-primary-500' />
                             </TouchableOpacity>
                         </SectionComponent>
                     )}

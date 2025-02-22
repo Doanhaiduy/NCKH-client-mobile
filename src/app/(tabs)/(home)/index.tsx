@@ -28,7 +28,7 @@ export default function Home() {
                     postAPI.getPosts({
                         page: 1,
                         size: 4,
-                        category: 'activity',
+                        type: 'activity',
                     }),
                 refetchInterval: 60000,
             },
@@ -38,7 +38,7 @@ export default function Home() {
                     postAPI.getPosts({
                         page: 1,
                         size: 6,
-                        category: 'news',
+                        type: 'news',
                     }),
                 refetchInterval: 60000,
             },
@@ -48,7 +48,7 @@ export default function Home() {
     return (
         <ContainerComponent
             isScroll
-            title="NTU Student"
+            title='NTU Student'
             isHome
             _refreshing={posts.isFetching || news.isFetching}
             handleRefresh={() => {
@@ -57,15 +57,15 @@ export default function Home() {
             }}
             iconRight={
                 <TouchableOpacity onPress={() => router.push('/notification')}>
-                    <Feather name="bell" size={32} color={colors.primary500} />
+                    <Feather name='bell' size={32} color={colors.primary500} />
                 </TouchableOpacity>
             }
         >
             <StatusBar barStyle={'light-content'} />
-            <SectionComponent className="flex-1 w-full">
-                <TextComponent text="Hoạt động nổi bật" fontBold color={colors.primary500} />
+            <SectionComponent className='flex-1 w-full'>
+                <TextComponent text='Hoạt động nổi bật' fontBold color={colors.primary500} />
 
-                <View className="pt-4 w-full -ml-1">
+                <View className='pt-4 w-full -ml-1'>
                     <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
                 </View>
             </SectionComponent>
@@ -73,8 +73,8 @@ export default function Home() {
             {/* <SectionComponent className='flex-1'>
                 <CollapsibleComponent />
             </SectionComponent> */}
-            <SectionComponent className="flex-1">
-                <TextComponent text="Truy cập nhanh" fontBold />
+            <SectionComponent className='flex-1'>
+                <TextComponent text='Truy cập nhanh' fontBold />
                 <ActionListComponents
                     onShowAll={() => {
                         modalizeRef.current?.open();
@@ -85,8 +85,8 @@ export default function Home() {
             <PortalizeComponent
                 ref={modalizeRef}
                 children={
-                    <View className="shadow-xl gap-5 p-3 pt-4 bg-white mx-auto">
-                        <TextComponent text="Truy cập nhanh" fontBold />
+                    <View className='shadow-xl gap-5 p-3 pt-4 bg-white mx-auto'>
+                        <TextComponent text='Truy cập nhanh' fontBold />
                         <ActionListComponents
                             full
                             onClose={() => {

@@ -23,8 +23,9 @@ export const appInfo = Object.freeze({
         android: StatusBar.currentHeight,
         default: 0,
     }),
-    // base_url: 'http:/192.168.1.20:3000/api/v1',
-    // base_view_url: 'http:/192.168.1.20:3000/views',
+    // base_url: 'http://10.2.0.50:3000/api/v1',
+    // base_view_url: 'http://10.2.0.50:3000/views',
     base_url: 'https://nckhserver.duydemo.io.vn/api/v1',
     base_view_url: 'https://nckhserver.duydemo.io.vn/views',
+    base_url_face_detect: 'https://nckhface.duydemo.io.vn',
 });

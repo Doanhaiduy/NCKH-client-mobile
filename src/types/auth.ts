@@ -17,7 +17,6 @@ type AuthState = {
 
 type OTP = {
     email: string;
-    otp: string;
     expiredIn: number;
     done: boolean;
 };

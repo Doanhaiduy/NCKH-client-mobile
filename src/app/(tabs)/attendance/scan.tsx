@@ -11,7 +11,7 @@ import {
     TextComponent,
 } from '@components/index';
 import { useMutation } from '@tanstack/react-query';
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -31,6 +31,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Buffer } from 'buffer';
 import jsQR from 'jsqr';
 import jpeg from 'jpeg-js';
+import handleDetectFace from '@/services/detectApi';
 const PNG = require('pngjs/browser').PNG;
 
 export default function ScanQRScreen() {
@@ -42,7 +43,7 @@ export default function ScanQRScreen() {
     const [encryptedData, setEncryptedData] = useState<string | null>(null);
     const [eventDetails, setEventDetails] = useState<EventDetails | null>(null);
     const [isTakePhoto, setIsTakePhoto] = useState(false);
-    const [picture, setPicture] = useState<string | null>(null);
+    const [picture, setPicture] = useState<CameraCapturedPicture | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState('');
 
@@ -327,11 +328,56 @@ export default function ScanQRScreen() {
     const handleTakePhoto = async () => {
         try {
             const photo = await cameraRef?.current?.takePictureAsync();
-            setPicture(photo?.uri as string);
+            setPicture(photo || null);
             modalizeShowPhoto.current?.open();
             setIsLoading(false);
         } catch (error) {
             console.log(error);
+            setIsLoading(false);
+        }
+    };
+
+    const handleSubmitCheckIn = async () => {
+        try {
+            setIsLoading(true);
+            setLoadingMessage('Đang xử lý ảnh');
+            // detect face
+            const formData = new FormData();
+            console.log(picture);
+            if (picture) {
+                /* @ts-ignore */
+                formData.append('image', {
+                    uri: picture.uri,
+                    type: 'image/jpeg',
+                    name: picture.uri.split('/').pop(),
+                });
+            }
+
+            formData.append('name', authData?.username || '');
+            const dataDetect = await handleDetectFace(formData);
+
+            // if (dataDetect.result) {
+            if (true) {
+                setLoadingMessage('Đang điểm danh');
+                await reverseLocation(currentLocation?.lat!, currentLocation?.lng!);
+                const dataLocation = eventDetails?.location;
+                mutate(dataLocation as EventLocation);
+                modalizeShowPhoto.current?.close();
+                setIsLoading(false);
+            } else {
+                setError('Ảnh không hợp lệ');
+                setScanned(true);
+                setIsLoading(false);
+                modalizeShowPhoto.current?.close();
+                modalizeRefFailed.current?.open();
+                setIsLoading(false);
+            }
+        } catch (error) {
+            setError('Đã xảy ra lỗi trong quá trình điểm danh');
+            setScanned(true);
+            setIsLoading(false);
+            modalizeShowPhoto.current?.close();
+            modalizeRefFailed.current?.open();
             setIsLoading(false);
         }
     };
@@ -341,9 +387,9 @@ export default function ScanQRScreen() {
     }
     if (!permission.granted) {
         return (
-            <ContainerComponent iconLeft="back" title="Quét mã QR">
-                <SectionComponent className="items-center mt-6">
-                    <Text className="text-base font-medium">
+            <ContainerComponent iconLeft='back' title='Quét mã QR'>
+                <SectionComponent className='items-center mt-6'>
+                    <Text className='text-base font-medium'>
                         Ứng dụng cần quyền truy cập máy ảnh để quét mã QR. Vui lòng bật quyền truy cập máy ảnh.
                     </Text>
                     <SpaceComponent height={20} />
@@ -355,8 +401,8 @@ export default function ScanQRScreen() {
                             requestPermission();
                         }}
                         title={'Cấp quyền truy cập máy ảnh'}
-                        size="large"
-                        type="primary"
+                        size='large'
+                        type='primary'
                     />
                 </SectionComponent>
             </ContainerComponent>
@@ -366,8 +412,8 @@ export default function ScanQRScreen() {
     return (
         <View style={{ flex: 1, position: 'relative' }}>
             {isTakePhoto ? (
-                <CameraView facing="front" className="flex-1" ref={cameraRef}>
-                    <View className="flex-1 items-center justify-center">
+                <CameraView facing='front' className='flex-1' ref={cameraRef}>
+                    <View className='flex-1 items-center justify-center'>
                         <TouchableOpacity
                             onPress={() => {
                                 setIsTakePhoto(false);
@@ -375,21 +421,21 @@ export default function ScanQRScreen() {
                             }}
                             style={{ position: 'absolute', top: 60, left: 20 }}
                         >
-                            <Ionicons name="chevron-back" size={44} color="white" />
+                            <Ionicons name='chevron-back' size={44} color='white' />
                         </TouchableOpacity>
                     </View>
 
                     <View>
                         <View
-                            className="items-center justify-center w-full mx-auto"
+                            className='items-center justify-center w-full mx-auto'
                             style={{ position: 'absolute', bottom: 0 }}
                         >
-                            <View className="items-center w-full h-full justify-between mb-[15vh]">
-                                <View className="">
+                            <View className='items-center w-full h-full justify-between mb-[15vh]'>
+                                <View className=''>
                                     <TextComponent
-                                        text="Đưa khuôn mặt vào khung và chụp ảnh"
+                                        text='Đưa khuôn mặt vào khung và chụp ảnh'
                                         size={16}
-                                        className="text-white font-interMd mb-4 text-center"
+                                        className='text-white font-interMd mb-4 text-center'
                                     />
                                     <Image
                                         source={require('@/assets/images/scanner-action.png')}
@@ -397,7 +443,7 @@ export default function ScanQRScreen() {
                                     />
                                 </View>
                                 <TouchableOpacity onPress={handleTakePhoto}>
-                                    <Ionicons name="camera" size={44} color="white" />
+                                    <Ionicons name='camera' size={44} color='white' />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -405,24 +451,24 @@ export default function ScanQRScreen() {
                 </CameraView>
             ) : (
                 <CameraView
-                    facing="back"
-                    className="flex-1"
+                    facing='back'
+                    className='flex-1'
                     barcodeScannerSettings={{
                         barcodeTypes: ['qr', 'pdf417'],
                     }}
                     onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
                 >
-                    <View className="flex-1 items-center justify-center">
+                    <View className='flex-1 items-center justify-center'>
                         <TouchableOpacity
                             onPress={() => router.dismiss()}
                             style={{ position: 'absolute', top: 60, right: 20 }}
                         >
-                            <Ionicons name="close" size={44} color="white" />
+                            <Ionicons name='close' size={44} color='white' />
                         </TouchableOpacity>
                         <TextComponent
-                            text="Hướng camera về phía mã QR"
+                            text='Hướng camera về phía mã QR'
                             size={16}
-                            className="text-white  font-interMd mb-4"
+                            className='text-white  font-interMd mb-4'
                         />
                         <Image
                             source={require('@/assets/images/scanner-action.png')}
@@ -432,7 +478,7 @@ export default function ScanQRScreen() {
                             onPress={handlePickImageAndScanQR}
                             style={{ position: 'absolute', bottom: 60, left: 20 }}
                         >
-                            <Ionicons name="images" size={44} color="white" />
+                            <Ionicons name='images' size={44} color='white' />
                         </TouchableOpacity>
                     </View>
                 </CameraView>
@@ -444,41 +490,41 @@ export default function ScanQRScreen() {
                 }}
                 ref={modalizeRefFailed}
                 children={
-                    <View className="shadow-xl gap-5 p-3 bg-white">
+                    <View className='shadow-xl gap-5 p-3 bg-white'>
                         <View
-                            className="border-[2px] border-white  items-center"
+                            className='border-[2px] border-white  items-center'
                             style={{
                                 borderRadius: 99,
                             }}
                         >
-                            <Ionicons name="close-circle" size={100} color={colors.error} />
+                            <Ionicons name='close-circle' size={100} color={colors.error} />
                         </View>
-                        <View className="justify-center items-center">
+                        <View className='justify-center items-center'>
                             <TextComponent
-                                className="text-center text-xl font-bold"
-                                text="Điểm danh không thành công"
+                                className='text-center text-xl font-bold'
+                                text='Điểm danh không thành công'
                             />
                             <TextComponent
-                                className="mt-2 text-center text-sm max-w-[70%] "
-                                text="Đã có lỗi xảy ra trong quá trình điểm danh"
+                                className='mt-2 text-center text-sm max-w-[70%] '
+                                text='Đã có lỗi xảy ra trong quá trình điểm danh'
                             />
                             <TextComponent
-                                className="mt-2 text-center text-sm max-w-[70%] text-error"
+                                className='mt-2 text-center text-sm max-w-[70%] text-error'
                                 text={error || ''}
                             />
                         </View>
 
-                        <View className="flex-row justify-center">
+                        <View className='flex-row justify-center'>
                             <SpaceComponent width={6} />
                             <ButtonComponent
-                                title="Quét lại"
+                                title='Quét lại'
                                 onPress={async () => {
                                     modalizeRefFailed.current?.close();
                                     await sleep(1000);
                                     setScanned(false);
                                 }}
-                                type="primary"
-                                size="large"
+                                type='primary'
+                                size='large'
                             />
                         </View>
                     </View>
@@ -487,22 +533,22 @@ export default function ScanQRScreen() {
             <PortalizeComponent
                 ref={modalizeRefSuccess}
                 children={
-                    <View className="shadow-xl gap-5 p-3 bg-white">
+                    <View className='shadow-xl gap-5 p-3 bg-white'>
                         <View
-                            className="border-[2px] border-white items-center"
+                            className='border-[2px] border-white items-center'
                             style={{
                                 borderRadius: 99,
                             }}
                         >
-                            <Ionicons name="checkmark-circle" size={100} color={colors.primary400} />
+                            <Ionicons name='checkmark-circle' size={100} color={colors.primary400} />
                         </View>
-                        <View className="justify-center items-center">
-                            <TextComponent className="text-center text-xl font-bold" text="Điểm danh thành công" />
+                        <View className='justify-center items-center'>
+                            <TextComponent className='text-center text-xl font-bold' text='Điểm danh thành công' />
                             <TextComponent
-                                className="mt-2 text-center text-sm max-w-[70%] "
-                                text="Bạn đã điểm danh thành công sự kiện: "
+                                className='mt-2 text-center text-sm max-w-[70%] '
+                                text='Bạn đã điểm danh thành công sự kiện: '
                             />
-                            <TextComponent className="font-bold" text={eventDetails?.name?.toString() || ''} />
+                            <TextComponent className='font-bold' text={eventDetails?.name?.toString() || ''} />
                         </View>
 
                         <View>
@@ -518,8 +564,8 @@ export default function ScanQRScreen() {
                                         },
                                     });
                                 }}
-                                type="primary"
-                                size="large"
+                                type='primary'
+                                size='large'
                             />
                         </View>
                     </View>
@@ -528,42 +574,21 @@ export default function ScanQRScreen() {
             <PortalizeComponent
                 ref={modalizeShowPhoto}
                 children={
-                    <View className="shadow-xl gap-5 p-3 bg-white">
-                        <TextComponent className="text-center text-xl font-bold" text="Ảnh chụp" />
+                    <View className='shadow-xl gap-5 p-3 bg-white'>
+                        <TextComponent className='text-center text-xl font-bold' text='Ảnh chụp' />
                         {picture && (
                             <Image
-                                source={{ uri: picture || '' }}
-                                className="w-[90%] h-[50vh] self-center rounded-[12px]"
+                                source={{ uri: picture.uri || '' }}
+                                className='w-[90%] h-[50vh] self-center rounded-[12px]'
                             />
                         )}
 
                         <View>
                             <ButtonComponent
                                 title={'Xác nhận'}
-                                onPress={async () => {
-                                    setIsLoading(true);
-                                    setLoadingMessage('Đang xử lý ảnh');
-                                    // detect face
-                                    await sleep(3000);
-                                    // check in
-                                    if (true) {
-                                        setLoadingMessage('Đang điểm danh');
-                                        await reverseLocation(currentLocation?.lat!, currentLocation?.lng!);
-                                        const dataLocation = eventDetails?.location;
-                                        mutate(dataLocation as EventLocation);
-                                        modalizeShowPhoto.current?.close();
-                                        setIsLoading(false);
-                                    } else {
-                                        setError('Ảnh không hợp lệ');
-                                        setScanned(true);
-                                        setIsLoading(false);
-                                        modalizeShowPhoto.current?.close();
-                                        modalizeRefFailed.current?.open();
-                                        setIsLoading(false);
-                                    }
-                                }}
-                                type="primary"
-                                size="large"
+                                onPress={handleSubmitCheckIn}
+                                type='primary'
+                                size='large'
                             />
 
                             <SpaceComponent height={12} />
@@ -574,8 +599,8 @@ export default function ScanQRScreen() {
                                     modalizeShowPhoto.current?.close();
                                     setIsTakePhoto(true);
                                 }}
-                                type="outline"
-                                size="large"
+                                type='outline'
+                                size='large'
                             />
                         </View>
                     </View>

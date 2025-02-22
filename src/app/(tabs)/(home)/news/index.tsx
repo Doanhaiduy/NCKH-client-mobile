@@ -1,4 +1,4 @@
-import postAPI from "@/apis/postApi";
+import postAPI from '@/apis/postApi';
 import {
     ContainerComponent,
     ItemCardList,
@@ -6,27 +6,26 @@ import {
     SectionComponent,
     SpaceComponent,
     TextComponent,
-} from "@/components";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useRefreshing } from "@/hooks/useRefreshing";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
-import React, { useEffect } from "react";
-import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, View } from "react-native";
+} from '@/components';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useRefreshing } from '@/hooks/useRefreshing';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, View } from 'react-native';
 
 export default function NewsScreen() {
-    const [searchValue, setSearchValue] = React.useState("");
+    const [searchValue, setSearchValue] = React.useState('');
     const debouncedSearchValue = useDebounce(searchValue, 500);
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
-            queryKey: ["news"],
+            queryKey: ['news'],
             initialPageParam: 1,
             queryFn: ({ pageParam }) =>
                 postAPI.getPosts({
                     page: pageParam,
                     size: 10,
-                    category: "news",
+                    type: 'news',
                     search: debouncedSearchValue,
                 }),
             getNextPageParam: (lastPage, pages) => {
@@ -50,20 +49,20 @@ export default function NewsScreen() {
     }, [debouncedSearchValue]);
 
     return (
-        <ContainerComponent title="Tin tức" iconLeft="back" notification>
+        <ContainerComponent title='Tin tức' iconLeft='back' notification>
             <SpaceComponent height={16} />
             <SectionComponent>
                 <SearchComponent
                     value={searchValue}
                     onChangeText={setSearchValue}
-                    onClear={() => setSearchValue("")}
-                    placeholder="Tìm kiếm hoạt động"
+                    onClear={() => setSearchValue('')}
+                    placeholder='Tìm kiếm hoạt động'
                 />
             </SectionComponent>
             <SectionComponent
-                className="flex-1"
+                className='flex-1'
                 style={{
-                    zIndex: Platform.OS === "ios" ? -1 : 0,
+                    zIndex: Platform.OS === 'ios' ? -1 : 0,
                 }}
             >
                 <FlatList
@@ -73,11 +72,11 @@ export default function NewsScreen() {
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
                     removeClippedSubviews={true}
                     initialNumToRender={10}
-                    ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={"large"} /> : null)}
+                    ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}
                     onEndReachedThreshold={0.3}
                     onEndReached={loadMore}
                     ListEmptyComponent={() => (
-                        <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                        <TextComponent text='Không có dữ liệu' className='text-center text-text-200' />
                     )}
                     renderItem={({ item }) => (
                         <ItemCardList
@@ -86,7 +85,7 @@ export default function NewsScreen() {
                                 router.push({
                                     pathname: `/news/${item._id}`,
                                     params: {
-                                        eventName: "Hoạt động ngoại khóa",
+                                        eventName: 'Hoạt động ngoại khóa',
                                     },
                                 });
                             }}

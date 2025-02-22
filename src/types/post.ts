@@ -16,7 +16,7 @@ type Post = {
     type: string;
     category: string;
     createdAt: string;
-    typeAction?: "none" | "register" | "unregister" | "expired" | "full" | "already";
+    typeAction?: 'none' | 'register' | 'unregister' | 'expired' | 'full' | 'already';
     event?: string;
     slug?: string;
 };
@@ -44,7 +44,7 @@ type CardItemData = {
 type PostsParams = {
     page?: number;
     size?: number;
-    category?: "news" | "activity";
+    type?: 'news' | 'activity';
     search?: string;
 };
 type Author = {

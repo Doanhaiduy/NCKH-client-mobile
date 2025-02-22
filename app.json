@@ -7,7 +7,7 @@
         "orientation": "portrait",
         "userInterfaceStyle": "light",
         "icon": "./assets/icon_v2.png",
-        "backgroundColor": "#030099",
+        "backgroundColor": "#FFFFFF",
         "experiments": {
             "tsconfigPaths": true
         },

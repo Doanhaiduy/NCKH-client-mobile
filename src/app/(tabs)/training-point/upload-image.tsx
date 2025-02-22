@@ -64,7 +64,7 @@ export default function UploadImage() {
         }
 
         if (!result.canceled) {
-            setIsLoading(true);
+            // setIsLoading(true);
 
             const manipulatedImages = await Promise.all(
                 result.assets.map(async (asset: any) => {
@@ -88,10 +88,10 @@ export default function UploadImage() {
             // setImages([...images, ...result.assets]);
             setImages([...images, ...manipulatedImages]);
 
-            setIsLoading(false);
+            // setIsLoading(false);
             console.log('upload avatar');
         }
-        setIsLoading(false);
+        // setIsLoading(false);
     };
 
     const { data, isFetching, refetch } = useQuery({
@@ -141,7 +141,7 @@ export default function UploadImage() {
                 };
                 formData.append('evidence', postData as any);
             });
-            console.log(formData);
+            console.log(formData.getAll('evidence'));
             const res = await trainingPointAPI.updateCriteriaEvidence(id?.toString() ?? '', formData);
             console.log(res);
             if (res) {
@@ -161,11 +161,11 @@ export default function UploadImage() {
 
     return (
         <ContainerComponent
-            title="Tải lên ảnh"
+            title='Tải lên ảnh'
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
             isScroll
-            iconLeft="back"
+            iconLeft='back'
             iconRight={
                 <TouchableOpacity
                     onPress={() => {
@@ -191,58 +191,58 @@ export default function UploadImage() {
                         ]);
                     }}
                 >
-                    <TextComponent text="Lưu" size={20} color={colors.primary400} />
+                    <TextComponent text='Lưu' size={20} color={colors.primary400} />
                 </TouchableOpacity>
             }
         >
-            <SectionComponent className="items-center">
+            <SectionComponent className='items-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
+                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className='font-interMd' size={20} />
                 <TextComponent
                     text={`Tên sinh viên: ${authData?.fullName}`}
-                    className="font-interMd mt-2"
+                    className='font-interMd mt-2'
                     size={20}
                     center
                 />
-                <TextComponent text="Tải lên minh chứng mục 1.2" color={colors.text400} className="mt-2" size={16} />
+                <TextComponent text='Tải lên minh chứng mục 1.2' color={colors.text400} className='mt-2' size={16} />
             </SectionComponent>
             {images.length <= 0 ? (
                 <SectionComponent>
                     <TouchableOpacity
-                        className="w-full h-[128px] border-[1px] border-dotted border-primary-400  items-center justify-center"
+                        className='w-full h-[128px] border-[1px] border-dotted border-primary-400  items-center justify-center'
                         style={{
                             borderRadius: 10,
                         }}
                         onPress={() => modalizeRef.current?.open()}
                     >
-                        <Feather name="image" size={32} color={colors.primary400} />
-                        <TextComponent text="Tải ảnh lên" size={20} />
+                        <Feather name='image' size={32} color={colors.primary400} />
+                        <TextComponent text='Tải ảnh lên' size={20} />
                     </TouchableOpacity>
                 </SectionComponent>
             ) : (
                 <SectionComponent>
-                    <View className="w-full flex-row gap-3 flex-wrap ">
+                    <View className='w-full flex-row gap-3 flex-wrap '>
                         {images.map((image: any, index: number) => (
-                            <View key={index} className="w-[80px] h-[80px] relative">
+                            <View key={index} className='w-[80px] h-[80px] relative'>
                                 <ImageComponent url={image.uri} rounded={4} showImageModal />
                                 <TouchableOpacity
-                                    className="absolute right-0 top-0"
+                                    className='absolute right-0 top-0'
                                     onPress={() => {
                                         const newImages = images.filter((_: any, i: number) => i !== index);
                                         setImages(newImages);
                                     }}
                                 >
-                                    <Ionicons name="close-circle-sharp" size={24} color={colors.text300} />
+                                    <Ionicons name='close-circle-sharp' size={24} color={colors.text300} />
                                 </TouchableOpacity>
                             </View>
                         ))}
 
                         <TouchableOpacity
-                            className="w-[80px] h-[80px] border-[1px] border-dotted border-primary-400"
+                            className='w-[80px] h-[80px] border-[1px] border-dotted border-primary-400'
                             onPress={() => modalizeRef.current?.open()}
                         >
-                            <View className="" style={[globalStyles.centerAbsolute]}>
-                                <Ionicons name="add" size={24} color={colors.primary400} />
+                            <View className='' style={[globalStyles.centerAbsolute]}>
+                                <Ionicons name='add' size={24} color={colors.primary400} />
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -252,26 +252,26 @@ export default function UploadImage() {
             <PortalizeComponent
                 ref={modalizeRef}
                 children={
-                    <View className=" shadow-xl  gap-3 p-3">
+                    <View className=' shadow-xl  gap-3 p-3'>
                         <TouchableOpacity
-                            className="flex-row  items-center"
+                            className='flex-row  items-center'
                             onPress={() => {
                                 pickImage('library');
                                 modalizeRef.current?.close();
                             }}
                         >
-                            <Ionicons name="image" size={22} color="black" />
-                            <TextComponent text="Chọn từ thư viện" className="ml-2 font-medium" />
+                            <Ionicons name='image' size={22} color='black' />
+                            <TextComponent text='Chọn từ thư viện' className='ml-2 font-medium' />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            className="flex-row py-2 items-center"
+                            className='flex-row py-2 items-center'
                             onPress={() => {
                                 pickImage('camera');
                                 modalizeRef.current?.close();
                             }}
                         >
-                            <Ionicons name="camera" size={24} color="black" />
-                            <TextComponent text="Chụp ảnh" className="ml-2 font-medium" />
+                            <Ionicons name='camera' size={24} color='black' />
+                            <TextComponent text='Chụp ảnh' className='ml-2 font-medium' />
                         </TouchableOpacity>
                     </View>
                 }
