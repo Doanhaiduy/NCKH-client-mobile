@@ -27,6 +27,7 @@ export default function ActivityScreen() {
                     size: 10,
                     type: 'activity',
                     search: debouncedSearchValue,
+                    sortDate: 'desc',
                 }),
             getNextPageParam: (lastPage, pages) => {
                 const nextPage = parseInt(lastPage.page) + 1;

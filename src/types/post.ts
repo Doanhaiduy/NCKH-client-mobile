@@ -46,6 +46,7 @@ type PostsParams = {
     size?: number;
     type?: 'news' | 'activity';
     search?: string;
+    sortDate?: 'asc' | 'desc';
 };
 type Author = {
     _id: string;

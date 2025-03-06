@@ -1,7 +1,6 @@
 import postAPI from '@/apis/postApi';
 import {
     ActionListComponents,
-    CollapsibleComponent,
     ContainerComponent,
     PortalizeComponent,
     SectionComponent,
@@ -16,11 +15,15 @@ import { router } from 'expo-router';
 import React from 'react';
 import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+interface Section {
+    title: string;
+    content: string | string[];
+}
+
 export default function Home() {
     const modalizeRef = React.useRef<any>(null);
     const { expoPushToken, notification } = usePushNotifications();
-    const data = JSON.stringify(notification, null, 2);
-    const [posts, news] = useQueries({
+    const [posts] = useQueries({
         queries: [
             {
                 queryKey: ['posts-activity'],
@@ -29,16 +32,7 @@ export default function Home() {
                         page: 1,
                         size: 4,
                         type: 'activity',
-                    }),
-                refetchInterval: 60000,
-            },
-            {
-                queryKey: ['posts-news'],
-                queryFn: () =>
-                    postAPI.getPosts({
-                        page: 1,
-                        size: 6,
-                        type: 'news',
+                        sortDate: 'desc',
                     }),
                 refetchInterval: 60000,
             },
@@ -50,10 +44,9 @@ export default function Home() {
             isScroll
             title='NTU Student'
             isHome
-            _refreshing={posts.isFetching || news.isFetching}
+            _refreshing={posts.isFetching}
             handleRefresh={() => {
                 posts.refetch();
-                news.refetch();
             }}
             iconRight={
                 <TouchableOpacity onPress={() => router.push('/notification')}>
@@ -69,10 +62,6 @@ export default function Home() {
                     <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
                 </View>
             </SectionComponent>
-
-            {/* <SectionComponent className='flex-1'>
-                <CollapsibleComponent />
-            </SectionComponent> */}
             <SectionComponent className='flex-1'>
                 <TextComponent text='Truy cập nhanh' fontBold />
                 <ActionListComponents

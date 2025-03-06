@@ -73,48 +73,48 @@ function TableBorderComponent(props: Props, ref: any) {
     }, [data]);
 
     return (
-        <View className="min-w-full px-2">
-            <View className="flex-row flex-nowrap border-text-200 border-y-[1px] ">
-                <View className="w-[10%] items-start border-text-200 py-3 px-1 border-x-[1px] justify-center">
-                    <TextComponent text="Mã TC" fontBold />
+        <View className='min-w-full px-2'>
+            <View className='flex-row flex-nowrap border-text-200 border-y-[1px] '>
+                <View className='w-[10%] items-start border-text-200 py-3 px-1 border-x-[1px] justify-center'>
+                    <TextComponent text='Mã TC' fontBold />
                 </View>
-                <View className="w-[50%] items-start border-text-200 py-3 px-1 border-x-[1px] justify-center">
-                    <TextComponent text="Tên tiêu chí" fontBold />
+                <View className='w-[50%] items-start border-text-200 py-3 px-1 border-x-[1px] justify-center'>
+                    <TextComponent text='Tên tiêu chí' fontBold />
                 </View>
                 {isUpload ? (
                     <>
-                        <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center">
-                            <TextComponent text="Tải lên minh chứng" fontBold />
+                        <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                            <TextComponent text='Tải lên minh chứng' fontBold />
                         </View>
                     </>
                 ) : (
                     <>
-                        <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center">
-                            <TextComponent text="Điểm tối đa" fontBold />
+                        <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                            <TextComponent text='Điểm tối đa' fontBold />
                         </View>
                         {!isAssessment && (
-                            <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center">
-                                <TextComponent text="Điểm đã duyệt" fontBold />
+                            <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                                <TextComponent text='Điểm đã duyệt' fontBold />
                             </View>
                         )}
-                        <View className="flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center">
-                            <TextComponent text="Điểm tự đánh giá" fontBold />
+                        <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                            <TextComponent text='Điểm tự đánh giá' fontBold />
                         </View>
                     </>
                 )}
             </View>
             {/* Body */}
             {!data ? null : (
-                <View className="flex-1">
+                <View className='flex-1'>
                     {flattenedData?.map((item, index) => (
                         <View
                             key={index}
-                            className="flex-row flex-nowrap  border-text-200 border-b-[1px] "
+                            className='flex-row flex-nowrap  border-text-200 border-b-[1px] '
                             style={{
                                 backgroundColor: index % 2 === 0 ? '#F3F4F6' : '#fff',
                             }}
                         >
-                            <View className="w-[10%] items-start justify-center py-3 px-1 border-text-200 border-x-[1px] ">
+                            <View className='w-[10%] items-start justify-center py-3 px-1 border-text-200 border-x-[1px] '>
                                 <TextComponent
                                     text={
                                         item.level === 1
@@ -126,7 +126,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                 />
                             </View>
                             <View
-                                className="w-[50%] items-start py-3 px-1 border-text-200 border-x-[1px] justify-center"
+                                className='w-[50%] items-start py-3 px-1 border-text-200 border-x-[1px] justify-center'
                                 style={{
                                     paddingLeft: item.level === 1 ? 4 : item.level === 2 ? 20 : 40,
                                 }}
@@ -140,7 +140,7 @@ function TableBorderComponent(props: Props, ref: any) {
                             </View>
 
                             {isUpload ? (
-                                <View className="flex-1 py-3 px-1 border-text-200 border-r-[1px] items-center justify-center">
+                                <View className='flex-1 py-3 px-1 border-text-200 border-r-[1px] items-center justify-center'>
                                     {item.require && !item.evidence && (
                                         <ButtonComponent
                                             onPress={() => {
@@ -149,10 +149,10 @@ function TableBorderComponent(props: Props, ref: any) {
                                                     params: { id: item._id },
                                                 });
                                             }}
-                                            title="Tải lên"
-                                            type="outline"
-                                            size="small"
-                                            icon={<Feather name="upload" size={18} color={colors.primary400} />}
+                                            title='Tải lên'
+                                            type='outline'
+                                            size='small'
+                                            icon={<Feather name='upload' size={18} color={colors.primary400} />}
                                         />
                                     )}
 
@@ -164,10 +164,10 @@ function TableBorderComponent(props: Props, ref: any) {
                                                     params: { id: item._id },
                                                 });
                                             }}
-                                            title="Đã tải lên"
-                                            type="outline"
-                                            size="small"
-                                            icon={<Feather name="image" size={18} color={colors.primary400} />}
+                                            title='Đã tải lên'
+                                            type='outline'
+                                            size='small'
+                                            icon={<Feather name='image' size={18} color={colors.primary400} />}
                                         />
                                     )}
 
@@ -190,18 +190,23 @@ function TableBorderComponent(props: Props, ref: any) {
                                 </View>
                             ) : isAssessment ? (
                                 <>
-                                    <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] justify-center">
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] justify-center'>
                                         <TextComponent text={item?.maxScore.toString() || ''} />
                                     </View>
-                                    <View className="flex-1 py-3 px-1 flex-row space-x-2 border-text-200 items-center border-r-[1px] justify-center">
-                                        {<TextComponent text={item?.maxScore < 0 ? '-' : ''} />}
+                                    <View className='flex-1 py-3 px-1 flex-row border-text-200 items-center border-r-[1px] justify-center'>
+                                        {
+                                            <TextComponent
+                                                className='absolute left-1'
+                                                text={item?.maxScore < 0 ? '-' : ''}
+                                            />
+                                        }
                                         <TextInput
-                                            className="text-center border-text-200 border-[1px] rounded-md py-3 px-4"
+                                            className='text-center border-text-200 border-[1px] rounded-md py-3 px-2 min-w-[35px]'
                                             style={{
                                                 textAlign: 'center',
                                                 backgroundColor: item.activeChange ? '#fff' : '#eee',
                                             }}
-                                            keyboardType="numbers-and-punctuation"
+                                            keyboardType='numbers-and-punctuation'
                                             readOnly={!item.activeChange}
                                             value={
                                                 item?.tempScore.toString() === '0'
@@ -221,13 +226,13 @@ function TableBorderComponent(props: Props, ref: any) {
                                 </>
                             ) : (
                                 <>
-                                    <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] '>
                                         <TextComponent text={item?.maxScore.toString() || ''} />
                                     </View>
-                                    <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] '>
                                         <TextComponent text={item?.totalScore.toString() || ''} />
                                     </View>
-                                    <View className="flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] ">
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] '>
                                         <TextComponent text={item?.tempScore.toString() || ''} />
                                     </View>
                                 </>

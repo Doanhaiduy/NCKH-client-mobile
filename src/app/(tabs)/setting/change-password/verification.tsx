@@ -47,16 +47,7 @@ export default function verification() {
             return;
         }
 
-        if (inputOtp == OTP?.otp) {
-            if (checkExpiredTime(OTP?.expiredIn || 0)) {
-                setError('Mã OTP đã hết hạn');
-            } else {
-                verifyOTP({ email: OTP?.email || '', otp: inputOtp });
-            }
-        } else {
-            setError('Mã OTP không chính xác');
-        }
-
+        verifyOTP({ email: OTP?.email || '', otp: inputOtp });
         setIsLoading(false);
     };
 
@@ -95,14 +86,14 @@ export default function verification() {
     };
 
     return (
-        <ContainerComponent isScroll iconLeft="back" title="Quên mật khẩu" notification>
-            <SectionComponent className="mt-2">
+        <ContainerComponent isScroll iconLeft='back' title='Quên mật khẩu' notification>
+            <SectionComponent className='mt-2'>
                 <TextComponent
                     text={`Chúng tôi đã gửi mã của bạn đến email ${obfuscateEmail(OTP?.email || '')}`}
-                    className="font-interMd"
+                    className='font-interMd'
                 />
                 <SpaceComponent height={8} />
-                <TextComponent className="text-md" text="Vui lòng kiểm tra mã trong email của bạn. Mã này gồm 6 số." />
+                <TextComponent className='text-md' text='Vui lòng kiểm tra mã trong email của bạn. Mã này gồm 6 số.' />
                 {expiredTime > 0 ? (
                     <TextComponent
                         text={`Mã xác minh sẽ hết hạn trong ${expiredTime} giây`}
@@ -110,16 +101,16 @@ export default function verification() {
                         color={colors.error}
                     />
                 ) : (
-                    <View className="w-full flex gap-1 flex-row">
-                        <TextComponent text="Chưa nhận được mã OTP?" className="text-md" />
+                    <View className='w-full flex gap-1 flex-row'>
+                        <TextComponent text='Chưa nhận được mã OTP?' className='text-md' />
                         <TouchableOpacity onPress={handleResendOTP}>
-                            <TextComponent text="Gửi lại" className="text-md text-primary-500" />
+                            <TextComponent text='Gửi lại' className='text-md text-primary-500' />
                         </TouchableOpacity>
                     </View>
                 )}
-                <TextComponent text="Nhập mã gồm 6 chữ số" className="font-interMd text-md" />
+                <TextComponent text='Nhập mã gồm 6 chữ số' className='font-interMd text-md' />
             </SectionComponent>
-            <SectionComponent className="px-[56px]">
+            <SectionComponent className='px-[56px]'>
                 <OtpInput
                     ref={otpRef}
                     numberOfDigits={6}
@@ -147,17 +138,17 @@ export default function verification() {
                 <SpaceComponent height={8} />
                 {error ? <TextComponent text={error} size={11} color={colors.error} /> : null}
                 <ButtonComponent
-                    title="Xác minh"
+                    title='Xác minh'
                     disabled={otp.length < 6}
-                    size="large"
-                    type="primary"
+                    size='large'
+                    type='primary'
                     onPress={() => handleVerification(undefined)}
                 />
                 <SpaceComponent height={8} />
                 <ButtonComponent
-                    title="Hủy"
-                    size="large"
-                    type="outline"
+                    title='Hủy'
+                    size='large'
+                    type='outline'
                     onPress={() => {
                         dispatch(removeOTP());
                         router.back();

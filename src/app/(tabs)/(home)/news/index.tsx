@@ -27,6 +27,7 @@ export default function NewsScreen() {
                     size: 10,
                     type: 'news',
                     search: debouncedSearchValue,
+                    sortDate: 'desc',
                 }),
             getNextPageParam: (lastPage, pages) => {
                 const nextPage = parseInt(lastPage.page) + 1;

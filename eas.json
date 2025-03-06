@@ -36,7 +36,7 @@
         "production": {
             "android": {
                 "serviceAccountKeyPath": "./service_play_console.json",
-                "track": "alpha"
+                "track": "production"
             }
         }
     }

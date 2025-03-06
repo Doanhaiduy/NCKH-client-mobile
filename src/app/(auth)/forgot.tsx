@@ -35,7 +35,7 @@ export default function ForGotPassWord() {
         formState: { errors },
     } = useForm<FormFields>({
         defaultValues: {
-            email: 'haiduytbt2k3@gmail.com',
+            email: '',
         },
         resolver: zodResolver(schema),
     });
@@ -57,25 +57,25 @@ export default function ForGotPassWord() {
     };
 
     return (
-        <ContainerComponent isAuth isScroll iconLeft="back">
+        <ContainerComponent isAuth isScroll iconLeft='back'>
             <SpaceComponent height={110} />
-            <View className="px-8 pb-4">
-                <SectionComponent align="center">
-                    <TextComponent text="Quên mật khẩu?" title className="text-primary-500" />
+            <View className='px-8 pb-4'>
+                <SectionComponent align='center'>
+                    <TextComponent text='Quên mật khẩu?' title className='text-primary-500' />
                     <TextComponent
-                        text="Vui lòng nhập địa chỉ email đã liên kết với tài khoản của bạn."
-                        className="text-center mt-4"
+                        text='Vui lòng nhập địa chỉ email đã liên kết với tài khoản của bạn.'
+                        className='text-center mt-4'
                     />
-                    <TextComponent text="Chúng tôi sẽ gửi một mã OTP." className="text-center" />
+                    <TextComponent text='Chúng tôi sẽ gửi một mã OTP.' className='text-center' />
                 </SectionComponent>
                 <SectionComponent>
                     <SpaceComponent height={24} />
                     <Controller
-                        name="email"
+                        name='email'
                         control={control}
                         render={({ field: { value, onBlur, onChange } }) => (
                             <InputComponent
-                                placeholder="Email"
+                                placeholder='Email'
                                 value={value}
                                 onChange={onChange}
                                 onBlur={onBlur}
@@ -85,25 +85,25 @@ export default function ForGotPassWord() {
                         )}
                     />
                     <SpaceComponent height={12} />
-                    {errors.root && <TextComponent text={`${errors.root.message}`} className="text-error" />}
+                    {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
                     <SpaceComponent height={12} />
 
                     <ButtonComponent
-                        title="Gửi mã OTP"
-                        size="large"
-                        type="primary"
+                        title='Gửi mã OTP'
+                        size='large'
+                        type='primary'
                         disabled={checkHasErr(errors)}
                         onPress={handleSubmit(onSubmit)}
                     />
-                    <View className="flex-row justify-center items-center gap-1 my-4">
-                        <View className="flex-1 h-[0.5px] bg-black" />
-                        <TextComponent text="Hoặc" />
-                        <View className="flex-1 h-[0.5px] bg-black" />
+                    <View className='flex-row justify-center items-center gap-1 my-4'>
+                        <View className='flex-1 h-[0.5px] bg-black' />
+                        <TextComponent text='Hoặc' />
+                        <View className='flex-1 h-[0.5px] bg-black' />
                     </View>
                     <ButtonComponent
-                        title="Đăng nhập"
-                        size="large"
-                        type="primary"
+                        title='Đăng nhập'
+                        size='large'
+                        type='primary'
                         onPress={() => router.dismissAll()}
                     />
                 </SectionComponent>

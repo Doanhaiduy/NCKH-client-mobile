@@ -13,10 +13,11 @@ interface Props {
     rounded?: number;
     aspectRatio?: number;
     showImageModal?: boolean;
+    objectFit?: 'cover' | 'contain';
 }
 
 const ImageComponent = (props: Props) => {
-    const { url, width, height, imageClass, showImageModal = false, rounded = 0 } = props;
+    const { url, width, height, imageClass, showImageModal = false, rounded = 0, objectFit = 'cover' } = props;
 
     const [isShowModal, setIsShowModal] = useState(false);
     const [isDownloaded, setIsDownloaded] = useState(false);
@@ -55,7 +56,7 @@ const ImageComponent = (props: Props) => {
         <Wrapper
             style={{
                 width: width || '100%',
-                backgroundColor: '#f0f0f0',
+                backgroundColor: objectFit === 'contain' ? 'transparent' : '#f0f0f0',
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: rounded,
@@ -75,10 +76,10 @@ const ImageComponent = (props: Props) => {
                     style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: objectFit,
                         borderRadius: rounded,
                     }}
-                    resizeMode="cover"
+                    resizeMode='cover'
                 />
             ) : (
                 <Image
@@ -90,10 +91,10 @@ const ImageComponent = (props: Props) => {
                     style={{
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: objectFit,
                         borderRadius: rounded,
                     }}
-                    resizeMode="cover"
+                    resizeMode='cover'
                 />
             )}
             {isShowModal && imageUri && (

@@ -62,22 +62,22 @@ export default function ContainerComponent(props: Props) {
     const ViewWrapper = isScroll ? ScrollView : View;
     const HeaderAuth = (
         <ViewWrapper
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps='handled'
             style={{ paddingTop: iconLeft === 'back' || title ? 0 : heightBar }}
-            className="flex-1"
+            className='flex-1'
         >
             {children}
             <SectionComponent
-                align="center"
-                className="pb-12 w-full"
+                align='center'
+                className='pb-12 w-full'
                 style={{
                     marginTop: iconLeft === 'back' || title ? 170 : 118,
                 }}
             >
                 <SpaceComponent height={10} />
                 <RowComponent>
-                    <TextComponent text="Tiếng việt" className="text-center" />
-                    <Ionicons name="chevron-down" size={24} color={colors.black} />
+                    <TextComponent text='Tiếng việt' className='text-center' />
+                    <Ionicons name='chevron-down' size={24} color={colors.black} />
                 </RowComponent>
             </SectionComponent>
         </ViewWrapper>
@@ -104,8 +104,8 @@ export default function ContainerComponent(props: Props) {
                     }}
                 >
                     {iconLeft === 'back' && (
-                        <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())} className=" py-1 px-2">
-                            <Ionicons name="chevron-back" size={24} color={colors.primary500} />
+                        <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())} className=' py-1 px-2'>
+                            <Ionicons name='chevron-back' size={24} color={colors.primary500} />
                         </TouchableOpacity>
                     )}
                     {iconLeft === 'logo' && (
@@ -114,12 +114,14 @@ export default function ContainerComponent(props: Props) {
                                 source={require('../assets/images/icon.png')}
                                 width={28}
                                 height={28}
-                                resizeMode="cover"
+                                resizeMode='cover'
                             />
                         </TouchableOpacity>
                     )}
                     {title && (
                         <TextComponent
+                            adjustsFontSizeToFit={true}
+                            numberOfLines={1}
                             text={title}
                             title={!isHome}
                             center
@@ -132,12 +134,12 @@ export default function ContainerComponent(props: Props) {
                         />
                     )}
                     {notification ? (
-                        <TouchableOpacity onPress={() => router.navigate('/notification')} className="px-1">
-                            <Feather name="bell" size={26} color={colors.primary500} />
+                        <TouchableOpacity onPress={() => router.navigate('/notification')} className='px-1'>
+                            <Feather name='bell' size={26} color={colors.primary500} />
                         </TouchableOpacity>
                     ) : iconRight ? null : (
-                        <View className="py-1 px-2">
-                            <Ionicons name="chevron-back" size={24} color="transparent" />
+                        <View className='py-1 px-2'>
+                            <Ionicons name='chevron-back' size={24} color='transparent' />
                         </View>
                     )}
                     {iconRight && iconRight}
@@ -150,29 +152,29 @@ export default function ContainerComponent(props: Props) {
         <ImageBackground
             {...containerProps}
             source={require('../assets/images/bg-login.png')}
-            className="flex-1 bg-primary-100"
+            className='flex-1 bg-primary-100'
             imageStyle={{
                 resizeMode: 'cover',
                 flex: 1,
             }}
         >
-            <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+            <StatusBar barStyle='light-content' translucent backgroundColor='transparent' />
 
             {iconLeft === 'back' && (
                 <RowComponent style={{ paddingTop: heightBar, paddingBottom: 8, paddingLeft: 16 }}>
                     <TouchableOpacity onPress={() => router.back()}>
-                        <Ionicons name="chevron-back" size={35} color={colors.text200} />
+                        <Ionicons name='chevron-back' size={35} color={colors.text200} />
                     </TouchableOpacity>
                 </RowComponent>
             )}
             {HeaderAuth}
         </ImageBackground>
     ) : (
-        <SafeAreaView className="flex-1 bg-white" {...containerProps}>
-            <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+        <SafeAreaView className='flex-1 bg-white' {...containerProps}>
+            <StatusBar barStyle='dark-content' translucent backgroundColor='transparent' />
             <HeaderMain />
             <ViewWrapper
-                keyboardShouldPersistTaps="handled"
+                keyboardShouldPersistTaps='handled'
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                     Platform.OS === 'android'
@@ -186,7 +188,7 @@ export default function ContainerComponent(props: Props) {
                               />
                           )
                 }
-                className="flex-1"
+                className='flex-1'
             >
                 {children}
             </ViewWrapper>
