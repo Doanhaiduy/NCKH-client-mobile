@@ -241,9 +241,7 @@ export default function ScanQRScreen() {
                 const image = result.assets[0];
                 let pixelData;
                 let imageBuffer;
-                console.log('image.mimeType', image.mimeType);
                 if (image.mimeType === 'image/jpeg' || image.uri.endsWith('.jpg')) {
-                    console.log('pixelData');
                     pixelData = jpeg.decode(base64Buffer, { useTArray: true });
                     imageBuffer = pixelData.data;
                 } else if (image.mimeType === 'image/png' || image.uri.endsWith('.png')) {
@@ -343,7 +341,6 @@ export default function ScanQRScreen() {
             setLoadingMessage('Đang xử lý ảnh');
             // detect face
             const formData = new FormData();
-            console.log(picture);
             if (picture) {
                 /* @ts-ignore */
                 formData.append('image', {

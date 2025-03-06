@@ -23,7 +23,6 @@ export default function NotificationPage() {
     const { refreshing, handleRefresh } = useRefreshing(refetch);
 
     const { notification } = usePushNotifications();
-    console.log('notification');
 
     useEffect(() => {
         if (notification) {
@@ -64,8 +63,8 @@ export default function NotificationPage() {
 
     return (
         <ContainerComponent
-            iconLeft="logo"
-            title="Thông báo"
+            iconLeft='logo'
+            title='Thông báo'
             notification
             isScroll
             handleRefresh={handleRefresh}

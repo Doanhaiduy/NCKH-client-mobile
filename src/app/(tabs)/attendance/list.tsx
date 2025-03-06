@@ -35,10 +35,6 @@ export default function ListAttendance() {
     const { data, refetch, isFetching } = useQuery({
         queryKey: ['attendance-list', authData?._id, selectedSemesterYear],
         queryFn: () => {
-            console.log({
-                id: authData?._id,
-                selectedSemesterYear: selectedSemesterYear,
-            });
             return userAPI.getAttendances(authData?._id!, {
                 page: 1,
                 size: 10,
@@ -68,25 +64,24 @@ export default function ListAttendance() {
                 back === 'to_scan' && router.dismissAll();
             }}
             isScroll
-            title="Đã điểm danh"
+            title='Đã điểm danh'
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
-            iconLeft="back"
+            iconLeft='back'
             notification
         >
-            <SectionComponent className="items-center">
+            <SectionComponent className='items-center'>
                 <TextComponent
-                    text="Hoạt động đã tham gia"
-                    className="mt-2 mb-6 font-interMd"
+                    text='Hoạt động đã tham gia'
+                    className='mt-2 mb-6 font-interMd'
                     size={20}
                     color={colors.primary400}
                 />
-                <RowComponent className="ml-auto mb-4">
+                <RowComponent className='ml-auto mb-4'>
                     <DropDownComponent
-                        title=""
+                        title=''
                         data={semesterYear || []}
                         onSelect={(selectedItem, index) => {
-                            console.log(selectedItem.value);
                             setSelectedSemesterYear(selectedItem.value as { year: string; semester: string });
                         }}
                         width={230}
@@ -96,7 +91,7 @@ export default function ListAttendance() {
                 {data?.attendances?.length! > 0 ? (
                     <TableComponent data={data?.attendances.reverse() || []} />
                 ) : (
-                    <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                    <TextComponent text='Không có dữ liệu' className='text-center text-text-200' />
                 )}
             </SectionComponent>
             {/* {isFetching && <LoadingModal />} */}

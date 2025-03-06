@@ -68,7 +68,6 @@ export default function ResetPassword() {
     const { mutate: sendOTP, isPending: pendingOTP } = useMutation({
         mutationFn: (variables: { email: string }) => authAPI.forgotPassword(variables),
         onSuccess: (data) => {
-            console.log('data', data);
             dispatch(setOtpValue(data));
             router.push('setting/change-password/verification');
         },
@@ -86,52 +85,52 @@ export default function ResetPassword() {
     };
 
     return (
-        <ContainerComponent title="Đổi mật khẩu" iconLeft="back" notification isScroll>
+        <ContainerComponent title='Đổi mật khẩu' iconLeft='back' notification isScroll>
             <TextComponent
-                text="Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. "
-                className="mt-2 mx-4"
+                text='Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. '
+                className='mt-2 mx-4'
                 size={16}
             />
-            <SectionComponent className="px-12">
+            <SectionComponent className='px-12'>
                 <SpaceComponent height={32} />
                 <Controller
                     control={control}
-                    name="oldPassword"
+                    name='oldPassword'
                     render={({ field: { onChange, value, onBlur } }) => (
                         <InputComponent
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
                             isPassword
-                            placeholder="Mật khẩu hiện tại"
+                            placeholder='Mật khẩu hiện tại'
                             err={errors.oldPassword?.message}
                         />
                     )}
                 />
                 <Controller
                     control={control}
-                    name="newPassword"
+                    name='newPassword'
                     render={({ field: { onChange, value, onBlur } }) => (
                         <InputComponent
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
                             isPassword
-                            placeholder="Mật khẩu mới"
+                            placeholder='Mật khẩu mới'
                             err={errors.newPassword?.message}
                         />
                     )}
                 />
                 <Controller
                     control={control}
-                    name="confirmPassword"
+                    name='confirmPassword'
                     render={({ field: { onChange, value, onBlur } }) => (
                         <InputComponent
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
                             isPassword
-                            placeholder="Nhập lại mật khẩu mới"
+                            placeholder='Nhập lại mật khẩu mới'
                             err={errors.confirmPassword?.message}
                         />
                     )}
@@ -144,15 +143,15 @@ export default function ResetPassword() {
                         })
                     }
                 >
-                    <TextComponent text="Quên mật khẩu?" className="mt-2 ml-5" size={14} />
+                    <TextComponent text='Quên mật khẩu?' className='mt-2 ml-5' size={14} />
                 </TouchableOpacity>
-                {errors.root && <TextComponent text={`${errors.root.message}`} className="text-error" />}
+                {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
             </SectionComponent>
-            <SectionComponent className="px-12">
+            <SectionComponent className='px-12'>
                 <ButtonComponent
-                    type="primary"
-                    size="large"
-                    title="Cập nhật mật khẩu"
+                    type='primary'
+                    size='large'
+                    title='Cập nhật mật khẩu'
                     onPress={handleSubmit(onSubmit)}
                     disabled={checkHasErr(errors)}
                 />

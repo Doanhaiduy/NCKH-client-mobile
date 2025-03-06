@@ -37,12 +37,10 @@ export default function Upload() {
         }
     }, [trainingPointRefresh]);
 
-    console.log(id);
-
     return (
         <ContainerComponent
-            title="Tải lên minh chứng"
-            iconLeft="back"
+            title='Tải lên minh chứng'
+            iconLeft='back'
             isScroll
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
@@ -63,27 +61,27 @@ export default function Upload() {
                         ])
                     }
                 >
-                    <TextComponent text="Gửi" size={20} color={colors.primary400} />
+                    <TextComponent text='Gửi' size={20} color={colors.primary400} />
                 </TouchableOpacity>
             }
         >
-            <SectionComponent className="items-center justify-center">
+            <SectionComponent className='items-center justify-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
+                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className='font-interMd' size={20} />
                 <TextComponent
                     text={`Tên sinh viên: ${authData?.fullName}`}
-                    className="font-interMd mt-2"
+                    className='font-interMd mt-2'
                     size={20}
                     center
                 />
                 <TextComponent
                     text={`Năm học ${data?.semesterYear.year} - ${+data?.semesterYear.year! + 1} | Học Kỳ ${romanize(data?.semesterYear.semester.toString()!)}`}
                     color={colors.text400}
-                    className="mt-2"
+                    className='mt-2'
                     size={16}
                 />
             </SectionComponent>
-            <SectionComponent className="items-center">
+            <SectionComponent className='items-center'>
                 <TableBorderComponent isUpload data={data?.criteria} />
             </SectionComponent>
         </ContainerComponent>

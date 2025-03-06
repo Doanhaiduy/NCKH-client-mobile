@@ -40,8 +40,6 @@ export default function VerificationPage() {
     const handleVerification = async (text?: string) => {
         setIsLoading(true);
         const inputOtp: string = text || otp;
-        console.log('inputOtp', inputOtp);
-
         if (inputOtp.length !== 6) {
             setError('Mã OTP không hợp lệ');
             setIsLoading(false);

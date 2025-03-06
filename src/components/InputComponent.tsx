@@ -52,7 +52,6 @@ function InputComponent(props: Props) {
         testID,
         ...inputProps
     } = props;
-    console.log('InputComponent: value', value);
 
     const containerClass = clsx(
         'w-full max-w-full rounded-[10px] border-[1px] border-primary-400 h-[56px]  min-h-[56px] justify-between  bg-white flex-row items-center ',
@@ -71,11 +70,11 @@ function InputComponent(props: Props) {
     );
 
     return (
-        <View className="mt-4 w-full">
+        <View className='mt-4 w-full'>
             {labelTop ? (
                 <RowComponent>
-                    {required && <TextComponent text="*" className="text-error mr-1" />}
-                    <TextComponent text={labelTop} className="mb-1" />
+                    {required && <TextComponent text='*' className='text-error mr-1' />}
+                    <TextComponent text={labelTop} className='mb-1' />
                 </RowComponent>
             ) : null}
             <Pressable
@@ -85,14 +84,14 @@ function InputComponent(props: Props) {
                     height: height ?? 'auto',
                 }}
             >
-                <View className="flex-col flex-1 ">
+                <View className='flex-col flex-1 '>
                     {value && placeholder && !labelTop && (
-                        <Text className="px-5 pt-1 text-[12px] text-black font-inter">{placeholder}</Text>
+                        <Text className='px-5 pt-1 text-[12px] text-black font-inter'>{placeholder}</Text>
                     )}
                     <TextInput
                         testID={testID ?? ''}
                         ref={inputRef}
-                        autoCapitalize="none"
+                        autoCapitalize='none'
                         {...inputProps}
                         placeholder={placeholder ?? ''}
                         value={value}
@@ -119,31 +118,31 @@ function InputComponent(props: Props) {
                 {value && !isPassword && !readOnly && (
                     <Pressable
                         onPress={() => onChange('')}
-                        className="mr-5"
+                        className='mr-5'
                         style={{
                             position: multiline ? 'absolute' : 'relative',
                             top: multiline ? 10 : 0,
                             right: 0,
                         }}
                     >
-                        <Ionicons name="close" size={18} color={color ?? 'black'} />
+                        <Ionicons name='close' size={18} color={color ?? 'black'} />
                     </Pressable>
                 )}
 
                 {value && isPassword && (
                     <Pressable
                         onPress={() => setIsShowPassword(!isShowPassword)}
-                        className="mr-1 p-[10px] mt-2 items-center justify-center "
+                        className='mr-1 p-[10px] mt-2 items-center justify-center '
                     >
                         {isShowPassword ? (
-                            <Ionicons name="eye" size={18} color={color ?? 'black'} />
+                            <Ionicons name='eye' size={18} color={color ?? 'black'} />
                         ) : (
-                            <Ionicons name="eye-off" size={18} color={color ?? 'black'} />
+                            <Ionicons name='eye-off' size={18} color={color ?? 'black'} />
                         )}
                     </Pressable>
                 )}
             </Pressable>
-            {err && <Text className="px-3 pt-1 text-[12px] text-error font-inter">{err}</Text>}
+            {err && <Text className='px-3 pt-1 text-[12px] text-error font-inter'>{err}</Text>}
         </View>
     );
 }

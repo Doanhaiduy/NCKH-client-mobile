@@ -25,7 +25,6 @@ const ImageComponent = (props: Props) => {
     const { imageUri, loading, error, retry } = useImage(url);
 
     const openModal = () => {
-        console.log('openModal');
         if (!isShowModal) setIsShowModal(true);
     };
 

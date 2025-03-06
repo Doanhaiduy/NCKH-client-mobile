@@ -116,13 +116,12 @@ const ActionCard = ({
     onClose?: () => void;
 }) => {
     return (
-        <View className="w-[25%] p-2">
+        <View className='w-[25%] p-2'>
             <TouchableOpacity
-                className="items-center mb-2 px-2 py-3 bg-primary-100 rounded-xl"
+                className='items-center mb-2 px-2 py-3 bg-primary-100 rounded-xl'
                 style={[globalStyles.shadow, { minHeight: 130 }]}
                 onPress={() => {
                     if (path === 'all') {
-                        console.log("Don't have path");
                         onPress && onPress();
                         return;
                     } else {
@@ -137,13 +136,13 @@ const ActionCard = ({
                     }
                 }}
             >
-                <View className="mb-2 w-16 aspect-square items-center justify-center ">
+                <View className='mb-2 w-16 aspect-square items-center justify-center '>
                     <Image source={icon ?? require('@/assets/images/fallback.png')} style={{ width: 64, height: 64 }} />
                 </View>
                 <TextComponent
                     text={text}
                     size={12}
-                    className="text-center"
+                    className='text-center'
                     numberOfLines={2}
                     style={{
                         lineHeight: 16,
@@ -177,7 +176,7 @@ export default function ActionListComponents(props: ActionListComponentsProps) {
     });
 
     return (
-        <Animated.View className="py-2 flex-1 w-full flex-row items-stretch justify-start flex-wrap bg-white overflow-hidden pb-[20px]">
+        <Animated.View className='py-2 flex-1 w-full flex-row items-stretch justify-start flex-wrap bg-white overflow-hidden pb-[20px]'>
             {ActionData.map((item, index) => (
                 <ActionCard
                     key={index}

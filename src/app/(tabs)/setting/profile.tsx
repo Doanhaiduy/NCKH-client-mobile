@@ -9,13 +9,12 @@ type Props = {};
 
 const details = (props: Props) => {
     const { authData } = useSelector(authSelector);
-    console.log('authData', authData);
 
     return (
-        <ContainerComponent title="Chi tiết tài khoản " iconLeft="back" notification isScroll>
-            <SectionComponent className="items-center flex-1 justify-center mt-4">
+        <ContainerComponent title='Chi tiết tài khoản ' iconLeft='back' notification isScroll>
+            <SectionComponent className='items-center flex-1 justify-center mt-4'>
                 <View
-                    className="border-1 border border-primary-400 p-[2px]"
+                    className='border-1 border border-primary-400 p-[2px]'
                     style={{
                         borderRadius: 99,
                     }}
@@ -23,37 +22,37 @@ const details = (props: Props) => {
                     <ImageComponent showImageModal url={authData?.avatar!} height={80} width={80} rounded={99} />
                 </View>
             </SectionComponent>
-            <SectionComponent className="-mt-4">
+            <SectionComponent className='-mt-4'>
                 <View>
                     <InputComponent
                         value={authData?.username ?? 'Không có dữ liệu'}
                         onChange={() => {}}
-                        labelTop="Mã số sinh viên"
+                        labelTop='Mã số sinh viên'
                         readOnly
                     />
                     <InputComponent
                         value={authData?.fullName ?? 'Không có dữ liệu'}
                         onChange={() => {}}
-                        labelTop="Họ và tên sinh viên"
+                        labelTop='Họ và tên sinh viên'
                         readOnly
                     />
                     <InputComponent
                         value={authData?.email ?? 'Không có dữ liệu'}
                         onChange={() => {}}
-                        labelTop="Email"
+                        labelTop='Email'
                         readOnly
                     />
                     <InputComponent
                         value={authData?.sclassName ?? 'Không có dữ liệu'}
                         onChange={() => {}}
-                        labelTop="Lớp"
+                        labelTop='Lớp'
                         readOnly
                     />
-                    <InputComponent value={'Công nghệ thông tin'} onChange={() => {}} labelTop="Khoa" readOnly />
+                    <InputComponent value={'Công nghệ thông tin'} onChange={() => {}} labelTop='Khoa' readOnly />
                     <InputComponent
                         value={authData?.role ?? 'Không có dữ liệu'}
                         onChange={() => {}}
-                        labelTop="Chức vụ"
+                        labelTop='Chức vụ'
                         readOnly
                     />
                 </View>

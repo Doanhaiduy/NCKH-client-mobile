@@ -89,7 +89,6 @@ export default function UploadImage() {
             setImages([...images, ...manipulatedImages]);
 
             // setIsLoading(false);
-            console.log('upload avatar');
         }
         // setIsLoading(false);
     };
@@ -108,7 +107,6 @@ export default function UploadImage() {
     }, [isFocused]);
 
     useEffect(() => {
-        console.log('data', data);
         if (data) {
             const parserImages: ImagePicker.ImagePickerAsset[] = data.data.map((item: ResponseEvidence) => ({
                 currentImage: true,
@@ -141,9 +139,7 @@ export default function UploadImage() {
                 };
                 formData.append('evidence', postData as any);
             });
-            console.log(formData.getAll('evidence'));
             const res = await trainingPointAPI.updateCriteriaEvidence(id?.toString() ?? '', formData);
-            console.log(res);
             if (res) {
                 Alert.alert('Thông báo', 'Tải ảnh lên thành công');
                 console.log(res);
