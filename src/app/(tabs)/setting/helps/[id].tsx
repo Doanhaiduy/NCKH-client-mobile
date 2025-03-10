@@ -8,7 +8,6 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
-import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '@/constants/colors';
 
 interface GuideContent {
@@ -19,8 +18,6 @@ interface GuideSection {
     title: string;
     content: string | string[] | GuideContent[];
     image?: string;
-    isMainFeature?: boolean;
-    highlighted?: boolean;
 }
 
 const guideSections: GuideSection[] = [

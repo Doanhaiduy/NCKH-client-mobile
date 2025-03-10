@@ -49,6 +49,16 @@
                         "color": "#FFFFFF"
                     }
                 ]
+            ],
+            "intentFilters": [
+                {
+                    "autoVerify": true,
+                    "action": "VIEW",
+                    "data": {
+                        "scheme": "ntustudent",
+                        "host": "ntustudent"
+                    }
+                }
             ]
         },
         "web": {

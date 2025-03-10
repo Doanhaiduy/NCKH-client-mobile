@@ -171,7 +171,7 @@ export default function ScanQRScreen() {
             return false;
         }
 
-        if (eventCode !== dataDecrypt?.eventCode) {
+        if (eventCode ? eventCode !== dataDecrypt?.eventCode : eventDetails?.eventCode !== dataDecrypt?.eventCode) {
             setError('Mã QR không hợp lệ');
             setScanned(true);
             modalizeRefFailed.current?.open();
@@ -350,7 +350,7 @@ export default function ScanQRScreen() {
                 });
             }
 
-            formData.append('name', authData?.username || '');
+            formData.append('username', authData?.username || '');
             const dataDetect = await handleDetectFace(formData);
 
             // if (dataDetect.result) {
@@ -370,9 +370,8 @@ export default function ScanQRScreen() {
                 setIsLoading(false);
             }
         } catch (error) {
-            setError('Đã xảy ra lỗi trong quá trình điểm danh');
+            setError('Đã xảy ra lỗi trong quá trình điểm danh: ' + error);
             setScanned(true);
-            setIsLoading(false);
             modalizeShowPhoto.current?.close();
             modalizeRefFailed.current?.open();
             setIsLoading(false);

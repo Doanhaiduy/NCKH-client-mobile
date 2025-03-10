@@ -1,6 +1,5 @@
 import { colors } from '@/constants/colors';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import React, { ReactNode } from 'react';
 import {
     Image,
@@ -21,6 +20,7 @@ import SectionComponent from './SectionComponent';
 import TextComponent from './TextComponent';
 import SpaceComponent from './SpaceComponent';
 import { appInfo } from '@/constants/appInfo';
+import { useCustomRouter } from '@/hooks/useCustomRouter';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
@@ -57,6 +57,8 @@ export default function ContainerComponent(props: Props) {
         isHome,
         ...containerProps
     } = props;
+
+    const router = useCustomRouter();
 
     const heightBar: number = !isModal ? (Platform.OS === 'ios' ? 50 : appInfo.StatusBarHeight || 30) : 22;
     const ViewWrapper = isScroll ? ScrollView : View;
@@ -103,46 +105,53 @@ export default function ContainerComponent(props: Props) {
                         paddingBottom: 8,
                     }}
                 >
-                    {iconLeft === 'back' && (
-                        <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())} className=' py-1 px-2'>
-                            <Ionicons name='chevron-back' size={24} color={colors.primary500} />
-                        </TouchableOpacity>
-                    )}
-                    {iconLeft === 'logo' && (
-                        <TouchableOpacity onPress={() => {}}>
-                            <Image
-                                source={require('../assets/images/icon.png')}
-                                width={28}
-                                height={28}
-                                resizeMode='cover'
-                            />
-                        </TouchableOpacity>
-                    )}
-                    {title && (
-                        <TextComponent
-                            adjustsFontSizeToFit={true}
-                            numberOfLines={1}
-                            text={title}
-                            title={!isHome}
-                            center
-                            style={{
-                                fontSize: isHome ? 28 : 24,
-                                lineHeight: isHome ? 40 : 32,
-                                color: colors['primary400'],
-                                fontWeight: isHome ? 'bold' : 'normal',
-                            }}
-                        />
-                    )}
-                    {notification ? (
-                        <TouchableOpacity onPress={() => router.navigate('/notification')} className='px-1'>
-                            <Feather name='bell' size={26} color={colors.primary500} />
-                        </TouchableOpacity>
-                    ) : iconRight ? null : (
-                        <View className='py-1 px-2'>
-                            <Ionicons name='chevron-back' size={24} color='transparent' />
+                    {isHome ? null : (
+                        <View className='w-[10%]'>
+                            {iconLeft === 'back' && (
+                                <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())} className=''>
+                                    <Ionicons name='chevron-back' size={24} color={colors.primary500} />
+                                </TouchableOpacity>
+                            )}
+                            {iconLeft === 'logo' && (
+                                <TouchableOpacity onPress={() => {}}>
+                                    <Image
+                                        source={require('../assets/images/icon.png')}
+                                        width={28}
+                                        height={28}
+                                        resizeMode='cover'
+                                    />
+                                </TouchableOpacity>
+                            )}
                         </View>
                     )}
-                    {iconRight && iconRight}
+                    <View className={`${!isHome && 'w-[80%]'}`}>
+                        {title && (
+                            <TextComponent
+                                numberOfLines={1}
+                                text={title}
+                                title={!isHome}
+                                center
+                                style={{
+                                    fontSize: isHome ? 28 : 24,
+                                    lineHeight: isHome ? 40 : 32,
+                                    color: colors['primary400'],
+                                    fontWeight: isHome ? 'bold' : 'normal',
+                                }}
+                            />
+                        )}
+                    </View>
+                    <View className='w-[10%] items-end'>
+                        {notification ? (
+                            <TouchableOpacity onPress={() => router.navigate('/notification')} className='px-1'>
+                                <Feather name='bell' size={26} color={colors.primary500} />
+                            </TouchableOpacity>
+                        ) : iconRight ? null : (
+                            <View className=''>
+                                <Ionicons name='chevron-back' size={24} color='transparent' />
+                            </View>
+                        )}
+                        {iconRight && iconRight}
+                    </View>
                 </RowComponent>
             </View>
         );

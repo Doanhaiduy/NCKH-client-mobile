@@ -1,16 +1,27 @@
 import { TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
+import { authSelector } from '@/stores/reducers/authReducer';
 import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { router, Tabs, usePathname, useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 export default function TabsLayout() {
     const path = usePathname();
+    const { authData } = useSelector(authSelector);
+
+    useEffect(() => {
+        if (!authData || !authData.accessToken) {
+            setTimeout(() => {
+                router.navigate('/(auth)/sign-in');
+            }, 100);
+        }
+    }, [authData]);
 
     return (
         <Tabs
-            initialRouteName="(home)"
+            initialRouteName='(home)'
             screenOptions={{
                 headerShown: false,
                 tabBarHideOnKeyboard: true,
@@ -28,12 +39,12 @@ export default function TabsLayout() {
             }}
         >
             <Tabs.Screen
-                name="(home)"
+                name='(home)'
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center min-w-[70px]">
-                            <Feather name="home" size={20} color={color} />
-                            <TextComponent text="Trang chủ" color={color} size={10} />
+                        <View className='items-center min-w-[70px]'>
+                            <Feather name='home' size={20} color={color} />
+                            <TextComponent text='Trang chủ' color={color} size={10} />
                         </View>
                     ),
                     headerTitle: 'Trang chủ',
@@ -41,12 +52,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="notification"
+                name='notification'
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center min-w-[70px]">
-                            <Feather name="bell" size={20} color={color} />
-                            <TextComponent text="Thông báo" color={color} size={10} />
+                        <View className='items-center min-w-[70px]'>
+                            <Feather name='bell' size={20} color={color} />
+                            <TextComponent text='Thông báo' color={color} size={10} />
                         </View>
                     ),
                     headerTitle: 'Thông báo',
@@ -54,12 +65,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="attendance"
+                name='attendance'
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <TouchableOpacity
                             activeOpacity={0.3}
-                            className="items-center justify-center h-14 w-14  bg-primary-400 mb-10"
+                            className='items-center justify-center h-14 w-14  bg-primary-400 mb-10'
                             style={{
                                 borderRadius: 99,
                             }}
@@ -67,7 +78,7 @@ export default function TabsLayout() {
                                 router.navigate('/attendance');
                             }}
                         >
-                            <MaterialIcons name="qr-code-scanner" size={26} color={colors.white} />
+                            <MaterialIcons name='qr-code-scanner' size={26} color={colors.white} />
                         </TouchableOpacity>
                     ),
                     headerTitle: 'Điểm danh',
@@ -75,12 +86,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="feedback"
+                name='feedback'
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center min-w-[70px]">
-                            <MaterialCommunityIcons name="message-processing-outline" size={20} color={color} />
-                            <TextComponent text="Góp ý" color={color} size={10} />
+                        <View className='items-center min-w-[70px]'>
+                            <MaterialCommunityIcons name='message-processing-outline' size={20} color={color} />
+                            <TextComponent text='Góp ý' color={color} size={10} />
                         </View>
                     ),
                     title: '',
@@ -88,12 +99,12 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="setting"
+                name='setting'
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <View className="items-center min-w-[70px]">
-                            <Feather name="user" size={20} color={color} />
-                            <TextComponent text="Cài đặt" color={color} size={10} />
+                        <View className='items-center min-w-[70px]'>
+                            <Feather name='user' size={20} color={color} />
+                            <TextComponent text='Cài đặt' color={color} size={10} />
                         </View>
                     ),
                     headerTitle: 'Cài đặt',
@@ -102,7 +113,7 @@ export default function TabsLayout() {
             />
 
             <Tabs.Screen
-                name="training-point"
+                name='training-point'
                 options={{
                     href: null,
                 }}

@@ -1,12 +1,12 @@
 import notificationAPI from '@/apis/notificationApi';
 import userAPI from '@/apis/userApi';
 import { ContainerComponent, NotificationCard } from '@/components';
+import { useCustomRouter } from '@/hooks/useCustomRouter';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useRefreshing } from '@/hooks/useRefreshing';
 import { LoadingModal, NotificationModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQuery } from '@tanstack/react-query';
-import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 export default function NotificationPage() {
     const { authData } = useSelector(authSelector);
     const [visible, setVisible] = React.useState(false);
+
+    const router = useCustomRouter();
     const [notificationDetails, setNotificationDetails] = React.useState<_Notification | null>(null);
     const { data, isFetching, refetch } = useQuery<_Notification[]>({
         queryKey: ['notifications', authData?._id],
@@ -48,15 +50,15 @@ export default function NotificationPage() {
         setVisible(false);
         if (notificationDetails?.type === 'event') {
             if (notificationDetails.actionId) {
-                router.replace(`/attendance/${notificationDetails.actionId}`);
+                router.navigateTo(`/(tabs)/attendance/${notificationDetails.actionId}`);
             }
         }
         if (notificationDetails?.type === 'training-point') {
-            router.push(`/training-point`);
+            router.navigateTo(`/(tabs)/training-point`);
         }
         if (notificationDetails?.type === 'post') {
             if (notificationDetails.actionId) {
-                router.push(`/activity/${notificationDetails.actionId}`);
+                router.navigateTo(`/(tabs)/(home)/activity/${notificationDetails.actionId}`);
             }
         }
     };
