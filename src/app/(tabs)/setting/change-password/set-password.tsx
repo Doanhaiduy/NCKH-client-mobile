@@ -37,12 +37,8 @@ export default function SetPassword() {
         mutationFn: (variables: FormResetPassword) => authAPI.resetPassword(variables),
         onSuccess: async (data) => {
             await dispatch(removeOTP());
-            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!', [
-                {
-                    text: 'Đồng ý',
-                    onPress: () => router.dismissAll(),
-                },
-            ]);
+            router.dismissAll();
+            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!');
         },
         onError: (error: string) => {
             Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
@@ -55,36 +51,36 @@ export default function SetPassword() {
             return;
         }
         if (OTP?.done && OTP?.email) {
-            mutate({ email: OTP.email, newPassword });
+            mutate({ newPassword, resetToken: OTP.resetToken });
         }
     };
 
     return (
-        <ContainerComponent title="Tạo mật khẩu mới" iconLeft="back" notification isScroll>
-            <SectionComponent className="mt-2">
-                <TextComponent text="Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. " />
+        <ContainerComponent title='Tạo mật khẩu mới' iconLeft='back' notification isScroll>
+            <SectionComponent className='mt-2'>
+                <TextComponent text='Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. ' />
             </SectionComponent>
-            <SectionComponent className="px-[56px]">
+            <SectionComponent className='px-[56px]'>
                 <InputComponent
                     value={newPassword}
                     onChange={setNewPassword}
                     onEnd={handleCheckPassword}
                     isPassword
-                    placeholder="Mật khẩu"
+                    placeholder='Mật khẩu mới'
                 />
                 <InputComponent
                     value={confirmNewPassword}
                     onChange={setConfirmNewPassword}
                     onEnd={handleCheckPassword}
                     isPassword
-                    placeholder="Nhập lại mật khẩu"
+                    placeholder='Nhập lại mật khẩu'
                     err={isError ? 'Mật khẩu không khớp' : undefined}
                 />
                 <SpaceComponent height={24} />
                 <ButtonComponent
-                    title="Tạo mật khẩu"
-                    size="large"
-                    type="primary"
+                    title='Tạo mật khẩu'
+                    size='large'
+                    type='primary'
                     disabled={isError}
                     onPress={handleSetPassword}
                 />

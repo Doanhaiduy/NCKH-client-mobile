@@ -55,7 +55,11 @@ export default function verification() {
         mutationFn: (variables: { email: string; otp: string }) => authAPI.verifyOTP(variables),
         onSuccess: async (data) => {
             await sleep(500);
-            dispatch(setDoneVerify());
+            dispatch(
+                setDoneVerify({
+                    resetToken: data.resetToken,
+                }),
+            );
             router.push('/setting/change-password/set-password');
             setError('');
             otpRef.current?.clear();

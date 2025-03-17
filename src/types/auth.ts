@@ -19,6 +19,7 @@ type OTP = {
     email: string;
     expiredIn: number;
     done: boolean;
+    resetToken: string;
 };
 
 type FormLogin = {
@@ -28,8 +29,8 @@ type FormLogin = {
 };
 
 type FormResetPassword = {
-    email: string;
     newPassword: string;
+    resetToken: string;
 };
 
 type FormChangePassword = {

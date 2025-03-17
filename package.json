@@ -1,6 +1,6 @@
 {
     "name": "ntu-student",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "main": "expo-router/entry",
     "expo": {
         "doctor": {

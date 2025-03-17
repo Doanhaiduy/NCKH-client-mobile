@@ -38,8 +38,9 @@ const authSlice = createSlice({
             state.OTP = action.payload;
             state.OTP!.done = false;
         },
-        setDoneVerify: (state) => {
+        setDoneVerify: (state, action) => {
             state.OTP!.done = true;
+            state.OTP!.resetToken = action.payload.resetToken;
         },
     },
 });

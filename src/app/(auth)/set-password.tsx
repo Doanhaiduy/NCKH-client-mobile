@@ -25,12 +25,8 @@ export default function SetPassword() {
         mutationFn: (variables: FormResetPassword) => authAPI.resetPassword(variables),
         onSuccess: async (data) => {
             await dispatch(removeOTP());
-            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!', [
-                {
-                    text: 'Đăng nhập',
-                    onPress: () => router.push('/sign-in'),
-                },
-            ]);
+            router.dismissTo('/sign-in');
+            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!');
         },
         onError: (error: string) => {
             Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
@@ -43,25 +39,33 @@ export default function SetPassword() {
             return;
         }
         if (OTP?.done && OTP?.email) {
-            mutate({ email: OTP.email, newPassword });
+            mutate({ newPassword, resetToken: OTP.resetToken });
         }
     };
 
     return (
-        <ContainerComponent isAuth isScroll iconLeft="back">
+        <ContainerComponent
+            isAuth
+            isScroll
+            iconLeft='back'
+            onBack={() => {
+                dispatch(removeOTP());
+                router.dismissTo('/forgot');
+            }}
+        >
             <SpaceComponent height={110} />
-            <View className="px-8 pb-4 ">
-                <SectionComponent align="center">
-                    <TextComponent text="Tạo mật khẩu mới" title className="text-primary-500" />
+            <View className='px-8 pb-4 '>
+                <SectionComponent align='center'>
+                    <TextComponent text='Tạo mật khẩu mới' title className='text-primary-500' />
                     <TextComponent
-                        text="Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó."
-                        className="text-center mt-4"
+                        text='Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó.'
+                        className='text-center mt-4'
                     />
                 </SectionComponent>
                 <SectionComponent>
                     <SpaceComponent height={24} />
                     <InputComponent
-                        placeholder="Mật khẩu mới"
+                        placeholder='Mật khẩu mới'
                         value={newPassword}
                         isPassword
                         onChange={(val) => setNewPassword(val)}
@@ -70,9 +74,9 @@ export default function SetPassword() {
                     />
                     <SpaceComponent height={24} />
                     <ButtonComponent
-                        title="Đặt lại mật khẩu"
-                        size="large"
-                        type="primary"
+                        title='Đặt lại mật khẩu'
+                        size='large'
+                        type='primary'
                         disabled={isError}
                         onPress={handleSetPassword}
                     />

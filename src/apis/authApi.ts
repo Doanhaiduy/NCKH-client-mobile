@@ -30,7 +30,7 @@ class AuthAPI {
     verifyOTP = async (
         data: { email: string; otp: string },
         option: AxiosRequestConfig = {},
-    ): Promise<{ email: String }> => {
+    ): Promise<{ email: String; resetToken: String }> => {
         return await this.HandleAuth(API_URL.auth.verifyOTP, data, 'post', option);
     };
 
