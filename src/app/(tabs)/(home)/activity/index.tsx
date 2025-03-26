@@ -13,10 +13,12 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React from 'react';
 import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export default function ActivityScreen() {
     const [searchValue, setSearchValue] = React.useState('');
     const debouncedSearchValue = useDebounce(searchValue, 500);
+    const { t } = useTranslation();
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
             queryKey: ['activity', debouncedSearchValue],
@@ -50,14 +52,14 @@ export default function ActivityScreen() {
     }, [debouncedSearchValue]);
 
     return (
-        <ContainerComponent title='Hoạt động' iconLeft='back' notification>
+        <ContainerComponent title={t('activity.title')} iconLeft='back' notification>
             <SpaceComponent height={16} />
             <SectionComponent>
                 <SearchComponent
                     value={searchValue}
                     onChangeText={setSearchValue}
                     onClear={() => setSearchValue('')}
-                    placeholder='Tìm kiếm hoạt động'
+                    placeholder={t('activity.search_placeholder')}
                 />
             </SectionComponent>
             <SectionComponent
@@ -73,7 +75,7 @@ export default function ActivityScreen() {
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
                     removeClippedSubviews={true}
                     ListEmptyComponent={() => (
-                        <TextComponent text='Không có dữ liệu' className='text-center text-text-200' />
+                        <TextComponent text={t('activity.no_data')} className='text-center text-text-200' />
                     )}
                     initialNumToRender={10}
                     ListFooterComponent={() => (isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null)}
@@ -81,7 +83,7 @@ export default function ActivityScreen() {
                     onEndReached={loadMore}
                     ListHeaderComponent={() => (
                         <TextComponent
-                            text='Hoạt động đang diễn ra'
+                            text={t('activity.ongoing_activities')}
                             className='text-[20px] text-primary-500 font-interMd mt-2 mb-4'
                         />
                     )}
@@ -100,5 +102,3 @@ export default function ActivityScreen() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

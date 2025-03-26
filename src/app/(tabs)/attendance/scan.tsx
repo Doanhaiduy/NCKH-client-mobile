@@ -1,6 +1,5 @@
 import eventAPI from '@/apis/eventApi';
 import { decryptData, sleep } from '@/utils';
-
 import { checkTimeActive } from '@/utils/dateTime';
 import {
     ButtonComponent,
@@ -14,7 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import * as Location from 'expo-location';
 import { getDistance } from 'geolib';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,6 +31,7 @@ import { Buffer } from 'buffer';
 import jsQR from 'jsqr';
 import jpeg from 'jpeg-js';
 import handleDetectFace from '@/services/detectApi';
+import { useTranslation } from 'react-i18next';
 const PNG = require('pngjs/browser').PNG;
 
 export default function ScanQRScreen() {
@@ -46,6 +46,7 @@ export default function ScanQRScreen() {
     const [picture, setPicture] = useState<CameraCapturedPicture | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState('');
+    const { t } = useTranslation();
 
     const modalizeRefFailed = useRef<Modalize>(null);
     const modalizeRefSuccess = useRef<Modalize>(null);
@@ -62,12 +63,11 @@ export default function ScanQRScreen() {
                 .getDetailEvents(id.toString())
                 .then((data) => {
                     setEventDetails(data);
-                    // console.log('==== eventDetails ====', data);
                 })
                 .catch((error) => {
-                    Alert.alert('Thông báo', 'Không tìm thấy sự kiện', [
+                    Alert.alert(t('scan_qr.no_event'), t('scan_qr.no_event'), [
                         {
-                            text: 'Quay lại',
+                            text: t('scan_qr.back'),
                             onPress: () => {
                                 router.dismiss();
                             },
@@ -112,9 +112,9 @@ export default function ScanQRScreen() {
     const getCurrentLocation: any = async () => {
         const permission = await Location.requestForegroundPermissionsAsync();
         if (!permission.canAskAgain || permission.status === 'denied') {
-            Alert.alert('Thông báo', 'Ứng dụng cần quyền truy cập vị trí để điểm danh.', [
+            Alert.alert(t('scan_qr.location_permission_prompt'), t('scan_qr.location_permission_prompt'), [
                 {
-                    text: 'Mở cài đặt',
+                    text: t('scan_qr.open_settings'),
                     onPress: () => {
                         Linking.openSettings();
                         router.dismiss();
@@ -152,7 +152,6 @@ export default function ScanQRScreen() {
         try {
             const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VN&apiKey=${process
                 .env.EXPO_PUBLIC_HERE_LOCATION_API_KEY!}`;
-            // console.log(api);
             const res = await axios<{ items: GeoLocation[] }>(api);
             if (res && res.status === 200) {
                 setCurrentLocation({
@@ -172,13 +171,13 @@ export default function ScanQRScreen() {
         }
 
         if (eventCode ? eventCode !== dataDecrypt?.eventCode : eventDetails?.eventCode !== dataDecrypt?.eventCode) {
-            setError('Mã QR không hợp lệ');
+            setError(t('scan_qr.invalid_qr'));
             setScanned(true);
             modalizeRefFailed.current?.open();
             return false;
         }
         if (!checkTimeActive(dataDecrypt?.startAt || 0, dataDecrypt?.endAt || 0)) {
-            setError('Thời gian điểm danh không hợp lệ');
+            setError(t('scan_qr.invalid_time'));
             setScanned(true);
             modalizeRefFailed.current?.open();
             return false;
@@ -190,7 +189,12 @@ export default function ScanQRScreen() {
                 { latitude: dataLocation.lat, longitude: dataLocation.lng },
             );
             if (distance > eventDetails?.distanceLimit && eventDetails?.distanceLimit !== 0) {
-                setError(`Bạn cần đến gần hơn ${distance - eventDetails?.distanceLimit}(m) để điểm danh.`);
+                setError(
+                    t('scan_qr.distance_error').replace(
+                        '{distance}',
+                        (distance - eventDetails?.distanceLimit).toString(),
+                    ),
+                );
                 setScanned(true);
                 modalizeRefFailed.current?.open();
                 return false;
@@ -203,9 +207,9 @@ export default function ScanQRScreen() {
     const handlePickImageAndScanQR = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (!permissionResult.granted) {
-            Alert.alert('Thông báo', 'Ứng dụng cần quyền truy cập thư viện ảnh để quét mã QR.', [
+            Alert.alert(t('scan_qr.gallery_permission_prompt'), t('scan_qr.gallery_permission_prompt'), [
                 {
-                    text: 'Mở cài đặt',
+                    text: t('scan_qr.open_settings'),
                     onPress: () => {
                         Linking.openSettings();
                         router.dismiss();
@@ -222,7 +226,7 @@ export default function ScanQRScreen() {
         if (!result.canceled && result.assets.length > 0) {
             setIsLoading(true);
             setScanned(false);
-            setLoadingMessage('Đang đọc mã QR');
+            setLoadingMessage(t('scan_qr.reading_qr'));
             try {
                 const manipulatedImage = await ImageManipulator.manipulateAsync(
                     result.assets[0].uri,
@@ -249,7 +253,7 @@ export default function ScanQRScreen() {
                     imageBuffer = pixelData.data;
                 } else {
                     setIsLoading(false);
-                    setError('Không tìm thấy mã QR trong ảnh');
+                    setError(t('scan_qr.no_qr_found'));
                     setScanned(true);
                     modalizeRefFailed.current?.open();
                     return;
@@ -257,7 +261,7 @@ export default function ScanQRScreen() {
 
                 if (!pixelData || !pixelData.width || !pixelData.height) {
                     setIsLoading(false);
-                    setError('Không tìm thấy mã QR trong ảnh');
+                    setError(t('scan_qr.no_qr_found'));
                     setScanned(true);
                     modalizeRefFailed.current?.open();
                     return;
@@ -271,19 +275,19 @@ export default function ScanQRScreen() {
                         handleBarCodeScanned({ type: 'qr', data: code.data });
                     } else {
                         setIsLoading(false);
-                        setError('Không tìm thấy mã QR trong ảnh');
+                        setError(t('scan_qr.no_qr_found'));
                         setScanned(true);
                         modalizeRefFailed.current?.open();
                     }
                 } catch (err) {
                     setIsLoading(false);
-                    setError('Không tìm thấy mã QR trong ảnh');
+                    setError(t('scan_qr.no_qr_found'));
                     setScanned(true);
                     modalizeRefFailed.current?.open();
                 }
             } catch (error) {
                 setIsLoading(false);
-                setError('Không tìm thấy mã QR trong ảnh');
+                setError(t('scan_qr.no_qr_found'));
                 setScanned(true);
                 modalizeRefFailed.current?.open();
             }
@@ -295,29 +299,22 @@ export default function ScanQRScreen() {
     const handleBarCodeScanned = async ({ type, data }: any) => {
         setScanned(true);
         try {
-            setLoadingMessage('Đang xử lý mã QR');
+            setLoadingMessage(t('scan_qr.processing_qr'));
             await sleep(1000);
             const dataParse = JSON.parse(data);
             const dataDecrypt = decryptData(dataParse.data);
             setEncryptedData(dataParse.data);
             if (!dataDecrypt) {
-                setError('Mã QR không hợp lệ');
+                setError(t('scan_qr.invalid_qr'));
                 setScanned(true);
                 modalizeRefFailed.current?.open();
                 return;
             }
             if (await handleCheck(dataDecrypt)) {
                 setIsTakePhoto(true);
-                try {
-                    // await reverseLocation(currentLocation?.lat!, currentLocation?.lng!);
-                    // const dataLocation = eventDetails?.location;
-                    // mutate(dataLocation as EventLocation);
-                } catch (error) {
-                    console.log(error);
-                }
             }
         } catch (error) {
-            setError('Mã QR không hợp lệ');
+            setError(t('scan_qr.invalid_qr'));
             setScanned(true);
             modalizeRefFailed.current?.open();
         }
@@ -338,8 +335,7 @@ export default function ScanQRScreen() {
     const handleSubmitCheckIn = async () => {
         try {
             setIsLoading(true);
-            setLoadingMessage('Đang xử lý ảnh');
-            // detect face
+            setLoadingMessage(t('scan_qr.processing_image'));
             const formData = new FormData();
             if (picture) {
                 /* @ts-ignore */
@@ -355,19 +351,18 @@ export default function ScanQRScreen() {
 
             // if (dataDetect.result) {
             if (true) {
-                setLoadingMessage('Đang điểm danh');
+                setLoadingMessage(t('scan_qr.checking_in'));
                 await reverseLocation(currentLocation?.lat!, currentLocation?.lng!);
                 const dataLocation = eventDetails?.location;
                 mutate(dataLocation as EventLocation);
                 modalizeShowPhoto.current?.close();
                 setIsLoading(false);
             } else {
-                setError('Ảnh không hợp lệ');
+                setError(t('scan_qr.invalid_image'));
                 setScanned(true);
                 setIsLoading(false);
                 modalizeShowPhoto.current?.close();
                 modalizeRefFailed.current?.open();
-                setIsLoading(false);
             }
         } catch (error) {
             setError('Đã xảy ra lỗi trong quá trình điểm danh: ' + error);
@@ -383,11 +378,9 @@ export default function ScanQRScreen() {
     }
     if (!permission.granted) {
         return (
-            <ContainerComponent iconLeft='back' title='Quét mã QR'>
+            <ContainerComponent iconLeft='back' title={t('scan_qr.title')}>
                 <SectionComponent className='items-center mt-6'>
-                    <Text className='text-base font-medium'>
-                        Ứng dụng cần quyền truy cập máy ảnh để quét mã QR. Vui lòng bật quyền truy cập máy ảnh.
-                    </Text>
+                    <Text className='text-base font-medium'>{t('scan_qr.camera_permission_prompt')}</Text>
                     <SpaceComponent height={20} />
                     <ButtonComponent
                         onPress={() => {
@@ -396,7 +389,7 @@ export default function ScanQRScreen() {
                             }
                             requestPermission();
                         }}
-                        title={'Cấp quyền truy cập máy ảnh'}
+                        title={t('scan_qr.grant_camera_access')}
                         size='large'
                         type='primary'
                     />
@@ -429,7 +422,7 @@ export default function ScanQRScreen() {
                             <View className='items-center w-full h-full justify-between mb-[15vh]'>
                                 <View className=''>
                                     <TextComponent
-                                        text='Đưa khuôn mặt vào khung và chụp ảnh'
+                                        text={t('scan_qr.take_photo_instruction')}
                                         size={16}
                                         className='text-white font-interMd mb-4 text-center'
                                     />
@@ -462,9 +455,9 @@ export default function ScanQRScreen() {
                             <Ionicons name='close' size={44} color='white' />
                         </TouchableOpacity>
                         <TextComponent
-                            text='Hướng camera về phía mã QR'
+                            text={t('scan_qr.scan_qr_instruction')}
                             size={16}
-                            className='text-white  font-interMd mb-4'
+                            className='text-white font-interMd mb-4'
                         />
                         <Image
                             source={require('@/assets/images/scanner-action.png')}
@@ -488,7 +481,7 @@ export default function ScanQRScreen() {
                 children={
                     <View className='shadow-xl gap-5 p-3 bg-white'>
                         <View
-                            className='border-[2px] border-white  items-center'
+                            className='border-[2px] border-white items-center'
                             style={{
                                 borderRadius: 99,
                             }}
@@ -498,11 +491,11 @@ export default function ScanQRScreen() {
                         <View className='justify-center items-center'>
                             <TextComponent
                                 className='text-center text-xl font-bold'
-                                text='Điểm danh không thành công'
+                                text={t('scan_qr.check_in_failed')}
                             />
                             <TextComponent
-                                className='mt-2 text-center text-sm max-w-[70%] '
-                                text='Đã có lỗi xảy ra trong quá trình điểm danh'
+                                className='mt-2 text-center text-sm max-w-[70%]'
+                                text={t('scan_qr.check_in_failed_message')}
                             />
                             <TextComponent
                                 className='mt-2 text-center text-sm max-w-[70%] text-error'
@@ -513,7 +506,7 @@ export default function ScanQRScreen() {
                         <View className='flex-row justify-center'>
                             <SpaceComponent width={6} />
                             <ButtonComponent
-                                title='Quét lại'
+                                title={t('scan_qr.scan_again')}
                                 onPress={async () => {
                                     modalizeRefFailed.current?.close();
                                     await sleep(1000);
@@ -539,17 +532,20 @@ export default function ScanQRScreen() {
                             <Ionicons name='checkmark-circle' size={100} color={colors.primary400} />
                         </View>
                         <View className='justify-center items-center'>
-                            <TextComponent className='text-center text-xl font-bold' text='Điểm danh thành công' />
                             <TextComponent
-                                className='mt-2 text-center text-sm max-w-[70%] '
-                                text='Bạn đã điểm danh thành công sự kiện: '
+                                className='text-center text-xl font-bold'
+                                text={t('scan_qr.check_in_success')}
+                            />
+                            <TextComponent
+                                className='mt-2 text-center text-sm max-w-[70%]'
+                                text={t('scan_qr.check_in_success_message')}
                             />
                             <TextComponent className='font-bold' text={eventDetails?.name?.toString() || ''} />
                         </View>
 
                         <View>
                             <ButtonComponent
-                                title={'Xác nhận'}
+                                title={t('scan_qr.confirm')}
                                 onPress={async () => {
                                     router.dismiss();
                                     setIsLoading(false);
@@ -571,7 +567,7 @@ export default function ScanQRScreen() {
                 ref={modalizeShowPhoto}
                 children={
                     <View className='shadow-xl gap-5 p-3 bg-white'>
-                        <TextComponent className='text-center text-xl font-bold' text='Ảnh chụp' />
+                        <TextComponent className='text-center text-xl font-bold' text={t('scan_qr.photo_title')} />
                         {picture && (
                             <Image
                                 source={{ uri: picture.uri || '' }}
@@ -581,7 +577,7 @@ export default function ScanQRScreen() {
 
                         <View>
                             <ButtonComponent
-                                title={'Xác nhận'}
+                                title={t('scan_qr.confirm')}
                                 onPress={handleSubmitCheckIn}
                                 type='primary'
                                 size='large'
@@ -589,7 +585,7 @@ export default function ScanQRScreen() {
 
                             <SpaceComponent height={12} />
                             <ButtonComponent
-                                title={'Chụp lại'}
+                                title={t('scan_qr.retake')}
                                 onPress={() => {
                                     setPicture(null);
                                     modalizeShowPhoto.current?.close();
@@ -603,9 +599,9 @@ export default function ScanQRScreen() {
                 }
             />
 
-            {isPending || isLoading ? <LoadingModal message={isLoading ? loadingMessage : 'Đang xử lý'} /> : null}
+            {isPending || isLoading ? (
+                <LoadingModal message={isLoading ? loadingMessage : t('scan_qr.processing_qr')} />
+            ) : null}
         </View>
     );
 }
-
-const styles = StyleSheet.create({});

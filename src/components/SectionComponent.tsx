@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import TextComponent from './TextComponent';
 import { colors } from '@/constants/colors';
 
@@ -37,5 +37,3 @@ export default function SectionComponent(props: Props) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({});

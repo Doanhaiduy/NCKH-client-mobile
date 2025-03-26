@@ -1,81 +1,98 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import { ContainerComponent, InputComponent, SectionComponent, TextComponent } from "@/components";
-import { authSelector } from "@/stores/reducers/authReducer";
-import { useSelector } from "react-redux";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { router } from "expo-router";
-import feedbackAPI from "@/apis/feedbackApi";
+import { Alert, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { ContainerComponent, InputComponent, SectionComponent, TextComponent } from '@/components';
+import { authSelector } from '@/stores/reducers/authReducer';
+import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { router } from 'expo-router';
+import feedbackAPI from '@/apis/feedbackApi';
+import { useTranslation } from 'react-i18next';
 
-export default function feedback() {
+export default function Feedback() {
+    const { t } = useTranslation();
     const { authData } = useSelector(authSelector);
-    const [content, setContent] = React.useState("");
+    const [content, setContent] = React.useState('');
+
     const handleSubmit = () => {
         if (!content) {
-            Alert.alert("Gửi góp ý", "Vui lòng nhập nội dung góp ý");
+            Alert.alert(t('feedback.submit_title'), t('feedback.empty_content_message'));
             return;
         }
-        Alert.alert("Gửi góp ý", "Bạn có chắc chắn muốn gửi góp ý này?", [
+        Alert.alert(t('feedback.submit_title'), t('feedback.confirm_message'), [
             {
-                text: "Hủy",
+                text: t('feedback.cancel_button'),
                 onPress: () => {},
-                style: "cancel",
+                style: 'cancel',
             },
             {
-                text: "Gửi",
+                text: t('feedback.submit_button'),
                 onPress: async () => {
                     try {
                         const res = await feedbackAPI.submitFeedback({
-                            user: authData?._id || "",
+                            user: authData?._id || '',
                             feedback: content,
                         });
                         if (res) {
                             router.back();
-                            Alert.alert("Gửi góp ý", "Gửi góp ý thành công");
-                            setContent("");
+                            Alert.alert(t('feedback.submit_title'), t('feedback.success_message'));
+                            setContent('');
                         } else {
-                            Alert.alert("Gửi góp ý", `Gửi góp ý thất bại`);
+                            Alert.alert(t('feedback.submit_title'), t('feedback.failure_message'));
                         }
                     } catch (error: any) {
-                        Alert.alert("Gửi góp ý", `Gửi góp ý thất bại, ${error}`);
+                        Alert.alert(
+                            t('feedback.submit_title'),
+                            t('feedback.failure_message_with_error').replace('{error}', error.toString()),
+                        );
                     }
                 },
             },
         ]);
     };
+
     return (
         <ContainerComponent
-            title="Góp ý"
+            title={t('feedback.title')}
             isScroll
-            iconLeft="logo"
+            iconLeft='logo'
             iconRight={
                 <TouchableOpacity onPress={handleSubmit}>
-                    <TextComponent text="Gửi" size={20} />
+                    <TextComponent text={t('feedback.submit_button')} size={20} />
                 </TouchableOpacity>
             }
         >
-            <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='handled'>
                 <SectionComponent>
                     <InputComponent
-                        value={authData?.username ?? ""}
+                        value={authData?.username ?? ''}
                         onChange={() => {}}
-                        labelTop="Mã số sinh viên"
+                        labelTop={t('feedback.student_id_label')}
                         readOnly
                     />
                     <InputComponent
-                        value={authData?.fullName ?? ""}
+                        value={authData?.fullName ?? ''}
                         onChange={() => {}}
-                        labelTop="Họ và tên sinh viên"
+                        labelTop={t('feedback.full_name_label')}
                         readOnly
                     />
-                    <InputComponent value={authData?.sclassName ?? ""} onChange={() => {}} labelTop="Lớp" readOnly />
-                    <InputComponent value={"Công nghệ thông tin"} onChange={() => {}} labelTop="Khoa" readOnly />
+                    <InputComponent
+                        value={authData?.sclassName ?? ''}
+                        onChange={() => {}}
+                        labelTop={t('feedback.class_label')}
+                        readOnly
+                    />
+                    <InputComponent
+                        value={'Công nghệ thông tin'}
+                        onChange={() => {}}
+                        labelTop={t('feedback.faculty_label')}
+                        readOnly
+                    />
                     <InputComponent
                         value={content}
                         onChange={setContent}
                         multiline
-                        placeholder="Nhập nội dung tại đây"
-                        labelTop="Nội dung góp ý"
+                        placeholder={t('feedback.content_placeholder')}
+                        labelTop={t('feedback.content_label')}
                         height={130}
                         required
                     />
@@ -84,5 +101,3 @@ export default function feedback() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

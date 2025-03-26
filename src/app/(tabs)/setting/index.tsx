@@ -6,10 +6,12 @@ import { authSelector, logout } from '@/stores/reducers/authReducer';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
-import { Alert, Image, StyleSheet, Touchable, TouchableOpacity, View } from 'react-native';
+import { Alert, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function SettingPage() {
+    const { t } = useTranslation();
     const { authData } = useSelector(authSelector);
 
     const dispatch = useDispatch();
@@ -24,71 +26,72 @@ export default function SettingPage() {
         }
     };
     return (
-        <ContainerComponent isScroll title="Cài đặt" iconLeft="logo" notification>
-            <SectionComponent className="flex-row flex-1 items-center mt-4">
+        <ContainerComponent isScroll title={t('settings.title')} iconLeft='logo' notification>
+            <SectionComponent className='flex-row flex-1 items-center mt-4'>
                 <View
-                    className="border-1 border border-primary-400 p-[2px]"
+                    className='border-1 border border-primary-400 p-[2px]'
                     style={{
                         borderRadius: 99,
                     }}
                 >
                     <ImageComponent showImageModal url={authData?.avatar!} height={80} width={80} rounded={99} />
                 </View>
-                <View className="ml-4 flex-1">
-                    <TextComponent text={authData?.fullName || ''} className="text-xl" />
-                    <TextComponent text={`MSSV: ${authData?.username}`} className="text-base text-gray-400" />
+                <View className='ml-4 flex-1'>
+                    <TextComponent text={authData?.fullName || ''} className='text-xl' />
+                    <TextComponent
+                        text={t('settings.student_id_label').replace('{username}', authData?.username || '')}
+                        className='text-base text-gray-400'
+                    />
                 </View>
                 <TouchableOpacity onPress={() => router.push('setting/profile')}>
-                    <Feather name="info" size={24} color={colors.primary500} />
+                    <Feather name='info' size={24} color={colors.primary500} />
                 </TouchableOpacity>
             </SectionComponent>
 
-            <SectionComponent className="mt-4">
+            <SectionComponent className='mt-4'>
                 <TouchableOpacity
-                    className="flex-row flex-1 w-full items-center py-6 border-y-[1px] border-y-text-200"
+                    className='flex-row flex-1 w-full items-center py-6 border-y-[1px] border-y-text-200'
                     onPress={() => router.push('setting/language')}
                 >
-                    <Ionicons name="earth-outline" size={26} color={colors.primary400} />
-                    <TextComponent text="Ngôn ngữ" className="text-base ml-4 flex-1" />
-                    <Ionicons name="chevron-forward" size={26} color={colors.text500} />
+                    <Ionicons name='earth-outline' size={26} color={colors.primary400} />
+                    <TextComponent text={t('settings.language')} className='text-base ml-4 flex-1' />
+                    <Ionicons name='chevron-forward' size={26} color={colors.text500} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="flex-row flex-1 w-full items-center py-6 border-b-[1px] border-b-text-200"
+                    className='flex-row flex-1 w-full items-center py-6 border-b-[1px] border-b-text-200'
                     onPress={() => router.push('setting/change-password')}
                 >
-                    <Entypo name="lock" size={26} color={colors.primary400} />
-                    <TextComponent text="Đổi mật khẩu" className="text-base ml-4 flex-1" />
-                    <Ionicons name="chevron-forward" size={26} color={colors.text500} />
+                    <Entypo name='lock' size={26} color={colors.primary400} />
+                    <TextComponent text={t('settings.change_password')} className='text-base ml-4 flex-1' />
+                    <Ionicons name='chevron-forward' size={26} color={colors.text500} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="flex-row flex-1 w-full items-center py-6 border-b-[1px] border-b-text-200"
+                    className='flex-row flex-1 w-full items-center py-6 border-b-[1px] border-b-text-200'
                     onPress={() => router.push('setting/helps')}
                 >
-                    <Feather name="info" size={26} color={colors.primary400} />
-                    <TextComponent text="Trợ giúp" className="text-base ml-4 flex-1" />
-                    <Ionicons name="chevron-forward" size={26} color={colors.text500} />
+                    <Feather name='info' size={26} color={colors.primary400} />
+                    <TextComponent text={t('settings.help')} className='text-base ml-4 flex-1' />
+                    <Ionicons name='chevron-forward' size={26} color={colors.text500} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="flex-row flex-1 w-full items-center py-6 border-b-[1px] border-b-text-200"
+                    className='flex-row flex-1 w-full items-center py-6 border-b-[1px] border-b-text-200'
                     onPress={() => {
-                        Alert.alert('Thông báo', 'Bạn có chắc chắn muốn đăng xuất?', [
+                        Alert.alert(t('settings.logout_alert_title'), t('settings.logout_alert_message'), [
                             {
-                                text: 'Hủy',
+                                text: t('settings.cancel_button'),
                                 style: 'cancel',
                             },
                             {
-                                text: 'Đồng ý',
+                                text: t('settings.agree_button'),
                                 onPress: () => handleLogout(),
                             },
                         ]);
                     }}
                 >
-                    <FontAwesome name="sign-out" size={26} color={colors.primary400} />
-                    <TextComponent text="Đăng xuất" className="text-base ml-4 flex-1" />
+                    <FontAwesome name='sign-out' size={26} color={colors.primary400} />
+                    <TextComponent text={t('settings.logout')} className='text-base ml-4 flex-1' />
                 </TouchableOpacity>
             </SectionComponent>
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

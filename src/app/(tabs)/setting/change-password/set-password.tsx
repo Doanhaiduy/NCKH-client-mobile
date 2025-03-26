@@ -13,10 +13,12 @@ import { Regex } from '@/utils';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function SetPassword() {
+    const { t } = useTranslation();
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const [isError, setIsError] = useState(false);
@@ -38,10 +40,10 @@ export default function SetPassword() {
         onSuccess: async (data) => {
             await dispatch(removeOTP());
             router.dismissAll();
-            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!');
+            Alert.alert(t('set_password_v2.success_title'), t('set_password_v2.success_message'));
         },
         onError: (error: string) => {
-            Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
+            Alert.alert(t('set_password_v2.error_title'), error || t('set_password_v2.error_message'));
         },
     });
 
@@ -56,9 +58,9 @@ export default function SetPassword() {
     };
 
     return (
-        <ContainerComponent title='Tạo mật khẩu mới' iconLeft='back' notification isScroll>
+        <ContainerComponent title={t('set_password_v2.title')} iconLeft='back' notification isScroll>
             <SectionComponent className='mt-2'>
-                <TextComponent text='Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. ' />
+                <TextComponent text={t('set_password_v2.password_requirement')} />
             </SectionComponent>
             <SectionComponent className='px-[56px]'>
                 <InputComponent
@@ -66,19 +68,19 @@ export default function SetPassword() {
                     onChange={setNewPassword}
                     onEnd={handleCheckPassword}
                     isPassword
-                    placeholder='Mật khẩu mới'
+                    placeholder={t('set_password_v2.new_password_placeholder')}
                 />
                 <InputComponent
                     value={confirmNewPassword}
                     onChange={setConfirmNewPassword}
                     onEnd={handleCheckPassword}
                     isPassword
-                    placeholder='Nhập lại mật khẩu'
-                    err={isError ? 'Mật khẩu không khớp' : undefined}
+                    placeholder={t('set_password_v2.confirm_password_placeholder')}
+                    err={isError ? t('set_password_v2.password_mismatch') : undefined}
                 />
                 <SpaceComponent height={24} />
                 <ButtonComponent
-                    title='Tạo mật khẩu'
+                    title={t('set_password_v2.create_password_button')}
                     size='large'
                     type='primary'
                     disabled={isError}
@@ -89,5 +91,3 @@ export default function SetPassword() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

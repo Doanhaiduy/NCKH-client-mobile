@@ -6,11 +6,11 @@ import {
     SpaceComponent,
     TextComponent,
 } from '@/components';
-import { checkHasErr, sleep } from '@/utils';
+import { checkHasErr } from '@/utils';
 import { LoadingModal } from '@/modals';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { Alert, TouchableOpacity } from 'react-native';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { schemasCustom } from '@/utils/zod';
@@ -19,20 +19,25 @@ import { useMutation } from '@tanstack/react-query';
 import authAPI from '@/apis/authApi';
 import { authSelector, setOtpValue } from '@/stores/reducers/authReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
-const schema = z
-    .object({
-        oldPassword: schemasCustom.password('Login'),
-        newPassword: schemasCustom.password('SignUp'),
-        confirmPassword: schemasCustom.confirmPassword,
-    })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-        message: 'Mật khẩu không khớp',
-        path: ['confirmPassword'],
-    });
-
-type FormFields = z.infer<typeof schema>;
 export default function ResetPassword() {
+    const { t } = useTranslation();
+    const schemas = schemasCustom(t);
+
+    const schema = z
+        .object({
+            oldPassword: schemas.password('Login'),
+            newPassword: schemas.password('SignUp'),
+            confirmPassword: schemas.confirmPassword,
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+            message: t('reset_password.password_mismatch'),
+            path: ['confirmPassword'],
+        });
+
+    type FormFields = z.infer<typeof schema>;
+
     const {
         handleSubmit,
         setError,
@@ -53,9 +58,9 @@ export default function ResetPassword() {
     const { mutate, isPending } = useMutation({
         mutationFn: (variables: FormChangePassword) => authAPI.changePassword(variables),
         onSuccess: async (data) => {
-            Alert.alert('Thành công', 'Cập nhật mật khẩu thành công!', [
+            Alert.alert(t('reset_password.success_title'), t('reset_password.success_message'), [
                 {
-                    text: 'Đồng ý',
+                    text: t('reset_password.agree_button'),
                     onPress: () => router.back(),
                 },
             ]);
@@ -85,12 +90,8 @@ export default function ResetPassword() {
     };
 
     return (
-        <ContainerComponent title='Đổi mật khẩu' iconLeft='back' notification isScroll>
-            <TextComponent
-                text='Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt. '
-                className='mt-2 mx-4'
-                size={16}
-            />
+        <ContainerComponent title={t('reset_password.title')} iconLeft='back' notification isScroll>
+            <TextComponent text={t('reset_password.password_requirement')} className='mt-2 mx-4' size={16} />
             <SectionComponent className='px-12'>
                 <SpaceComponent height={32} />
                 <Controller
@@ -102,7 +103,7 @@ export default function ResetPassword() {
                             onChange={onChange}
                             onBlur={onBlur}
                             isPassword
-                            placeholder='Mật khẩu hiện tại'
+                            placeholder={t('reset_password.current_password_placeholder')}
                             err={errors.oldPassword?.message}
                         />
                     )}
@@ -116,7 +117,7 @@ export default function ResetPassword() {
                             onChange={onChange}
                             onBlur={onBlur}
                             isPassword
-                            placeholder='Mật khẩu mới'
+                            placeholder={t('reset_password.new_password_placeholder')}
                             err={errors.newPassword?.message}
                         />
                     )}
@@ -130,7 +131,7 @@ export default function ResetPassword() {
                             onChange={onChange}
                             onBlur={onBlur}
                             isPassword
-                            placeholder='Nhập lại mật khẩu mới'
+                            placeholder={t('reset_password.confirm_password_placeholder')}
                             err={errors.confirmPassword?.message}
                         />
                     )}
@@ -143,7 +144,7 @@ export default function ResetPassword() {
                         })
                     }
                 >
-                    <TextComponent text='Quên mật khẩu?' className='mt-2 ml-5' size={14} />
+                    <TextComponent text={t('reset_password.forgot_password')} className='mt-2 ml-5' size={14} />
                 </TouchableOpacity>
                 {errors.root && <TextComponent text={`${errors.root.message}`} className='text-error' />}
             </SectionComponent>
@@ -151,7 +152,7 @@ export default function ResetPassword() {
                 <ButtonComponent
                     type='primary'
                     size='large'
-                    title='Cập nhật mật khẩu'
+                    title={t('reset_password.update_password')}
                     onPress={handleSubmit(onSubmit)}
                     disabled={checkHasErr(errors)}
                 />
@@ -160,5 +161,3 @@ export default function ResetPassword() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

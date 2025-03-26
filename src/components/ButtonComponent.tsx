@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import { Button, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Button, TouchableOpacity, View } from 'react-native';
 import TextComponent from './TextComponent';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '@/constants/colors';
@@ -79,5 +79,3 @@ export default function ButtonComponent(props: Props) {
         </TouchableOpacity>
     );
 }
-
-const styles = StyleSheet.create({});

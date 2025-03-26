@@ -20,6 +20,7 @@ import TableComponent from './TableComponent';
 import TextComponent from './TextComponent';
 import CollapsibleGuideComponent from './CollapsibleGuideComponent';
 import ImageComponent from './ImageComponent';
+import { LanguageSelector } from './LanguageSelectorComponent';
 
 export {
     ButtonComponent,
@@ -44,4 +45,5 @@ export {
     SearchComponent,
     ImageComponent,
     CollapsibleGuideComponent,
+    LanguageSelector,
 };

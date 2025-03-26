@@ -1,7 +1,7 @@
 import { authSelector } from '@/stores/reducers/authReducer';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { ImageBackground, StyleSheet } from 'react-native';
+import { ImageBackground } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function Home() {
@@ -25,5 +25,3 @@ export default function Home() {
         ></ImageBackground>
     );
 }
-
-const styles = StyleSheet.create({});

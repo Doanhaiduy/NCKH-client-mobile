@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function SettingHelpsLayout() {
     return (
@@ -9,11 +8,11 @@ export default function SettingHelpsLayout() {
                 headerShown: false,
             }}
         >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="user-guide" />
-            <Stack.Screen name="terms-policies" />
+            <Stack.Screen name='index' />
+            <Stack.Screen name='user-guide' />
+            <Stack.Screen name='terms-policies' />
             <Stack.Screen
-                name="[id]"
+                name='[id]'
                 options={{
                     presentation: 'fullScreenModal',
                 }}
@@ -21,5 +20,3 @@ export default function SettingHelpsLayout() {
         </Stack>
     );
 }
-
-const styles = StyleSheet.create({});

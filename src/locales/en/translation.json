@@ -1,6 +1,365 @@
 {
-    "common": {
+    "language": {
         "test": "Choose your language:",
-        "test2": "Language"
+        "test2": "Language",
+        "language_changed": "Language has been changed",
+        "notification_title": "Notification",
+        "language_changed_message": "Language has been changed",
+        "ok": "OK",
+        "error_title": "Error",
+        "error_message": "An error occurred, please try again later!"
+    },
+    "forgot": {
+        "forgot_password": "Forgot Password?",
+        "enter_email": "Please enter the email address linked to your account.",
+        "send_otp_info": "We will send an OTP code.",
+        "email_placeholder": "Email",
+        "send_otp": "Send OTP Code",
+        "or": "Or",
+        "login": "Login"
+    },
+    "set_password": {
+        "create_new_password": "Create New Password",
+        "password_requirement": "Your new password must be different from previously used passwords.",
+        "new_password_placeholder": "New Password",
+        "reset_password": "Reset Password",
+        "password_error": "Password must be at least 8 characters long, including letters and numbers",
+        "success_title": "Success",
+        "success_message": "Password has been successfully reset!",
+        "error_title": "Error",
+        "error_message": "An error occurred, please try again later!"
+    },
+    "login": {
+        "app_name": "NTU Student",
+        "student_id_placeholder": "Student ID",
+        "password_placeholder": "Password",
+        "forgot_password": "Forgot Password",
+        "login_button": "Login",
+        "success_message": "Login successful"
+    },
+    "verification": {
+        "verify_email": "Verify Email",
+        "otp_sent": "A 6-digit OTP code has been sent to your email {email}.",
+        "check_and_enter": "Please check and enter the code.",
+        "verify_button": "Verify",
+        "invalid_otp": "Invalid OTP code",
+        "resend_prompt": "Didn't receive the OTP code?",
+        "resend": "Resend",
+        "otp_expires_in": "The verification code will expire in {seconds} seconds"
+    },
+    "activity": {
+        "title": "Activities",
+        "search_placeholder": "Search activities",
+        "no_data": "No data available",
+        "ongoing_activities": "Ongoing Activities"
+    },
+    "activityDetails": {
+        "title": "Extracurricular Activity",
+        "no_data": "No data available",
+        "register": "Register",
+        "unregister": "Unregister",
+        "full": "Capacity Full",
+        "expired": "Registration Expired",
+        "already": "Already Checked In",
+        "prevent_unregister": "Unregister",
+        "prevent_unregister_alert_title": "Notification",
+        "prevent_unregister_alert_message": "Cannot unregister when the event is about to start",
+        "ok": "OK"
+    },
+    "news": {
+        "title": "News",
+        "search_placeholder": "Search news",
+        "no_data": "No data available"
+    },
+    "news_details": {
+        "title": "News",
+        "no_data": "No data available"
+    },
+    "home": {
+        "title": "NTU Student",
+        "featured_activities": "Featured Activities",
+        "quick_access": "Quick Access"
+    },
+    "attendance": {
+        "title": "Attendance",
+        "ongoing_activities": "Ongoing Activities",
+        "registered_activities": "Registered Activities",
+        "past_activities": "Past Activities",
+        "no_data": "No data available",
+        "view_attended_activities": "View Attended Activities"
+    },
+    "list_attendance": {
+        "title": "Attended",
+        "attended_activities": "Attended Activities",
+        "no_data": "No data available"
+    },
+    "attendance_details": {
+        "title": "Attendance",
+        "event_code": "Event Code: {code}",
+        "location": "Location: {location}",
+        "start_time": "Start Time: {time}",
+        "end_time": "End Time: {time}",
+        "check_in": "Check In",
+        "no_event": "Event not found"
+    },
+    "scan_qr": {
+        "title": "Scan QR",
+        "camera_permission_prompt": "The app needs camera access to scan QR codes. Please enable camera access.",
+        "grant_camera_access": "Grant Camera Access",
+        "scan_qr_instruction": "Point the camera at the QR code",
+        "take_photo_instruction": "Place your face in the frame and take a photo",
+        "photo_title": "Captured Photo",
+        "confirm": "Confirm",
+        "retake": "Retake",
+        "scan_again": "Scan Again",
+        "check_in_success": "Check-In Successful",
+        "check_in_success_message": "You have successfully checked in to the event: ",
+        "check_in_failed": "Check-In Failed",
+        "check_in_failed_message": "An error occurred during the check-in process",
+        "location_permission_prompt": "The app needs location access to check in.",
+        "open_settings": "Open Settings",
+        "back": "Back",
+        "invalid_qr": "Invalid QR code",
+        "invalid_time": "Check-in time is invalid",
+        "distance_error": "You need to be closer by {distance} meters to check in.",
+        "processing_qr": "Processing QR code",
+        "reading_qr": "Reading QR code",
+        "processing_image": "Processing image",
+        "checking_in": "Checking in",
+        "gallery_permission_prompt": "The app needs access to your photo library to scan QR codes.",
+        "no_event": "Event not found",
+        "no_qr_found": "No QR code found in the image",
+        "invalid_image": "Invalid image"
+    },
+    "notification": {
+        "title": "Notifications",
+        "no_notifications": "No notifications available"
+    },
+    "reset_password": {
+        "title": "Change Password",
+        "password_requirement": "Your new password must be at least 6 characters long, including numbers, letters, and special characters.",
+        "current_password_placeholder": "Current Password",
+        "new_password_placeholder": "New Password",
+        "confirm_password_placeholder": "Confirm New Password",
+        "forgot_password": "Forgot Password?",
+        "update_password": "Update Password",
+        "success_title": "Success",
+        "success_message": "Password updated successfully!",
+        "agree_button": "Agree",
+        "password_mismatch": "Passwords do not match"
+    },
+    "set_password_v2": {
+        "title": "Create New Password",
+        "password_requirement": "Your new password must be at least 6 characters long, including numbers, letters, and special characters.",
+        "new_password_placeholder": "New Password",
+        "confirm_password_placeholder": "Confirm Password",
+        "create_password_button": "Create Password",
+        "password_mismatch": "Passwords do not match",
+        "success_title": "Success",
+        "success_message": "Password has been successfully reset!",
+        "error_title": "Error",
+        "error_message": "An error occurred, please try again later!"
+    },
+    "verification_v2": {
+        "title": "Forgot Password",
+        "sent_otp_message": "We have sent your code to the email {email}",
+        "check_otp_instruction": "Please check the code in your email. The code consists of 6 digits.",
+        "otp_expiry_message": "The verification code will expire in {seconds} seconds",
+        "no_otp_message": "Haven't received the OTP code?",
+        "resend_otp": "Resend",
+        "enter_otp_instruction": "Enter the 6-digit code",
+        "invalid_otp": "Invalid OTP code",
+        "verify_button": "Verify",
+        "cancel_button": "Cancel"
+    },
+    "helps": {
+        "title": "Help",
+        "user_guide": "User Guide",
+        "terms_policies": "Terms and Policies"
+    },
+    "terms_policies": {
+        "title": "Terms and Policies",
+        "terms_of_use": "Terms of Use",
+        "privacy_policy": "Privacy Policy"
+    },
+    "user_guide": {
+        "title": "User Guide",
+        "help_question": "How can we assist you?",
+        "functionality_title": "Functionality"
+    },
+    "settings": {
+        "title": "Settings",
+        "student_id_label": "Student ID: {username}",
+        "language": "Language",
+        "change_password": "Change Password",
+        "help": "Help",
+        "logout": "Logout",
+        "logout_alert_title": "Notification",
+        "logout_alert_message": "Are you sure you want to log out?",
+        "cancel_button": "Cancel",
+        "agree_button": "Agree"
+    },
+    "profile": {
+        "title": "Account Details",
+        "student_id_label": "Student ID",
+        "full_name_label": "Full Name",
+        "email_label": "Email",
+        "class_label": "Class",
+        "faculty_label": "Faculty",
+        "role_label": "Role",
+        "no_data": "No data available"
+    },
+    "training_point": {
+        "title": "Training Results",
+        "student_id_label": "Student ID: {username}",
+        "student_name_label": "Student Name: {fullName}",
+        "year_label": "Academic Year",
+        "semester_label": "Semester",
+        "self_assessment_score": "Self-Assessment Score",
+        "view_details_button": "View Details",
+        "no_data": "No data available",
+        "self_assessment_time_label": "Self-Assessment Period",
+        "from_label": "From: {startTime}",
+        "to_label": "To: {endTime}",
+        "not_yet_time": "Not yet time for assessment"
+    },
+    "training_point_details": {
+        "title": "Training Results",
+        "student_id_label": "Student ID: {username}",
+        "student_name_label": "Student Name: {fullName}",
+        "semester_year_label": "Academic Year {year} - {nextYear} | Semester {semester}",
+        "self_assessment_button": "Self-Assessment",
+        "upload_evidence_button": "Upload Evidence",
+        "notification_title": "Notification",
+        "locked_message": "It is not yet time to assess training points, please come back later"
+    },
+    "assessment": {
+        "title": "Self-Assessment",
+        "student_id_label": "Student ID: {username}",
+        "student_name_label": "Student Name: {fullName}",
+        "semester_year_label": "Academic Year {year} - {nextYear} | Semester {semester}",
+        "submit_button": "Submit",
+        "notification_title": "Notification",
+        "confirm_message": "Confirm assessment?",
+        "cancel_button": "Cancel",
+        "agree_button": " Agree",
+        "processing_message": "Processing"
+    },
+    "upload": {
+        "title": "Upload Evidence",
+        "student_id_label": "Student ID: {username}",
+        "student_name_label": "Student Name: {fullName}",
+        "semester_year_label": "Academic Year {year} - {nextYear} | Semester {semester}",
+        "submit_button": "Submit",
+        "notification_title": "Notification",
+        "confirm_message": "Submit evidence?",
+        "cancel_button": "Cancel",
+        "agree_button": " Agree"
+    },
+    "upload_image": {
+        "title": "Upload Image",
+        "student_id_label": "Student ID: {username}",
+        "student_name_label": "Student Name: {fullName}",
+        "evidence_label": "Upload evidence for item 1.2",
+        "upload_image_button": "Upload Image",
+        "save_button": "Save",
+        "select_from_library": "Select from Library",
+        "take_photo": "Take Photo",
+        "permission_denied": "Permission to access photo library is required!",
+        "no_image_error_title": "Error",
+        "no_image_error_message": "Please select an image to upload",
+        "save_confirmation_title": "Save",
+        "save_confirmation_message": "Are you sure you want to save this evidence?",
+        "cancel_button": "Cancel",
+        "success_title": "Notification",
+        "success_message": "Image uploaded successfully",
+        "error_title": "Error",
+        "error_message": "Image upload failed",
+        "loading_data_message": "Loading data",
+        "uploading_message": "Uploading image"
+    },
+    "feedback": {
+        "title": "Feedback",
+        "student_id_label": "Student ID",
+        "full_name_label": "Full Name",
+        "class_label": "Class",
+        "faculty_label": "Faculty",
+        "content_label": "Feedback Content",
+        "content_placeholder": "Enter content here",
+        "submit_button": "Submit",
+        "submit_title": "Submit Feedback",
+        "empty_content_message": "Please enter feedback content",
+        "confirm_message": "Are you sure you want to submit this feedback?",
+        "cancel_button": "Cancel",
+        "success_message": "Feedback submitted successfully",
+        "failure_message": "Feedback submission failed",
+        "failure_message_with_error": "Feedback submission failed, {error}"
+    },
+    "action_list_component": {
+        "news": "News",
+        "activity": "Activity",
+        "attendance": "Checked In",
+        "training_point": "Training Results",
+        "help": "Help",
+        "feedback": "Feedback",
+        "setting": "Settings",
+        "nothing": "Nothing",
+        "all": "All",
+        "attendance_short": "Attendance"
+    },
+    "collapsible_guide_component": {
+        "expand": "Expand",
+        "collapse": "Collapse"
+    },
+    "dropdown_item_component": {
+        "extracurricular_activities": "Extracurricular Activities"
+    },
+    "image_component": {
+        "permission_denied": "Permission to access media library is required!",
+        "download_success_title": "Download Successful",
+        "download_success_message": "The image has been downloaded to your photo library"
+    },
+    "item_card_list_component": {
+        "attendance": "Attendance"
+    },
+    "table_border_component": {
+        "criteria_code": "Criteria Code",
+        "criteria_name": "Criteria Name",
+        "upload_evidence": "Upload Evidence",
+        "max_score": "Max Score",
+        "approved_score": "Approved Score",
+        "self_assessment_score": "Self-Assessment Score",
+        "upload": "Upload",
+        "uploaded": "Uploaded",
+        "notification": "Notification"
+    },
+    "table_component": {
+        "index": "#",
+        "activity_name": "Activity Name",
+        "time": "Time"
+    },
+    "loading_modal_component": {
+        "loading": "Loading..."
+    },
+    "notification_modal_component": {
+        "view_details": "View Details"
+    },
+    "language_selector_component": {
+        "select_language": "Select Language",
+        "languages": {
+            "vi": "Vietnamese",
+            "en": "English"
+        }
+    },
+
+    "schemas_custom_zod": {
+        "username_required": "Student ID is required",
+        "username_invalid": "Invalid student ID",
+        "email_required": "Email is required",
+        "email_invalid": "Invalid email",
+        "password_required": "Password is required",
+        "password_min_length": "Password must be at least 8 characters long",
+        "password_invalid": "Password must contain at least 1 letter and 1 number",
+        "confirm_password_invalid": "Passwords do not match"
     }
 }

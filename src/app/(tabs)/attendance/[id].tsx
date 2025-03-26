@@ -6,10 +6,12 @@ import { dateTimeFormat } from '@/utils/dateTime';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export default function Details() {
     const { id } = useLocalSearchParams();
+    const { t } = useTranslation();
 
     const { data, refetch } = useQuery({
         queryKey: ['event', id],
@@ -23,7 +25,7 @@ export default function Details() {
         <ContainerComponent
             iconLeft='back'
             notification
-            title='Điểm Danh'
+            title={t('attendance_details.title')}
             isScroll
             _refreshing={refreshing}
             handleRefresh={handleRefresh}
@@ -33,23 +35,26 @@ export default function Details() {
                     <SectionComponent className='items-center'>
                         <TextComponent text={data?.name || ''} size={20} className='text-center mt-4' />
                         <TextComponent
-                            text={'Mã sự kiện: ' + data?.eventCode || ''}
+                            text={t('attendance_details.event_code').replace('{code}', data?.eventCode || '')}
                             size={16}
                             className='text-center mt-2'
                         />
                         <TextComponent
-                            text={'Địa điểm: ' + data?.location.name || ''}
+                            text={t('attendance_details.location').replace('{location}', data?.location.name || '')}
                             size={16}
                             className='text-center mt-2'
                         />
                         <TextComponent
-                            text={`Thời gian bắt đầu: ${dateTimeFormat(data?.startAt || '')}`}
+                            text={t('attendance_details.start_time').replace(
+                                '{time}',
+                                dateTimeFormat(data?.startAt || ''),
+                            )}
                             size={16}
                             color={colors.error}
                             className='text-center mt-2'
                         />
                         <TextComponent
-                            text={`Thời gian kết thúc: ${dateTimeFormat(data?.endAt || '')}`}
+                            text={t('attendance_details.end_time').replace('{time}', dateTimeFormat(data?.endAt || ''))}
                             size={16}
                             className='text-center mt-2'
                             color={colors.error}
@@ -60,7 +65,7 @@ export default function Details() {
                     </SectionComponent>
                     <SectionComponent className='items-center w-[80%] mx-auto'>
                         <ButtonComponent
-                            title='Điểm danh'
+                            title={t('attendance_details.check_in')}
                             type='primary'
                             size='large'
                             onPress={() => {
@@ -76,10 +81,8 @@ export default function Details() {
                     </SectionComponent>
                 </>
             ) : (
-                <TextComponent text={'Không tìm thấy sự kiện'} size={20} className='text-center mt-4' />
+                <TextComponent text={t('attendance_details.no_event')} size={20} className='text-center mt-4' />
             )}
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

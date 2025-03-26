@@ -1,12 +1,12 @@
-import { StyleSheet, View } from "react-native";
-import React, { useCallback, useState } from "react";
-import Carousel from "react-native-reanimated-carousel";
-import { appInfo } from "@/constants/appInfo";
-import { EventData } from "@/mockData";
-import ItemCardGrid from "./ItemCardGrid";
-import { useSharedValue } from "react-native-reanimated";
-import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
-import { router, useFocusEffect } from "expo-router";
+import { StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import Carousel from 'react-native-reanimated-carousel';
+import { appInfo } from '@/constants/appInfo';
+import { EventData } from '@/mockData';
+import ItemCardGrid from './ItemCardGrid';
+import { useSharedValue } from 'react-native-reanimated';
+import AnimatedDotsCarousel from 'react-native-animated-dots-carousel';
+import { router, useFocusEffect } from 'expo-router';
 
 interface Props {
     data: CardItemData[];
@@ -51,8 +51,8 @@ export default function SlideCardComponent(props: Props) {
                 {...baseOptions}
                 loop
                 defaultScrollOffsetValue={scrollOffsetValue}
-                testID={"xxx"}
-                style={{ width: "100%" }}
+                testID={'xxx'}
+                style={{ width: '100%' }}
                 autoPlay={isAutoPlayEnabled}
                 autoPlayInterval={duration || 5000}
                 data={data}
@@ -62,9 +62,9 @@ export default function SlideCardComponent(props: Props) {
                 }}
                 onSnapToItem={(index) => setIndex(index)}
                 renderItem={({ item, index }) => (
-                    <View className="mx-2">
+                    <View className='mx-2'>
                         <ItemCardGrid
-                            size="large"
+                            size='large'
                             key={index}
                             data={item}
                             onPress={() => {
@@ -77,7 +77,7 @@ export default function SlideCardComponent(props: Props) {
             <View
                 style={[
                     {
-                        marginHorizontal: "auto",
+                        marginHorizontal: 'auto',
                         height: 25,
                     },
                 ]}
@@ -88,24 +88,24 @@ export default function SlideCardComponent(props: Props) {
                     maxIndicators={EventData.length - 1}
                     interpolateOpacityAndColor={true}
                     activeIndicatorConfig={{
-                        color: "#FFD000",
+                        color: '#FFD000',
                         margin: 3,
                         opacity: 1,
                         size: 8,
                     }}
                     inactiveIndicatorConfig={{
-                        color: "#D9D9D9",
+                        color: '#D9D9D9',
                         margin: 3,
                         opacity: 0.5,
                         size: 8,
                     }}
                     decreasingDots={[
                         {
-                            config: { color: "white", margin: 3, opacity: 0.5, size: 6 },
+                            config: { color: 'white', margin: 3, opacity: 0.5, size: 6 },
                             quantity: 1,
                         },
                         {
-                            config: { color: "white", margin: 3, opacity: 0.5, size: 4 },
+                            config: { color: 'white', margin: 3, opacity: 0.5, size: 4 },
                             quantity: 1,
                         },
                     ]}
@@ -114,5 +114,3 @@ export default function SlideCardComponent(props: Props) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({});

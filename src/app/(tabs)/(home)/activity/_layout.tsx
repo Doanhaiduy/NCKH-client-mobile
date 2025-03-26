@@ -1,7 +1,6 @@
 import { colors } from '@/constants/colors';
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function ActivityLayout() {
     return (
@@ -15,5 +14,3 @@ export default function ActivityLayout() {
         />
     );
 }
-
-const styles = StyleSheet.create({});

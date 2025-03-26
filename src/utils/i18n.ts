@@ -24,14 +24,21 @@ const LANGUAGE_DETECTOR = {
     async: true,
     detect: async (callback: (lng: LanguageCode) => void): Promise<void> => {
         try {
-            // Lấy ngôn ngữ đã lưu
-            const storedLanguage = await AsyncStorage.getItem('USER_LANGUAGE');
+            const authStorage = await AsyncStorage.getItem('auth');
+            if (authStorage) {
+                const parsedAuth = JSON.parse(authStorage);
+                const authLanguage = parsedAuth.lang;
 
+                if (authLanguage && LANG_CODES.includes(authLanguage as LanguageCode)) {
+                    return callback(authLanguage as LanguageCode);
+                }
+            }
+
+            const storedLanguage = await AsyncStorage.getItem('USER_LANGUAGE');
             if (storedLanguage && LANG_CODES.includes(storedLanguage as LanguageCode)) {
                 return callback(storedLanguage as LanguageCode);
             }
 
-            // Nếu không có ngôn ngữ đã lưu, dùng ngôn ngữ thiết bị
             const phoneLanguage = Localization.getLocales()[0].languageCode;
             const supportedLanguage = LANG_CODES.includes(phoneLanguage as LanguageCode)
                 ? (phoneLanguage as LanguageCode)
@@ -47,8 +54,14 @@ const LANGUAGE_DETECTOR = {
     init: (): void => {},
     cacheUserLanguage: async (language: LanguageCode): Promise<void> => {
         try {
-            // Lưu ngôn ngữ đã chọn
             await AsyncStorage.setItem('USER_LANGUAGE', language);
+
+            const authStorage = await AsyncStorage.getItem('auth');
+            if (authStorage) {
+                const parsedAuth = JSON.parse(authStorage);
+                parsedAuth.language = language;
+                await AsyncStorage.setItem('auth', JSON.stringify(parsedAuth));
+            }
         } catch (error) {
             console.log('Error caching language:', error);
         }

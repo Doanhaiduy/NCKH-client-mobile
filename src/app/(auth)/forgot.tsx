@@ -8,26 +8,30 @@ import {
     TextComponent,
 } from '@/components';
 import { LoadingModal } from '@/modals';
-import { authSelector, setOtpValue } from '@/stores/reducers/authReducer';
-import { checkHasErr, Regex, sleep } from '@/utils';
+import { setOtpValue } from '@/stores/reducers/authReducer';
+import { checkHasErr } from '@/utils';
 import { schemasCustom } from '@/utils/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { StyleSheet, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 
-const schema = z.object({
-    email: schemasCustom.email,
-});
-
-type FormFields = z.infer<typeof schema>;
-
-export default function ForGotPassWord() {
+const ForGotPassWord = () => {
     const dispatch = useDispatch<any>();
+    const { t } = useTranslation();
+
+    const schemas = schemasCustom(t);
+    const schema = z.object({
+        email: schemas.email,
+    });
+
+    type FormFields = z.infer<typeof schema>;
+
     const {
         handleSubmit,
         setError,
@@ -60,12 +64,9 @@ export default function ForGotPassWord() {
             <SpaceComponent height={110} />
             <View className='px-8 pb-4'>
                 <SectionComponent align='center'>
-                    <TextComponent text='Quên mật khẩu?' title className='text-primary-500' />
-                    <TextComponent
-                        text='Vui lòng nhập địa chỉ email đã liên kết với tài khoản của bạn.'
-                        className='text-center mt-4'
-                    />
-                    <TextComponent text='Chúng tôi sẽ gửi một mã OTP.' className='text-center' />
+                    <TextComponent text={t('forgot.forgot_password')} title className='text-primary-500' />
+                    <TextComponent text={t('forgot.enter_email')} className='text-center mt-4' />
+                    <TextComponent text={t('forgot.send_otp_info')} className='text-center' />
                 </SectionComponent>
                 <SectionComponent>
                     <SpaceComponent height={24} />
@@ -74,7 +75,7 @@ export default function ForGotPassWord() {
                         control={control}
                         render={({ field: { value, onBlur, onChange } }) => (
                             <InputComponent
-                                placeholder='Email'
+                                placeholder={t('forgot.email_placeholder')}
                                 value={value}
                                 onChange={onChange}
                                 onBlur={onBlur}
@@ -88,7 +89,7 @@ export default function ForGotPassWord() {
                     <SpaceComponent height={12} />
 
                     <ButtonComponent
-                        title='Gửi mã OTP'
+                        title={t('forgot.send_otp')}
                         size='large'
                         type='primary'
                         disabled={checkHasErr(errors)}
@@ -96,11 +97,11 @@ export default function ForGotPassWord() {
                     />
                     <View className='flex-row justify-center items-center gap-1 my-4'>
                         <View className='flex-1 h-[0.5px] bg-black' />
-                        <TextComponent text='Hoặc' />
+                        <TextComponent text={t('forgot.or')} />
                         <View className='flex-1 h-[0.5px] bg-black' />
                     </View>
                     <ButtonComponent
-                        title='Đăng nhập'
+                        title={t('forgot.login')}
                         size='large'
                         type='primary'
                         onPress={() => router.dismissAll()}
@@ -110,6 +111,6 @@ export default function ForGotPassWord() {
             {isPending && <LoadingModal />}
         </ContainerComponent>
     );
-}
+};
 
-const styles = StyleSheet.create({});
+export default ForGotPassWord;

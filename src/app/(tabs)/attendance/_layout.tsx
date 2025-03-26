@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function AttendanceLayout() {
     return (
@@ -9,19 +8,17 @@ export default function AttendanceLayout() {
                 headerShown: false,
             }}
         >
-            <Stack.Screen name="index" />
+            <Stack.Screen name='index' />
             <Stack.Screen
-                name="scan"
+                name='scan'
                 options={{
                     presentation: 'containedModal',
                 }}
             />
-            <Stack.Screen name="pending" />
-            <Stack.Screen name="list" />
+            <Stack.Screen name='pending' />
+            <Stack.Screen name='list' />
 
-            <Stack.Screen name="[id]" />
+            <Stack.Screen name='[id]' />
         </Stack>
     );
 }
-
-const styles = StyleSheet.create({});

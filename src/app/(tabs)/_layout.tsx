@@ -2,9 +2,9 @@ import { TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { router, Tabs, usePathname, useRouter } from 'expo-router';
+import { router, Tabs, usePathname } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
 export default function TabsLayout() {
@@ -121,5 +121,3 @@ export default function TabsLayout() {
         </Tabs>
     );
 }
-
-const styles = StyleSheet.create({});

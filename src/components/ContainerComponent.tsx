@@ -10,7 +10,6 @@ import {
     ScrollView,
     StatusBar,
     StyleProp,
-    StyleSheet,
     TouchableOpacity,
     View,
     ViewStyle,
@@ -21,6 +20,7 @@ import TextComponent from './TextComponent';
 import SpaceComponent from './SpaceComponent';
 import { appInfo } from '@/constants/appInfo';
 import { useCustomRouter } from '@/hooks/useCustomRouter';
+import { LanguageSelector } from './LanguageSelectorComponent';
 
 interface Props extends React.ComponentProps<typeof View> {
     children: React.ReactNode;
@@ -77,10 +77,7 @@ export default function ContainerComponent(props: Props) {
                 }}
             >
                 <SpaceComponent height={10} />
-                <RowComponent>
-                    <TextComponent text='Tiếng việt' className='text-center' />
-                    <Ionicons name='chevron-down' size={24} color={colors.black} />
-                </RowComponent>
+                <LanguageSelector />
             </SectionComponent>
         </ViewWrapper>
     );
@@ -204,5 +201,3 @@ export default function ContainerComponent(props: Props) {
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({});

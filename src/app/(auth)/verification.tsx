@@ -1,5 +1,5 @@
 import authAPI from '@/apis/authApi';
-import { ButtonComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
+import { ButtonComponent, SectionComponent, SpaceComponent, TextComponent } from '@/components';
 import ContainerComponent from '@/components/ContainerComponent';
 import { colors } from '@/constants/colors';
 import { LoadingModal } from '@/modals';
@@ -9,9 +9,10 @@ import { checkExpiredTime, getSecondTimeLimit } from '@/utils/dateTime';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { OtpInput, OtpInputRef } from 'react-native-otp-entry';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function VerificationPage() {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,7 @@ export default function VerificationPage() {
     const { OTP } = useSelector(authSelector);
     const otpRef = React.useRef<OtpInputRef>(null);
     const dispatch = useDispatch<any>();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!checkExpiredTime(OTP?.expiredIn || 0)) {
@@ -41,7 +43,7 @@ export default function VerificationPage() {
         setIsLoading(true);
         const inputOtp: string = text || otp;
         if (inputOtp.length !== 6) {
-            setError('Mã OTP không hợp lệ');
+            setError(t('verification.invalid_otp'));
             setIsLoading(false);
             return;
         }
@@ -64,7 +66,6 @@ export default function VerificationPage() {
             router.push('/set-password');
             setError('');
         },
-
         onError: (error: string) => {
             setError(error);
         },
@@ -93,14 +94,14 @@ export default function VerificationPage() {
     return (
         <ContainerComponent isAuth isScroll iconLeft='back'>
             <SpaceComponent height={120} />
-            <View className='px-8 pb-4 '>
+            <View className='px-8 pb-4'>
                 <SectionComponent align='center'>
-                    <TextComponent text='Xác minh email' title className='text-primary-500' />
+                    <TextComponent text={t('verification.verify_email')} title className='text-primary-500' />
                     <TextComponent
-                        text={`Một mã OTP 6 chữ số đã được gửi đến email ${obfuscateEmail(OTP?.email || '')}.`}
+                        text={t('verification.otp_sent').replace('{email}', obfuscateEmail(OTP?.email || ''))}
                         className='text-center mt-4'
                     />
-                    <TextComponent text='Vui lòng kiểm tra và nhập mã.' className='text-center' />
+                    <TextComponent text={t('verification.check_and_enter')} className='text-center' />
                 </SectionComponent>
                 <SectionComponent className='items-center'>
                     <SpaceComponent height={24} />
@@ -132,7 +133,7 @@ export default function VerificationPage() {
                     {error ? <TextComponent text={error} size={11} color={colors.error} /> : null}
                     <SpaceComponent height={12} />
                     <ButtonComponent
-                        title='Xác minh'
+                        title={t('verification.verify_button')}
                         disabled={otp.length < 6}
                         size='large'
                         type='primary'
@@ -143,15 +144,15 @@ export default function VerificationPage() {
 
                     {expiredTime > 0 ? (
                         <TextComponent
-                            text={`Mã xác minh sẽ hết hạn trong ${expiredTime} giây`}
+                            text={t('verification.otp_expires_in').replace('{seconds}', expiredTime.toString())}
                             size={11}
                             color={colors.error}
                         />
                     ) : (
                         <SectionComponent align='center' className='w-full'>
-                            <TextComponent text='Chưa nhận được mã OTP?' className='text-sm' />
+                            <TextComponent text={t('verification.resend_prompt')} className='text-sm' />
                             <TouchableOpacity onPress={handleResendOTP}>
-                                <TextComponent text='Gửi lại' className='text-sm text-primary-500' />
+                                <TextComponent text={t('verification.resend')} className='text-sm text-primary-500' />
                             </TouchableOpacity>
                         </SectionComponent>
                     )}
@@ -165,5 +166,3 @@ export default function VerificationPage() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

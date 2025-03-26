@@ -8,6 +8,7 @@ type AuthData = {
     accessToken: string;
     refreshToken: string;
     sclassName: string;
+    lang?: 'vi' | 'en';
 };
 
 type AuthState = {

@@ -1,7 +1,7 @@
 import { globalStyles } from '@/styles';
 import clsx from 'clsx';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 interface Props extends React.ComponentProps<typeof TouchableOpacity> {
     children: React.ReactNode;
@@ -27,5 +27,3 @@ export default function CardComponent(props: Props) {
         </View>
     );
 }
-
-const styles = StyleSheet.create({});

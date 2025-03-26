@@ -21,8 +21,10 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function TrainingPoint() {
+    const { t } = useTranslation();
     const [selectedYear, setSelectedYear] = useState<String>(YearData[3].value.toString());
     const [selectedSemester, setSelectedSemester] = useState<String>(SemesterData[0].value.toString());
     const [trainingPointOption, setTrainingPointOption] = useState<{
@@ -66,30 +68,35 @@ export default function TrainingPoint() {
             dispatch(setTrainingPointRefresh(false));
         }
     }, [trainingPointRefresh]);
+
     return (
         <ContainerComponent
-            title="Kết quả rèn luyện"
-            iconLeft="back"
+            title={t('training_point.title')}
+            iconLeft='back'
             notification
             isScroll
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
         >
-            <SectionComponent className="items-center justify-center">
+            <SectionComponent className='items-center justify-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
                 <TextComponent
-                    text={`Tên sinh viên: ${authData?.fullName}`}
-                    className="font-interMd mt-2"
+                    text={t('training_point.student_id_label').replace('{username}', authData?.username || '')}
+                    className='font-interMd'
+                    size={20}
+                />
+                <TextComponent
+                    text={t('training_point.student_name_label').replace('{fullName}', authData?.fullName || '')}
+                    className='font-interMd mt-2'
                     size={20}
                     center
                 />
             </SectionComponent>
             <SpaceComponent height={16} />
-            <SectionComponent className="flex-row justify-center flex-wrap">
+            <SectionComponent className='flex-row justify-center flex-wrap'>
                 <DropDownComponent
                     data={trainingPointOption?.year || []}
-                    title="Năm học"
+                    title={t('training_point.year_label')}
                     onSelect={(selectedItem, index) => {
                         setSelectedYear(selectedItem.value as string);
                     }}
@@ -97,19 +104,19 @@ export default function TrainingPoint() {
                 <SpaceComponent width={10} />
                 <DropDownComponent
                     data={trainingPointOption?.semester || []}
-                    title="Học kỳ"
+                    title={t('training_point.semester_label')}
                     width={70}
                     onSelect={(selectedItem, index) => {
                         setSelectedSemester(selectedItem.value as string);
                     }}
                 />
             </SectionComponent>
-            <SectionComponent className="items-center w-full">
+            <SectionComponent className='items-center w-full'>
                 <SpaceComponent height={16} />
                 {data?._id ? (
-                    <View className="w-[80%] justify-between items-center">
+                    <View className='w-[80%] justify-between items-center'>
                         <View
-                            className="absolute -top-6 -right-10 bg-white  p-4 py-2 shadow-lg  justify-center items-center border-primary-300 border-[1px]"
+                            className='absolute -top-6 -right-10 bg-white p-4 py-2 shadow-lg justify-center items-center border-primary-300 border-[1px]'
                             style={{
                                 zIndex: 999,
                                 borderRadius: 32,
@@ -117,20 +124,20 @@ export default function TrainingPoint() {
                             }}
                         >
                             <TextComponent
-                                text="Điểm tự đánh giá"
+                                text={t('training_point.self_assessment_score')}
                                 size={14}
                                 color={colors.primary400}
-                                className="font-semibold"
+                                className='font-semibold'
                             />
                             <TextComponent
                                 text={data.tempScore.toString()}
                                 color={colors.primary400}
-                                className="mt-2 font-semibold"
+                                className='mt-2 font-semibold'
                                 size={24}
                             />
                         </View>
                         <View
-                            className="justify-between items-center border-primary-300 border-[1px] w-[200px] aspect-square mb-10"
+                            className='justify-between items-center border-primary-300 border-[1px] w-[200px] aspect-square mb-10'
                             style={{
                                 shadowColor: colors.primary300,
                                 shadowOffset: {
@@ -173,33 +180,33 @@ export default function TrainingPoint() {
                             </View>
                         </View>
                         <ButtonComponent
-                            iconFlex="right"
-                            icon={<Ionicons name="arrow-forward" size={24} color={colors.white} />}
-                            title="Xem chi tiết"
-                            type="primary"
-                            size="large"
+                            iconFlex='right'
+                            icon={<Ionicons name='arrow-forward' size={24} color={colors.white} />}
+                            title={t('training_point.view_details_button')}
+                            type='primary'
+                            size='large'
                             onPress={() => router.push(`/training-point/${data?._id}`)}
                         />
                     </View>
                 ) : (
-                    <View className="px-2 py-4">
-                        <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                    <View className='px-2 py-4'>
+                        <TextComponent text={t('training_point.no_data')} className='text-center text-text-200' />
                     </View>
                 )}
             </SectionComponent>
             <SectionComponent>
                 <View
-                    className="flex-row  bg-primary-100 p-4 flex-1 w-full justify-around"
+                    className='flex-row bg-primary-100 p-4 flex-1 w-full justify-around'
                     style={{
                         borderRadius: 24,
                     }}
                 >
                     <View>
                         <TextComponent
-                            text="Thời gian tự đánh giá"
+                            text={t('training_point.self_assessment_time_label')}
                             size={20}
                             color={colors.primary400}
-                            className="font-interSemi"
+                            className='font-interSemi'
                         />
                         <SpaceComponent height={10} />
                         {data?.AssessmentStartTime && data.AssessmentEndTime ? (
@@ -207,20 +214,26 @@ export default function TrainingPoint() {
                                 <TextComponent
                                     color={colors.error}
                                     fontBold
-                                    text={`Từ: ${dateTimeFormat(data?.AssessmentStartTime!)}`}
+                                    text={t('training_point.from_label').replace(
+                                        '{startTime}',
+                                        dateTimeFormat(data?.AssessmentStartTime!),
+                                    )}
                                 />
                                 <TextComponent
                                     color={colors.error}
                                     fontBold
-                                    text={`Đến: ${dateTimeFormat(data?.AssessmentEndTime!)}`}
+                                    text={t('training_point.to_label').replace(
+                                        '{endTime}',
+                                        dateTimeFormat(data?.AssessmentEndTime!),
+                                    )}
                                 />
                             </>
                         ) : (
-                            <TextComponent color={colors.error} fontBold text="Chưa đến thời gian đánh giá" />
+                            <TextComponent color={colors.error} fontBold text={t('training_point.not_yet_time')} />
                         )}
                     </View>
-                    <View className="rotate-12">
-                        <MaterialCommunityIcons name="timer-sand" size={80} color={colors.primary500} />
+                    <View className='rotate-12'>
+                        <MaterialCommunityIcons name='timer-sand' size={80} color={colors.primary500} />
                     </View>
                 </View>
             </SectionComponent>

@@ -2,11 +2,12 @@ import { colors } from '@/constants/colors';
 import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useImperativeHandle } from 'react';
-import { Alert, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, TextInput, View } from 'react-native';
 import ButtonComponent from './ButtonComponent';
 import TextComponent from './TextComponent';
 import { flattenCriteria, romanize } from '@/utils';
 import trainingPointAPI from '@/apis/trainingPointApi';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     data?: Criteria[];
@@ -17,6 +18,7 @@ interface Props {
 }
 
 function TableBorderComponent(props: Props, ref: any) {
+    const { t } = useTranslation();
     const { numOfColumns = 3, isUpload, data, isAssessment, idTrainingPoint } = props;
     const [flattenedData, setFlattenedData] = React.useState<flattenCriteria[] | null>(null);
 
@@ -61,7 +63,7 @@ function TableBorderComponent(props: Props, ref: any) {
                 return true;
             }
         } catch (error: any) {
-            Alert.alert('Thông báo', error);
+            Alert.alert(t('table_border_component.notification'), error);
             return false;
         }
     };
@@ -76,29 +78,29 @@ function TableBorderComponent(props: Props, ref: any) {
         <View className='min-w-full px-2'>
             <View className='flex-row flex-nowrap border-text-200 border-y-[1px] '>
                 <View className='w-[10%] items-start border-text-200 py-3 px-1 border-x-[1px] justify-center'>
-                    <TextComponent text='Mã TC' fontBold />
+                    <TextComponent text={t('table_border_component.criteria_code')} fontBold />
                 </View>
                 <View className='w-[50%] items-start border-text-200 py-3 px-1 border-x-[1px] justify-center'>
-                    <TextComponent text='Tên tiêu chí' fontBold />
+                    <TextComponent text={t('table_border_component.criteria_name')} fontBold />
                 </View>
                 {isUpload ? (
                     <>
-                        <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
-                            <TextComponent text='Tải lên minh chứng' fontBold />
+                        <View className='flex-1 items-start py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                            <TextComponent text={t('table_border_component.upload_evidence')} fontBold />
                         </View>
                     </>
                 ) : (
                     <>
-                        <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
-                            <TextComponent text='Điểm tối đa' fontBold />
+                        <View className='flex-1 items-start py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                            <TextComponent text={t('table_border_component.max_score')} fontBold />
                         </View>
                         {!isAssessment && (
-                            <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
-                                <TextComponent text='Điểm đã duyệt' fontBold />
+                            <View className='flex-1 items-start py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                                <TextComponent text={t('table_border_component.approved_score')} fontBold />
                             </View>
                         )}
-                        <View className='flex-1 items-start  py-3 px-1 border-text-200 border-r-[1px] justify-center'>
-                            <TextComponent text='Điểm tự đánh giá' fontBold />
+                        <View className='flex-1 items-start py-3 px-1 border-text-200 border-r-[1px] justify-center'>
+                            <TextComponent text={t('table_border_component.self_assessment_score')} fontBold />
                         </View>
                     </>
                 )}
@@ -109,12 +111,12 @@ function TableBorderComponent(props: Props, ref: any) {
                     {flattenedData?.map((item, index) => (
                         <View
                             key={index}
-                            className='flex-row flex-nowrap  border-text-200 border-b-[1px] '
+                            className='flex-row flex-nowrap border-text-200 border-b-[1px]'
                             style={{
                                 backgroundColor: index % 2 === 0 ? '#F3F4F6' : '#fff',
                             }}
                         >
-                            <View className='w-[10%] items-start justify-center py-3 px-1 border-text-200 border-x-[1px] '>
+                            <View className='w-[10%] items-start justify-center py-3 px-1 border-text-200 border-x-[1px]'>
                                 <TextComponent
                                     text={
                                         item.level === 1
@@ -149,7 +151,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                                     params: { id: item._id },
                                                 });
                                             }}
-                                            title='Tải lên'
+                                            title={t('table_border_component.upload')}
                                             type='outline'
                                             size='small'
                                             icon={<Feather name='upload' size={18} color={colors.primary400} />}
@@ -164,29 +166,12 @@ function TableBorderComponent(props: Props, ref: any) {
                                                     params: { id: item._id },
                                                 });
                                             }}
-                                            title='Đã tải lên'
+                                            title={t('table_border_component.uploaded')}
                                             type='outline'
                                             size='small'
                                             icon={<Feather name='image' size={18} color={colors.primary400} />}
                                         />
                                     )}
-
-                                    {/* Done */}
-                                    {/* {item.require && (
-                                    <ButtonComponent
-                                        onPress={() => {
-                                            router.push({
-                                                pathname: '/training-point/upload-image',
-                                                params: { id: 1 },
-                                            });
-                                        }}
-                                        title='Đã duyệt'
-                                        type='grey'
-                                        size='small'
-                                        disabled
-                                        icon={<Feather name='check-circle' disabled size={18} color={colors.text100} />}
-                                    />
-                                )} */}
                                 </View>
                             ) : isAssessment ? (
                                 <>
@@ -226,13 +211,13 @@ function TableBorderComponent(props: Props, ref: any) {
                                 </>
                             ) : (
                                 <>
-                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] '>
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px]'>
                                         <TextComponent text={item?.maxScore.toString() || ''} />
                                     </View>
-                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] '>
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px]'>
                                         <TextComponent text={item?.totalScore.toString() || ''} />
                                     </View>
-                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px] '>
+                                    <View className='flex-1 py-3 px-1 border-text-200 items-center border-r-[1px]'>
                                         <TextComponent text={item?.tempScore.toString() || ''} />
                                     </View>
                                 </>
@@ -246,5 +231,3 @@ function TableBorderComponent(props: Props, ref: any) {
 }
 
 export default React.forwardRef(TableBorderComponent);
-
-const styles = StyleSheet.create({});

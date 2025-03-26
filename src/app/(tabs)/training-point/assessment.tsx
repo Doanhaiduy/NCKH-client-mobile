@@ -12,14 +12,16 @@ import { romanize } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import { useRefreshing } from '@/hooks/useRefreshing';
 import { LoadingModal } from '@/modals';
 import { setTrainingPointRefresh } from '@/stores/reducers/refreshReducer';
+import { useTranslation } from 'react-i18next';
 
 export default function Assessment() {
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
     const [isLoading, setIsLoading] = React.useState(false);
@@ -43,21 +45,21 @@ export default function Assessment() {
 
     return (
         <ContainerComponent
-            title="Tự đánh giá"
-            iconLeft="back"
+            title={t('assessment.title')}
+            iconLeft='back'
             isScroll
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
-                        Alert.alert('Thông báo', 'Xác nhận đánh giá?', [
+                        Alert.alert(t('assessment.notification_title'), t('assessment.confirm_message'), [
                             {
-                                text: 'Hủy',
+                                text: t('assessment.cancel_button'),
                                 style: 'cancel',
                             },
                             {
-                                text: 'Đồng ý',
+                                text: t('assessment.agree_button'),
                                 onPress: async () => {
                                     setIsLoading(true);
                                     if (tableBorderRef.current) {
@@ -75,27 +77,34 @@ export default function Assessment() {
                         ])
                     }
                 >
-                    <TextComponent text="Gửi" size={20} color={colors.primary400} />
+                    <TextComponent text={t('assessment.submit_button')} size={20} color={colors.primary400} />
                 </TouchableOpacity>
             }
         >
-            <SectionComponent className="items-center justify-center">
+            <SectionComponent className='items-center justify-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
                 <TextComponent
-                    text={`Tên sinh viên: ${authData?.fullName}`}
-                    className="font-interMd mt-2"
+                    text={t('assessment.student_id_label').replace('{username}', authData?.username || '')}
+                    className='font-interMd'
+                    size={20}
+                />
+                <TextComponent
+                    text={t('assessment.student_name_label').replace('{fullName}', authData?.fullName || '')}
+                    className='font-interMd mt-2'
                     size={20}
                     center
                 />
                 <TextComponent
-                    text={`Năm học ${data?.semesterYear.year} - ${+data?.semesterYear.year! + 1} | Học Kỳ ${romanize(data?.semesterYear.semester.toString()!)}`}
+                    text={t('assessment.semester_year_label')
+                        .replace('{year}', data?.semesterYear.year.toString() || '')
+                        .replace('{nextYear}', (+data?.semesterYear.year! + 1).toString())
+                        .replace('{semester}', romanize(data?.semesterYear.semester.toString()!))}
                     color={colors.text400}
-                    className="mt-2"
+                    className='mt-2'
                     size={16}
                 />
             </SectionComponent>
-            <SectionComponent className="items-center">
+            <SectionComponent className='items-center'>
                 <TableBorderComponent
                     data={data?.criteria}
                     isAssessment
@@ -103,9 +112,7 @@ export default function Assessment() {
                     idTrainingPoint={data?._id ?? data?._id}
                 />
             </SectionComponent>
-            {isLoading && <LoadingModal message="Đang xử lý" />}
+            {isLoading && <LoadingModal message={t('assessment.processing_message')} />}
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

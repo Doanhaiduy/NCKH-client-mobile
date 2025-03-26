@@ -4,15 +4,17 @@ import { obfuscateEmail, sleep } from '@/utils';
 import { LoadingModal } from '@/modals';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { OtpInput, OtpInputRef } from 'react-native-otp-entry';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkExpiredTime, getSecondTimeLimit } from '@/utils/dateTime';
 import { authSelector, removeOTP, setDoneVerify, setOtpValue } from '@/stores/reducers/authReducer';
 import { useMutation } from '@tanstack/react-query';
 import authAPI from '@/apis/authApi';
+import { useTranslation } from 'react-i18next';
 
-export default function verification() {
+export default function Verification() {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const [otp, setOtp] = useState('');
     const [expiredTime, setExpiredTime] = useState(0);
@@ -42,7 +44,7 @@ export default function verification() {
         const inputOtp: string = text || otp;
 
         if (inputOtp.length !== 6) {
-            setError('Mã OTP không hợp lệ');
+            setError(t('verification_v2.invalid_otp'));
             setIsLoading(false);
             return;
         }
@@ -90,29 +92,32 @@ export default function verification() {
     };
 
     return (
-        <ContainerComponent isScroll iconLeft='back' title='Quên mật khẩu' notification>
+        <ContainerComponent isScroll iconLeft='back' title={t('verification_v2.title')} notification>
             <SectionComponent className='mt-2'>
                 <TextComponent
-                    text={`Chúng tôi đã gửi mã của bạn đến email ${obfuscateEmail(OTP?.email || '')}`}
+                    text={t('verification_v2.sent_otp_message').replace('{email}', obfuscateEmail(OTP?.email || ''))}
                     className='font-interMd'
                 />
                 <SpaceComponent height={8} />
-                <TextComponent className='text-md' text='Vui lòng kiểm tra mã trong email của bạn. Mã này gồm 6 số.' />
+                <TextComponent className='text-md' text={t('verification_v2.check_otp_instruction')} />
                 {expiredTime > 0 ? (
                     <TextComponent
-                        text={`Mã xác minh sẽ hết hạn trong ${expiredTime} giây`}
+                        text={t('verification_v2.otp_expiry_message').replace('{seconds}', expiredTime.toString())}
                         size={11}
                         color={colors.error}
                     />
                 ) : (
                     <View className='w-full flex gap-1 flex-row'>
-                        <TextComponent text='Chưa nhận được mã OTP?' className='text-md' />
+                        <TextComponent text={t('verification_v2.no_otp_message')} className='text-md' />
                         <TouchableOpacity onPress={handleResendOTP}>
-                            <TextComponent text='Gửi lại' className='text-md text-primary-500' />
+                            <TextComponent
+                                text={t('verification_v2.resend_otp')}
+                                className='text-md text-primary-500'
+                            />
                         </TouchableOpacity>
                     </View>
                 )}
-                <TextComponent text='Nhập mã gồm 6 chữ số' className='font-interMd text-md' />
+                <TextComponent text={t('verification_v2.enter_otp_instruction')} className='font-interMd text-md' />
             </SectionComponent>
             <SectionComponent className='px-[56px]'>
                 <OtpInput
@@ -142,7 +147,7 @@ export default function verification() {
                 <SpaceComponent height={8} />
                 {error ? <TextComponent text={error} size={11} color={colors.error} /> : null}
                 <ButtonComponent
-                    title='Xác minh'
+                    title={t('verification_v2.verify_button')}
                     disabled={otp.length < 6}
                     size='large'
                     type='primary'
@@ -150,7 +155,7 @@ export default function verification() {
                 />
                 <SpaceComponent height={8} />
                 <ButtonComponent
-                    title='Hủy'
+                    title={t('verification_v2.cancel_button')}
                     size='large'
                     type='outline'
                     onPress={() => {
@@ -163,5 +168,3 @@ export default function verification() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

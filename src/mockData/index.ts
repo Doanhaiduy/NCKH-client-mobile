@@ -1,7 +1,7 @@
 const EventData: CardItemData[] = [
     {
         type: '1',
-        id: 1,
+        _id: 1,
         title: 'THÔNG BÁO VỀ VIỆC ĐĂNG KÍ THAM GIA GIẢI BÓNG CHUYỀN NAM – NỮ khoa Công nghệ thông tin',
         createdAt: '2021-10-10',
         thumbnail:
@@ -9,7 +9,7 @@ const EventData: CardItemData[] = [
     },
     {
         type: '1',
-        id: 2,
+        _id: 2,
         title: 'Thông báo về việc tham gia lễ ra quân đội tuyển bóng đá nam khoa Công nghệ thông tin',
         createdAt: '2021-10-10',
         thumbnail:
@@ -17,7 +17,7 @@ const EventData: CardItemData[] = [
     },
     {
         type: '1',
-        id: 3,
+        _id: 3,
         title: 'Ngày hội hiến máu tình nguyện 2024',
         createdAt: '2021-10-10',
         thumbnail:
@@ -25,7 +25,7 @@ const EventData: CardItemData[] = [
     },
     {
         type: '1',
-        id: 4,
+        _id: 4,
         title: 'Khảo sát về việc tham gia cổ vũ chung kết giải đấu trường chân lý IT Champion Cup',
         createdAt: '2021-10-10',
         thumbnail:
@@ -33,7 +33,7 @@ const EventData: CardItemData[] = [
     },
     {
         type: '1',
-        id: 5,
+        _id: 5,
         title: 'Thông báo về việc tham gia lễ ra quân đội tuyển bóng đá nam khoa Công nghệ thông tin',
         createdAt: '2021-10-10',
         thumbnail:
@@ -180,22 +180,22 @@ const ActiveDataTrainingPoint = [
 
 const ActiveAttendanceData = [
     {
-        id: 1,
+        _id: 1,
         activity: 'HD00123_20240202',
         time: '02/02/2024 06:50:40 PM',
     },
     {
-        id: 2,
+        _id: 2,
         activity: 'HD00123_20240202',
         time: '02/02/2024 06:50:40 PM',
     },
     {
-        id: 3,
+        _id: 3,
         activity: 'HD00123_20240202',
         time: '02/02/2024 06:50:40 PM',
     },
     {
-        id: 4,
+        _id: 4,
         activity: 'HD00123_20240202',
         time: '02/02/2024 06:50:40 PM',
     },
@@ -210,49 +210,49 @@ const NotificationData: NotificationData[] = [
         title: 'Tin tức',
         description: 'Lịch thi đấu chính thức giải Bóng chuyền Lịch thi đấu chính thức giải Bóng chuyền...',
         createdAt: '2021-10-10',
-        id: 1,
+        _id: 1,
     },
     {
         title: 'Điểm danh',
         description: 'Chào cờ khoa Công nghệ thông tin ngày Chào cờ khoa Công nghệ thông tin ngày...',
         createdAt: '2021-10-10',
-        id: 1,
+        _id: 1,
     },
     {
         title: 'Hoạt động ngoại khóa',
         description: 'Hưởng ứng cuộc thi trực tuyến tìm hiểu về Hưởng ứng cuộc thi trực tuyến tìm hiểu về...',
         createdAt: '2021-10-10',
-        id: 2,
+        _id: 2,
     },
     {
         title: 'Hệ thống',
         description: 'Minh chứng bổ sung đã được duyệt',
         createdAt: '2021-10-10',
-        id: 1,
+        _id: 1,
     },
     {
         title: 'Tin tức',
         description: 'Lịch thi đấu chính thức giải Bóng chuyền Lịch thi đấu chính thức giải Bóng chuyền...',
         createdAt: '2021-10-10',
-        id: 2,
+        _id: 2,
     },
     {
         title: 'Điểm danh',
         description: 'Chào cờ khoa Công nghệ thông tin ngày Chào cờ khoa Công nghệ thông tin ngày...',
         createdAt: '2021-10-10',
-        id: 1,
+        _id: 1,
     },
     {
         title: 'Hoạt động ngoại khóa',
         description: 'Hưởng ứng cuộc thi trực tuyến tìm hiểu về Hưởng ứng cuộc thi trực tuyến tìm hiểu về...',
         createdAt: '2021-10-10',
-        id: 2,
+        _id: 2,
     },
     {
         title: 'Hệ thống',
         description: 'Minh chứng bổ sung đã được duyệt',
         createdAt: '2021-10-10',
-        id: 2,
+        _id: 2,
     },
 ];
 

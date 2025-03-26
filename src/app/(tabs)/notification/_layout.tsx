@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function NotificationLayout() {
     return (
@@ -11,5 +10,3 @@ export default function NotificationLayout() {
         />
     );
 }
-
-const styles = StyleSheet.create({});

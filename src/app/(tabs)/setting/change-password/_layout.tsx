@@ -1,6 +1,5 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 export default function SettingPasswordLayout() {
     return (
@@ -11,5 +10,3 @@ export default function SettingPasswordLayout() {
         />
     );
 }
-
-const styles = StyleSheet.create({});

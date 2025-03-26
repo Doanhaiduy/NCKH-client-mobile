@@ -7,13 +7,15 @@ import { Regex } from '@/utils';
 import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function SetPassword() {
     const [newPassword, setNewPassword] = useState('');
     const [isError, setIsError] = useState(false);
     const dispatch = useDispatch<any>();
+    const { t } = useTranslation();
 
     const { OTP } = useSelector(authSelector);
     const handleCheckPassword = () => {
@@ -26,10 +28,10 @@ export default function SetPassword() {
         onSuccess: async (data) => {
             await dispatch(removeOTP());
             router.dismissTo('/sign-in');
-            Alert.alert('Thành công', 'Mật khẩu đã được đặt lại thành công!');
+            Alert.alert(t('set_password.success_title'), t('set_password.success_message'));
         },
         onError: (error: string) => {
-            Alert.alert('Lỗi', error || 'Đã có lỗi xảy ra, vui lòng thử lại sau!');
+            Alert.alert(t('set_password.error_title'), error || t('set_password.error_message'));
         },
     });
 
@@ -54,27 +56,24 @@ export default function SetPassword() {
             }}
         >
             <SpaceComponent height={110} />
-            <View className='px-8 pb-4 '>
+            <View className='px-8 pb-4'>
                 <SectionComponent align='center'>
-                    <TextComponent text='Tạo mật khẩu mới' title className='text-primary-500' />
-                    <TextComponent
-                        text='Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó.'
-                        className='text-center mt-4'
-                    />
+                    <TextComponent text={t('set_password.create_new_password')} title className='text-primary-500' />
+                    <TextComponent text={t('set_password.password_requirement')} className='text-center mt-4' />
                 </SectionComponent>
                 <SectionComponent>
                     <SpaceComponent height={24} />
                     <InputComponent
-                        placeholder='Mật khẩu mới'
+                        placeholder={t('set_password.new_password_placeholder')}
                         value={newPassword}
                         isPassword
                         onChange={(val) => setNewPassword(val)}
                         onEnd={handleCheckPassword}
-                        err={!isError ? undefined : 'Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ cái và số'}
+                        err={!isError ? undefined : t('set_password.password_error')}
                     />
                     <SpaceComponent height={24} />
                     <ButtonComponent
-                        title='Đặt lại mật khẩu'
+                        title={t('set_password.reset_password')}
                         size='large'
                         type='primary'
                         disabled={isError}
@@ -86,5 +85,3 @@ export default function SetPassword() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

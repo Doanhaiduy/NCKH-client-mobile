@@ -13,10 +13,12 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, FlatList, Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export default function NewsScreen() {
     const [searchValue, setSearchValue] = React.useState('');
     const debouncedSearchValue = useDebounce(searchValue, 500);
+    const { t } = useTranslation();
     const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status, refetch } =
         useInfiniteQuery({
             queryKey: ['news'],
@@ -50,14 +52,14 @@ export default function NewsScreen() {
     }, [debouncedSearchValue]);
 
     return (
-        <ContainerComponent title='Tin tức' iconLeft='back' notification>
+        <ContainerComponent title={t('news.title')} iconLeft='back' notification>
             <SpaceComponent height={16} />
             <SectionComponent>
                 <SearchComponent
                     value={searchValue}
                     onChangeText={setSearchValue}
                     onClear={() => setSearchValue('')}
-                    placeholder='Tìm kiếm hoạt động'
+                    placeholder={t('news.search_placeholder')}
                 />
             </SectionComponent>
             <SectionComponent
@@ -77,7 +79,7 @@ export default function NewsScreen() {
                     onEndReachedThreshold={0.3}
                     onEndReached={loadMore}
                     ListEmptyComponent={() => (
-                        <TextComponent text='Không có dữ liệu' className='text-center text-text-200' />
+                        <TextComponent text={t('news.no_data')} className='text-center text-text-200' />
                     )}
                     renderItem={({ item }) => (
                         <ItemCardList
@@ -86,7 +88,7 @@ export default function NewsScreen() {
                                 router.push({
                                     pathname: `/news/${item._id}`,
                                     params: {
-                                        eventName: 'Hoạt động ngoại khóa',
+                                        eventName: 'Hoạt động ngoại khóa', // Nếu cần dịch, cần thêm vào JSON
                                     },
                                 });
                             }}
@@ -97,5 +99,3 @@ export default function NewsScreen() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

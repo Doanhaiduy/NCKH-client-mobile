@@ -1,9 +1,8 @@
 import { colors } from '@/constants/colors';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import { NotificationData } from '@/mockData';
 import { dateFormatLocale } from '@/utils/dateTime';
 
 interface Props {
@@ -41,5 +40,3 @@ export default function NotificationCard(props: Props) {
         </TouchableOpacity>
     );
 }
-
-const styles = StyleSheet.create({});

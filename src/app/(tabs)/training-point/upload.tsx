@@ -12,12 +12,14 @@ import { romanize } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import { useRefreshing } from '@/hooks/useRefreshing';
+import { useTranslation } from 'react-i18next';
 
 export default function Upload() {
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
     const { trainingPointRefresh } = useSelector((state: any) => state.refresh);
@@ -39,7 +41,7 @@ export default function Upload() {
 
     return (
         <ContainerComponent
-            title='Tải lên minh chứng'
+            title={t('upload.title')}
             iconLeft='back'
             isScroll
             handleRefresh={handleRefresh}
@@ -47,13 +49,13 @@ export default function Upload() {
             iconRight={
                 <TouchableOpacity
                     onPress={() =>
-                        Alert.alert('Thông báo', 'Gửi minh chứng?', [
+                        Alert.alert(t('upload.notification_title'), t('upload.confirm_message'), [
                             {
-                                text: 'Hủy',
+                                text: t('upload.cancel_button'),
                                 style: 'cancel',
                             },
                             {
-                                text: 'Đồng ý',
+                                text: t('upload.agree_button'),
                                 onPress: () => {
                                     router.back();
                                 },
@@ -61,21 +63,28 @@ export default function Upload() {
                         ])
                     }
                 >
-                    <TextComponent text='Gửi' size={20} color={colors.primary400} />
+                    <TextComponent text={t('upload.submit_button')} size={20} color={colors.primary400} />
                 </TouchableOpacity>
             }
         >
             <SectionComponent className='items-center justify-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className='font-interMd' size={20} />
                 <TextComponent
-                    text={`Tên sinh viên: ${authData?.fullName}`}
+                    text={t('upload.student_id_label').replace('{username}', authData?.username || '')}
+                    className='font-interMd'
+                    size={20}
+                />
+                <TextComponent
+                    text={t('upload.student_name_label').replace('{fullName}', authData?.fullName || '')}
                     className='font-interMd mt-2'
                     size={20}
                     center
                 />
                 <TextComponent
-                    text={`Năm học ${data?.semesterYear.year} - ${+data?.semesterYear.year! + 1} | Học Kỳ ${romanize(data?.semesterYear.semester.toString()!)}`}
+                    text={t('upload.semester_year_label')
+                        .replace('{year}', data?.semesterYear.year.toString() || '')
+                        .replace('{nextYear}', (+data?.semesterYear.year! + 1).toString())
+                        .replace('{semester}', romanize(data?.semesterYear.semester.toString()!))}
                     color={colors.text400}
                     className='mt-2'
                     size={16}
@@ -87,5 +96,3 @@ export default function Upload() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

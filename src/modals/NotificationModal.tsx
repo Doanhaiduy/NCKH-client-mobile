@@ -1,9 +1,10 @@
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { ButtonComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { dateFormatLocale } from '@/utils/dateTime';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
     visible: boolean;
@@ -13,7 +14,9 @@ type Props = {
 };
 
 const NotificationModal = (props: Props) => {
+    const { t } = useTranslation();
     const { visible, onClose, onDetails, data } = props;
+
     return (
         <Modal transparent statusBarTranslucent visible={visible}>
             <View className='flex-1 justify-center items-center bg-black/50'>
@@ -36,7 +39,12 @@ const NotificationModal = (props: Props) => {
                     </View>
                     <TextComponent text={data?.description?.toString() || ''} numberOfLines={4} className='my-4 mb-8' />
                     <View className='flex-1 w-full px-6 mt-5'>
-                        <ButtonComponent type='primary' size='large' title='Xem chi tiết' onPress={onDetails} />
+                        <ButtonComponent
+                            type='primary'
+                            size='large'
+                            title={t('notification_modal_component.view_details')}
+                            onPress={onDetails}
+                        />
                     </View>
                 </View>
             </View>
@@ -45,5 +53,3 @@ const NotificationModal = (props: Props) => {
 };
 
 export default NotificationModal;
-
-const styles = StyleSheet.create({});

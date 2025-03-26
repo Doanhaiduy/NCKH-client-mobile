@@ -1,10 +1,11 @@
 import { View, Image, TouchableOpacity, Alert } from 'react-native';
-import React, { useCallback, useState } from 'react';
-
+import React, { useState } from 'react';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { ImageModal } from '@/modals';
 import { useImage } from '@/hooks/useImage';
+import { useTranslation } from 'react-i18next';
+
 interface Props {
     url: string;
     width?: number;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const ImageComponent = (props: Props) => {
+    const { t } = useTranslation();
     const { url, width, height, imageClass, showImageModal = false, rounded = 0, objectFit = 'cover' } = props;
 
     const [isShowModal, setIsShowModal] = useState(false);
@@ -33,7 +35,7 @@ const ImageComponent = (props: Props) => {
             setIsDownloaded(true);
             const { status } = await MediaLibrary.requestPermissionsAsync();
             if (status !== 'granted') {
-                alert('Permission to access media library is required!');
+                alert(t('image_component.permission_denied'));
                 return;
             }
 
@@ -41,7 +43,7 @@ const ImageComponent = (props: Props) => {
 
             const asset = await MediaLibrary.createAssetAsync(file.uri);
             await MediaLibrary.createAlbumAsync('Download', asset, false);
-            Alert.alert('Tải ảnh thành công', 'Ảnh đã được tải xuống thư viện ảnh của bạn');
+            Alert.alert(t('image_component.download_success_title'), t('image_component.download_success_message'));
         } catch (error) {
             console.log(error);
         } finally {

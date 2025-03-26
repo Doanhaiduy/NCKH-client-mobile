@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 interface Props {
     width?: number;
@@ -17,5 +17,3 @@ export default function SpaceComponent(props: Props) {
         />
     );
 }
-
-const styles = StyleSheet.create({});

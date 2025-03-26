@@ -18,8 +18,10 @@ import { useIsFocused } from '@react-navigation/native';
 import ImageComponent from '@/components/ImageComponent';
 import { useRefreshing } from '@/hooks/useRefreshing';
 import { setTrainingPointRefresh } from '@/stores/reducers/refreshReducer';
+import { useTranslation } from 'react-i18next';
 
 export default function UploadImage() {
+    const { t } = useTranslation();
     const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
     const [currentImages, setCurrentImages] = useState<
         {
@@ -40,7 +42,7 @@ export default function UploadImage() {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (permissionResult.granted === false) {
-            alert('Permission to access camera roll is required!');
+            Alert.alert(t('upload_image.permission_denied'));
             return;
         }
 
@@ -49,48 +51,30 @@ export default function UploadImage() {
         if (option === 'camera') {
             result = await ImagePicker.launchCameraAsync({
                 mediaTypes: 'images',
-                // allowsEditing: true,
-                // aspect: [4, 3],
                 quality: 0.1,
             });
         } else {
             result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'images',
                 allowsMultipleSelection: true,
-                // allowsEditing: true,
-                // aspect: [4, 3],
                 quality: 0.1,
             });
         }
 
         if (!result.canceled) {
-            // setIsLoading(true);
-
             const manipulatedImages = await Promise.all(
                 result.assets.map(async (asset: any) => {
-                    // const fileSizeKB1 = await getFileSize(asset.uri);
-                    // console.log('before manipulate', asset);
-                    // console.log('Kích thước file:', fileSizeKB1, 'KB');
-
-                    // Nén và giảm kích thước ảnh với expo-image-manipulator
                     const manipulatedImage = await ImageManipulator.manipulateAsync(
                         asset.uri,
-                        [{ resize: { width: 800 } }], // Giảm kích thước ảnh
-                        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }, // Nén ảnh,
+                        [{ resize: { width: 800 } }],
+                        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG },
                     );
-                    // const fileSizeKB = await getFileSize(manipulatedImage.uri);
-                    // console.log('after manipulate', manipulatedImage);
-                    // console.log('Kích thước file:', fileSizeKB, 'KB');
                     return manipulatedImage;
                 }),
             );
 
-            // setImages([...images, ...result.assets]);
             setImages([...images, ...manipulatedImages]);
-
-            // setIsLoading(false);
         }
-        // setIsLoading(false);
     };
 
     const { data, isFetching, refetch } = useQuery({
@@ -141,7 +125,7 @@ export default function UploadImage() {
             });
             const res = await trainingPointAPI.updateCriteriaEvidence(id?.toString() ?? '', formData);
             if (res) {
-                Alert.alert('Thông báo', 'Tải ảnh lên thành công');
+                Alert.alert(t('upload_image.success_title'), t('upload_image.success_message'));
                 console.log(res);
                 setIsLoading(false);
                 dispatch(setTrainingPointRefresh(true));
@@ -150,14 +134,14 @@ export default function UploadImage() {
             setIsLoading(false);
         } catch (error) {
             console.log('error', error);
-            Alert.alert('Lỗi', 'Tải ảnh lên thất bại');
+            Alert.alert(t('upload_image.error_title'), t('upload_image.error_message'));
             setIsLoading(false);
         }
     };
 
     return (
         <ContainerComponent
-            title='Tải lên ảnh'
+            title={t('upload_image.title')}
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
             isScroll
@@ -170,54 +154,70 @@ export default function UploadImage() {
                             return;
                         }
                         if (images.length <= 0) {
-                            Alert.alert('Lỗi', 'Vui lòng chọn ảnh để tải lên');
+                            Alert.alert(
+                                t('upload_image.no_image_error_title'),
+                                t('upload_image.no_image_error_message'),
+                            );
                             return;
                         }
-                        Alert.alert('Lưu', 'Bạn có chắc chắn muốn lưu minh chứng này?', [
-                            {
-                                text: 'Hủy',
-                                style: 'cancel',
-                            },
-                            {
-                                text: 'Lưu',
-                                onPress: () => {
-                                    handleUploadImages();
+                        Alert.alert(
+                            t('upload_image.save_confirmation_title'),
+                            t('upload_image.save_confirmation_message'),
+                            [
+                                {
+                                    text: t('upload_image.cancel_button'),
+                                    style: 'cancel',
                                 },
-                            },
-                        ]);
+                                {
+                                    text: t('upload_image.save_button'),
+                                    onPress: () => {
+                                        handleUploadImages();
+                                    },
+                                },
+                            ],
+                        );
                     }}
                 >
-                    <TextComponent text='Lưu' size={20} color={colors.primary400} />
+                    <TextComponent text={t('upload_image.save_button')} size={20} color={colors.primary400} />
                 </TouchableOpacity>
             }
         >
             <SectionComponent className='items-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className='font-interMd' size={20} />
                 <TextComponent
-                    text={`Tên sinh viên: ${authData?.fullName}`}
+                    text={t('upload_image.student_id_label').replace('{username}', authData?.username || '')}
+                    className='font-interMd'
+                    size={20}
+                />
+                <TextComponent
+                    text={t('upload_image.student_name_label').replace('{fullName}', authData?.fullName || '')}
                     className='font-interMd mt-2'
                     size={20}
                     center
                 />
-                <TextComponent text='Tải lên minh chứng mục 1.2' color={colors.text400} className='mt-2' size={16} />
+                <TextComponent
+                    text={t('upload_image.evidence_label')}
+                    color={colors.text400}
+                    className='mt-2'
+                    size={16}
+                />
             </SectionComponent>
             {images.length <= 0 ? (
                 <SectionComponent>
                     <TouchableOpacity
-                        className='w-full h-[128px] border-[1px] border-dotted border-primary-400  items-center justify-center'
+                        className='w-full h-[128px] border-[1px] border-dotted border-primary-400 items-center justify-center'
                         style={{
                             borderRadius: 10,
                         }}
                         onPress={() => modalizeRef.current?.open()}
                     >
                         <Feather name='image' size={32} color={colors.primary400} />
-                        <TextComponent text='Tải ảnh lên' size={20} />
+                        <TextComponent text={t('upload_image.upload_image_button')} size={20} />
                     </TouchableOpacity>
                 </SectionComponent>
             ) : (
                 <SectionComponent>
-                    <View className='w-full flex-row gap-3 flex-wrap '>
+                    <View className='w-full flex-row gap-3 flex-wrap'>
                         {images.map((image: any, index: number) => (
                             <View key={index} className='w-[80px] h-[80px] relative'>
                                 <ImageComponent url={image.uri} rounded={4} showImageModal />
@@ -248,16 +248,16 @@ export default function UploadImage() {
             <PortalizeComponent
                 ref={modalizeRef}
                 children={
-                    <View className=' shadow-xl  gap-3 p-3'>
+                    <View className='shadow-xl gap-3 p-3'>
                         <TouchableOpacity
-                            className='flex-row  items-center'
+                            className='flex-row items-center'
                             onPress={() => {
                                 pickImage('library');
                                 modalizeRef.current?.close();
                             }}
                         >
                             <Ionicons name='image' size={22} color='black' />
-                            <TextComponent text='Chọn từ thư viện' className='ml-2 font-medium' />
+                            <TextComponent text={t('upload_image.select_from_library')} className='ml-2 font-medium' />
                         </TouchableOpacity>
                         <TouchableOpacity
                             className='flex-row py-2 items-center'
@@ -267,16 +267,16 @@ export default function UploadImage() {
                             }}
                         >
                             <Ionicons name='camera' size={24} color='black' />
-                            <TextComponent text='Chụp ảnh' className='ml-2 font-medium' />
+                            <TextComponent text={t('upload_image.take_photo')} className='ml-2 font-medium' />
                         </TouchableOpacity>
                     </View>
                 }
             />
             {isLoading || isFetching ? (
-                <LoadingModal message={isFetching ? 'Đang tải dữ liệu' : 'Đang tải ảnh lên'} />
+                <LoadingModal
+                    message={isFetching ? t('upload_image.loading_data_message') : t('upload_image.uploading_message')}
+                />
             ) : null}
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

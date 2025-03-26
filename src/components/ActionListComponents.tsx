@@ -1,11 +1,10 @@
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { Feather, FontAwesome6 } from '@expo/vector-icons';
 import TextComponent from './TextComponent';
-import { colors } from '@/constants/colors';
 import { router } from 'expo-router';
 import Animated from 'react-native-reanimated';
 import { globalStyles } from '@/styles';
+import { useTranslation } from 'react-i18next';
 
 let ActionDataTemp: {
     icon: string;
@@ -14,57 +13,57 @@ let ActionDataTemp: {
 }[] = [
     {
         icon: require('../assets/images/home/icon_news.png'),
-        text: 'Tin tức',
+        text: 'action_list_component.news',
         path: '/news',
     },
     {
         icon: require('../assets/images/home/icon_activity.png'),
-        text: 'Hoạt động',
+        text: 'action_list_component.activity',
         path: '/activity',
     },
     {
         icon: require('../assets/images/home/icon_attendance.png'),
-        text: 'Đã điểm danh',
+        text: 'action_list_component.attendance',
         path: '/attendance/list',
     },
     {
         icon: require('../assets/images/home/icon_assessment.png'),
-        text: 'Kết quả rèn luyện',
+        text: 'action_list_component.training_point',
         path: '/training-point',
     },
     {
         icon: require('../assets/images/home/icon_help.png'),
-        text: 'Trợ giúp',
+        text: 'action_list_component.help',
         path: '/setting/helps',
     },
     {
         icon: require('../assets/images/home/icon_feedback.png'),
-        text: 'Góp ý',
+        text: 'action_list_component.feedback',
         path: '/feedback',
     },
     {
         icon: require('../assets/images/home/icon_setting.png'),
-        text: 'Cài đặt',
+        text: 'action_list_component.setting',
         path: '/setting',
     },
     {
         icon: require('../assets/images/logo-login.png'),
-        text: 'Nothing',
+        text: 'action_list_component.nothing',
         path: '',
     },
     {
         icon: require('../assets/images/logo-login.png'),
-        text: 'Nothing',
+        text: 'action_list_component.nothing',
         path: '',
     },
     {
         icon: require('../assets/images/logo-login.png'),
-        text: 'Nothing',
+        text: 'action_list_component.nothing',
         path: '',
     },
     {
         icon: require('../assets/images/logo-login.png'),
-        text: 'Nothing',
+        text: 'action_list_component.nothing',
         path: '',
     },
 ];
@@ -76,28 +75,27 @@ let ActionDataTempHelper: {
 }[] = [
     {
         icon: require('../assets/images/home/icon_news.png'),
-        text: 'Tin tức',
+        text: 'action_list_component.news',
         path: '/setting/helps/news',
     },
     {
         icon: require('../assets/images/home/icon_activity.png'),
-        text: 'Hoạt động',
+        text: 'action_list_component.activity',
         path: '/setting/helps/activity',
     },
     {
         icon: require('../assets/images/home/icon_activity.png'),
-        text: 'Điểm danh',
+        text: 'action_list_component.attendance_short',
         path: '/setting/helps/attendance',
     },
-
     {
         icon: require('../assets/images/home/icon_assessment.png'),
-        text: 'Kết quả rèn luyện',
+        text: 'action_list_component.training_point',
         path: '/setting/helps/training-point',
     },
     {
         icon: require('../assets/images/home/icon_feedback.png'),
-        text: 'Góp ý',
+        text: 'action_list_component.feedback',
         path: '/setting/helps/feedback',
     },
 ];
@@ -115,6 +113,8 @@ const ActionCard = ({
     onPress?: () => void;
     onClose?: () => void;
 }) => {
+    const { t } = useTranslation();
+
     return (
         <View className='w-[25%] p-2'>
             <TouchableOpacity
@@ -130,7 +130,7 @@ const ActionCard = ({
                             pathname: path,
                             params: {
                                 back: path === '/attendance/list' ? 'to_home' : 'nothing',
-                                title: text,
+                                title: t(text),
                             },
                         });
                     }
@@ -140,7 +140,7 @@ const ActionCard = ({
                     <Image source={icon ?? require('@/assets/images/fallback.png')} style={{ width: 64, height: 64 }} />
                 </View>
                 <TextComponent
-                    text={text}
+                    text={t(text)}
                     size={12}
                     className='text-center'
                     numberOfLines={2}
@@ -161,6 +161,7 @@ interface ActionListComponentsProps {
 }
 
 export default function ActionListComponents(props: ActionListComponentsProps) {
+    const { t } = useTranslation();
     const { onShowAll, onClose, isHelper, full = false } = props;
     const [ActionData, setActionData] = React.useState(() => {
         let data = isHelper ? ActionDataTempHelper : ActionDataTemp;
@@ -168,7 +169,7 @@ export default function ActionListComponents(props: ActionListComponentsProps) {
             data = ActionDataTemp.slice(0, 7);
             data.push({
                 icon: require('../assets/images/home/icon_all.png'),
-                text: 'Tất cả',
+                text: 'action_list_component.all',
                 path: 'all',
             });
         }
@@ -190,5 +191,3 @@ export default function ActionListComponents(props: ActionListComponentsProps) {
         </Animated.View>
     );
 }
-
-const styles = StyleSheet.create({});

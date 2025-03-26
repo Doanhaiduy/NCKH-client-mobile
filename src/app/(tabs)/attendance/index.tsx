@@ -1,18 +1,18 @@
 import eventAPI from '@/apis/eventApi';
 import { ButtonComponent, ContainerComponent, ItemCardList, SectionComponent, TextComponent } from '@/components';
-import { authSelector } from '@/stores/reducers/authReducer';
 import { resetRefreshEventFlag } from '@/stores/reducers/refreshReducer';
 import { useQueries } from '@tanstack/react-query';
 import { router, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function Attendance() {
     const navigation = useNavigation();
-
     const { eventNeedsRefresh } = useSelector((state: any) => state.refresh);
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const [eventActive, eventInactive, eventRegistered] = useQueries({
         queries: [
             {
@@ -71,8 +71,8 @@ export default function Attendance() {
 
     return (
         <ContainerComponent
-            iconLeft="logo"
-            title="Điểm danh"
+            iconLeft='logo'
+            title={t('attendance.title')}
             isScroll
             _refreshing={eventActive.isFetching || eventInactive.isFetching || eventRegistered.isFetching}
             notification
@@ -84,14 +84,14 @@ export default function Attendance() {
         >
             <SectionComponent>
                 <TextComponent
-                    text="Hoạt động đang diễn ra"
-                    className="text-[20px] text-primary-500 font-interMd mt-2 mb-4 "
+                    text={t('attendance.ongoing_activities')}
+                    className='text-[20px] text-primary-500 font-interMd mt-2 mb-4'
                 />
-                <View className="w-full">
+                <View className='w-full'>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         ListEmptyComponent={() => (
-                            <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                            <TextComponent text={t('attendance.no_data')} className='text-center text-text-200' />
                         )}
                         data={eventActive?.data?.events}
                         showsVerticalScrollIndicator={false}
@@ -109,17 +109,17 @@ export default function Attendance() {
                 </View>
             </SectionComponent>
 
-            <SectionComponent className="border-t-[1px] border-text-200 flex-1">
+            <SectionComponent className='border-t-[1px] border-text-200 flex-1'>
                 <TextComponent
-                    text="Hoạt động đã đăng ký"
-                    className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
+                    text={t('attendance.registered_activities')}
+                    className='text-[20px] text-primary-500 font-interMd mt-2 mb-4'
                 />
-                <View className="w-full">
+                <View className='w-full'>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={eventRegistered.data?.events}
                         ListEmptyComponent={() => (
-                            <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                            <TextComponent text={t('attendance.no_data')} className='text-center text-text-200' />
                         )}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
@@ -138,17 +138,17 @@ export default function Attendance() {
                     />
                 </View>
             </SectionComponent>
-            <SectionComponent className="border-t-[1px] border-text-200 flex-1">
+            <SectionComponent className='border-t-[1px] border-text-200 flex-1'>
                 <TextComponent
-                    text="Hoạt động đã diễn ra"
-                    className="text-[20px] text-primary-500 font-interMd mt-2 mb-4"
+                    text={t('attendance.past_activities')}
+                    className='text-[20px] text-primary-500 font-interMd mt-2 mb-4'
                 />
-                <View className="w-full">
+                <View className='w-full'>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={eventInactive.data?.events}
                         ListEmptyComponent={() => (
-                            <TextComponent text="Không có dữ liệu" className="text-center text-text-200" />
+                            <TextComponent text={t('attendance.no_data')} className='text-center text-text-200' />
                         )}
                         showsVerticalScrollIndicator={false}
                         scrollEnabled={false}
@@ -156,11 +156,11 @@ export default function Attendance() {
                     />
                 </View>
             </SectionComponent>
-            <View className=" w-[80%] mx-auto py-5">
+            <View className='w-[80%] mx-auto py-5'>
                 <ButtonComponent
-                    title="Xem hoạt động đã điểm danh"
-                    size="large"
-                    type="primary"
+                    title={t('attendance.view_attended_activities')}
+                    size='large'
+                    type='primary'
                     onPress={() => {
                         router.push({
                             pathname: '/attendance/list',
@@ -174,5 +174,3 @@ export default function Attendance() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

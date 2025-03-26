@@ -68,6 +68,9 @@ class UserAPI {
         }
         return await this.HandleUser(`/${userId}/notifications`, { ...data }, 'get');
     };
+    updateLanguage = async (data: { language: 'vi' | 'en' }, option: AxiosRequestConfig = {}): Promise<any> => {
+        return await this.HandleUser(`/update-language`, data, 'put', option);
+    };
 }
 
 const userAPI = new UserAPI();

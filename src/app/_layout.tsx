@@ -8,7 +8,7 @@ import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, LogBox, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, LogBox, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider, useDispatch } from 'react-redux';
 import '../../global.css';
@@ -123,5 +123,3 @@ function RootLayoutNav() {
         </GestureHandlerRootView>
     );
 }
-
-const styles = StyleSheet.create({});

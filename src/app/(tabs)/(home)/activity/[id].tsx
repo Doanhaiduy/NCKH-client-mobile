@@ -1,26 +1,20 @@
-import { View, Text, Image, Pressable, ActivityIndicator, Share, Alert, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, Share, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import postAPI from '@/apis/postApi';
 import RenderHtml from 'react-native-render-html';
 import { appInfo } from '@/constants/appInfo';
-import {
-    ButtonComponent,
-    ContainerComponent,
-    RowComponent,
-    SectionComponent,
-    SpaceComponent,
-    TextComponent,
-} from '@/components';
+import { ButtonComponent, ContainerComponent, RowComponent, SectionComponent, TextComponent } from '@/components';
 import { colors } from '@/constants/colors';
 import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { dateFormat, dateFormatLocale } from '@/utils/dateTime';
+import { dateFormatLocale } from '@/utils/dateTime';
 import ImageComponent from '@/components/ImageComponent';
 import { useRefreshing } from '@/hooks/useRefreshing';
 import eventAPI from '@/apis/eventApi';
 import { useDispatch } from 'react-redux';
 import { setEventNeedsRefresh } from '@/stores/reducers/refreshReducer';
+import { useTranslation } from 'react-i18next';
 
 type Props = {};
 
@@ -28,6 +22,7 @@ const DetailsScreen = (props: Props) => {
     const { id } = useLocalSearchParams();
     const [content, setContent] = React.useState<string>('');
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const [btnTypeAction, setBtnTypeAction] = React.useState<
         'none' | 'register' | 'unregister' | 'expired' | 'full' | 'already' | 'preventUnregister'
@@ -86,7 +81,7 @@ const DetailsScreen = (props: Props) => {
                     <ButtonComponent
                         containerClass='ml-4'
                         onPress={handleAction}
-                        title='Hủy đăng ký'
+                        title={t('activity_details.unregister')}
                         type='primary'
                         size='small'
                         icon={<AntDesign name='closecircleo' size={16} color={colors.white} />}
@@ -98,7 +93,7 @@ const DetailsScreen = (props: Props) => {
                 return (
                     <ButtonComponent
                         onPress={handleAction}
-                        title='Đăng ký'
+                        title={t('activity_details.register')}
                         type='primary'
                         size='small'
                         icon={<Ionicons name='add-outline' size={16} color={colors.white} />}
@@ -112,7 +107,7 @@ const DetailsScreen = (props: Props) => {
                     <ButtonComponent
                         onPress={() => {}}
                         disabled
-                        title='Đã đủ số lượng'
+                        title={t('activity_details.full')}
                         type='grey'
                         size='small'
                         icon={<MaterialIcons name='bar-chart' size={16} color={colors.white} />}
@@ -126,7 +121,7 @@ const DetailsScreen = (props: Props) => {
                     <ButtonComponent
                         onPress={() => {}}
                         disabled
-                        title='Hết hạn đăng ký'
+                        title={t('activity_details.expired')}
                         type='grey'
                         size='small'
                         icon={<MaterialCommunityIcons name='timer-off' size={16} color={colors.white} />}
@@ -135,13 +130,12 @@ const DetailsScreen = (props: Props) => {
                         containerClass='ml-4'
                     />
                 );
-
             case 'already':
                 return (
                     <ButtonComponent
                         onPress={() => {}}
                         disabled
-                        title='Đã điểm danh'
+                        title={t('activity_details.already')}
                         type='grey'
                         size='small'
                         icon={<Feather name='user-check' size={16} color={colors.white} />}
@@ -154,9 +148,13 @@ const DetailsScreen = (props: Props) => {
                 return (
                     <ButtonComponent
                         onPress={() => {
-                            Alert.alert('Thông báo', 'Không thể hủy đăng ký khi sự kiện sắp diễn ra', [{ text: 'OK' }]);
+                            Alert.alert(
+                                t('activity_details.prevent_unregister_alert_title'),
+                                t('activity_details.prevent_unregister_alert_message'),
+                                [{ text: t('activity_details.ok') }],
+                            );
                         }}
-                        title='Hủy đăng ký'
+                        title={t('activity_details.prevent_unregister')}
                         type='primary'
                         size='small'
                         icon={<AntDesign name='closecircleo' size={16} color={colors.white} />}
@@ -172,7 +170,7 @@ const DetailsScreen = (props: Props) => {
 
     return (
         <ContainerComponent
-            title={`Hoạt động ngoại khóa`}
+            title={t('activity_details.title')}
             iconLeft='back'
             notification
             isScroll
@@ -220,7 +218,7 @@ const DetailsScreen = (props: Props) => {
                     </SectionComponent>
                 </>
             ) : (
-                <TextComponent className='text-center' text='Không có dữ liệu' />
+                <TextComponent className='text-center' text={t('activity_details.no_data')} />
             )}
         </ContainerComponent>
     );

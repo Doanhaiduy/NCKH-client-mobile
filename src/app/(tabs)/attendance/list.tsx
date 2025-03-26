@@ -14,8 +14,8 @@ import { getCurrentSemesterYear, getSemesterYears } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function ListAttendance() {
     const { authData } = useSelector(authSelector);
@@ -31,6 +31,7 @@ export default function ListAttendance() {
             semester: currentSY.semester.toString(),
         };
     });
+    const { t } = useTranslation();
 
     const { data, refetch, isFetching } = useQuery({
         queryKey: ['attendance-list', authData?._id, selectedSemesterYear],
@@ -56,6 +57,7 @@ export default function ListAttendance() {
         const optionData = getSemesterYears(authData?.username!);
         setSemesterYear(optionData.AttendanceOptionData);
     }, [authData?.username]);
+
     return (
         <ContainerComponent
             onBack={() => {
@@ -64,7 +66,7 @@ export default function ListAttendance() {
                 back === 'to_scan' && router.dismissAll();
             }}
             isScroll
-            title='Đã điểm danh'
+            title={t('list_attendance.title')}
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
             iconLeft='back'
@@ -72,7 +74,7 @@ export default function ListAttendance() {
         >
             <SectionComponent className='items-center'>
                 <TextComponent
-                    text='Hoạt động đã tham gia'
+                    text={t('list_attendance.attended_activities')}
                     className='mt-2 mb-6 font-interMd'
                     size={20}
                     color={colors.primary400}
@@ -91,12 +93,10 @@ export default function ListAttendance() {
                 {data?.attendances?.length! > 0 ? (
                     <TableComponent data={data?.attendances.reverse() || []} />
                 ) : (
-                    <TextComponent text='Không có dữ liệu' className='text-center text-text-200' />
+                    <TextComponent text={t('list_attendance.no_data')} className='text-center text-text-200' />
                 )}
             </SectionComponent>
             {/* {isFetching && <LoadingModal />} */}
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

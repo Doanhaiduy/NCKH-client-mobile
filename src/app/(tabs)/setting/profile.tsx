@@ -1,17 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import React from 'react';
 import { ContainerComponent, InputComponent, SectionComponent } from '@/components';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useSelector } from 'react-redux';
 import ImageComponent from '@/components/ImageComponent';
+import { useTranslation } from 'react-i18next';
 
 type Props = {};
 
-const details = (props: Props) => {
+const Details = (props: Props) => {
+    const { t } = useTranslation();
     const { authData } = useSelector(authSelector);
 
     return (
-        <ContainerComponent title='Chi tiết tài khoản ' iconLeft='back' notification isScroll>
+        <ContainerComponent title={t('profile.title')} iconLeft='back' notification isScroll>
             <SectionComponent className='items-center flex-1 justify-center mt-4'>
                 <View
                     className='border-1 border border-primary-400 p-[2px]'
@@ -25,34 +27,39 @@ const details = (props: Props) => {
             <SectionComponent className='-mt-4'>
                 <View>
                     <InputComponent
-                        value={authData?.username ?? 'Không có dữ liệu'}
+                        value={authData?.username ?? t('profile.no_data')}
                         onChange={() => {}}
-                        labelTop='Mã số sinh viên'
+                        labelTop={t('profile.student_id_label')}
                         readOnly
                     />
                     <InputComponent
-                        value={authData?.fullName ?? 'Không có dữ liệu'}
+                        value={authData?.fullName ?? t('profile.no_data')}
                         onChange={() => {}}
-                        labelTop='Họ và tên sinh viên'
+                        labelTop={t('profile.full_name_label')}
                         readOnly
                     />
                     <InputComponent
-                        value={authData?.email ?? 'Không có dữ liệu'}
+                        value={authData?.email ?? t('profile.no_data')}
                         onChange={() => {}}
-                        labelTop='Email'
+                        labelTop={t('profile.email_label')}
                         readOnly
                     />
                     <InputComponent
-                        value={authData?.sclassName ?? 'Không có dữ liệu'}
+                        value={authData?.sclassName ?? t('profile.no_data')}
                         onChange={() => {}}
-                        labelTop='Lớp'
+                        labelTop={t('profile.class_label')}
                         readOnly
                     />
-                    <InputComponent value={'Công nghệ thông tin'} onChange={() => {}} labelTop='Khoa' readOnly />
                     <InputComponent
-                        value={authData?.role ?? 'Không có dữ liệu'}
+                        value={'Công nghệ thông tin'} // Giữ nguyên vì đây là giá trị cố định
                         onChange={() => {}}
-                        labelTop='Chức vụ'
+                        labelTop={t('profile.faculty_label')}
+                        readOnly
+                    />
+                    <InputComponent
+                        value={authData?.role ?? t('profile.no_data')}
+                        onChange={() => {}}
+                        labelTop={t('profile.role_label')}
                         readOnly
                     />
                 </View>
@@ -61,6 +68,4 @@ const details = (props: Props) => {
     );
 };
 
-export default details;
-
-const styles = StyleSheet.create({});
+export default Details;

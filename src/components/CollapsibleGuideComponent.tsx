@@ -1,21 +1,22 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Collapsible from 'react-native-collapsible';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import { colors } from '@/constants/colors';
 import ImageComponent from './ImageComponent';
+import { useTranslation } from 'react-i18next';
+
 interface GuideContent {
     content: string;
     image?: string;
 }
-// Define types
+
 interface GuideSection {
     title: string;
     content: string | string[] | GuideContent[];
     image?: string;
-    highlighted?: boolean; // Đánh dấu phần này nên được highlight khi mở
+    highlighted?: boolean;
 }
 
 interface ChevronIconProps {
@@ -27,16 +28,13 @@ interface CollapsibleGuideProps {
     sections: GuideSection[];
 }
 
-// SVG Icon component for the dropdown chevron
 const ChevronIcon: React.FC<ChevronIconProps> = ({ isUp, isHighlighted }) => {
     return <Entypo name={isUp ? 'chevron-up' : 'chevron-down'} size={24} color={isHighlighted ? '#0066cc' : '#333'} />;
 };
 
 const CollapsibleGuide: React.FC<CollapsibleGuideProps> = ({ sections }) => {
-    // Sử dụng mảng boolean để theo dõi trạng thái của từng section
-    const [collapsedSections, setCollapsedSections] = React.useState<boolean[]>(
-        Array(sections.length).fill(true), // Ban đầu tất cả đều đóng
-    );
+    const { t } = useTranslation(); // Sử dụng hook i18n
+    const [collapsedSections, setCollapsedSections] = React.useState<boolean[]>(Array(sections.length).fill(true));
 
     const toggleSection = (index: number) => {
         setCollapsedSections((prev) => {
@@ -133,7 +131,7 @@ const CollapsibleGuide: React.FC<CollapsibleGuideProps> = ({ sections }) => {
             <View style={styles.buttonContainer}>
                 {collapsedSections.every((collapsed) => collapsed) ? (
                     <ButtonComponent
-                        title='Mở rộng'
+                        title={t('collapsible_guide_component.expand')}
                         type='outline'
                         size='small'
                         icon={<MaterialCommunityIcons name='arrow-expand-vertical' size={24} color='black' />}
@@ -141,7 +139,7 @@ const CollapsibleGuide: React.FC<CollapsibleGuideProps> = ({ sections }) => {
                     />
                 ) : (
                     <ButtonComponent
-                        title='Thu gọn'
+                        title={t('collapsible_guide_component.collapse')}
                         type='outline'
                         size='small'
                         icon={<MaterialCommunityIcons name='arrow-collapse-vertical' size={24} color='black' />}

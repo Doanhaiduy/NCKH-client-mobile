@@ -32,7 +32,7 @@ export default function TextComponent(props: Props) {
                 prop.style,
             ]}
         >
-            {text}
+            {text || ''}
         </Text>
     );
 }

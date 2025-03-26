@@ -15,11 +15,13 @@ import { Feather } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import { LoadingModal } from '@/modals';
+import { useTranslation } from 'react-i18next';
 
 export default function TrainingPointDetails() {
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams();
     const { authData } = useSelector(authSelector);
     const { trainingPointRefresh } = useSelector((state: any) => state.refresh);
@@ -36,8 +38,8 @@ export default function TrainingPointDetails() {
 
     return (
         <ContainerComponent
-            title="Kết quả rèn luyện"
-            iconLeft="back"
+            title={t('training_point_details.title')}
+            iconLeft='back'
             isScroll
             handleRefresh={refetch}
             _refreshing={isRefetching}
@@ -45,7 +47,10 @@ export default function TrainingPointDetails() {
                 <TouchableOpacity
                     onPress={() => {
                         if (data?.isLocked) {
-                            Alert.alert('Thông báo', 'Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau');
+                            Alert.alert(
+                                t('training_point_details.notification_title'),
+                                t('training_point_details.locked_message'),
+                            );
                         } else {
                             router.push({
                                 pathname: '/training-point/upload',
@@ -54,36 +59,46 @@ export default function TrainingPointDetails() {
                         }
                     }}
                 >
-                    <Feather name="upload" size={24} color={colors.primary400} />
+                    <Feather name='upload' size={24} color={colors.primary400} />
                 </TouchableOpacity>
             }
         >
-            <SectionComponent className="items-center justify-center">
+            <SectionComponent className='items-center justify-center'>
                 <SpaceComponent height={16} />
-                <TextComponent text={`Mã sinh viên: ${authData?.username}`} className="font-interMd" size={20} />
                 <TextComponent
-                    text={`Tên sinh viên: ${authData?.fullName}`}
-                    className="font-interMd mt-2"
+                    text={t('training_point_details.student_id_label').replace('{username}', authData?.username || '')}
+                    className='font-interMd'
+                    size={20}
+                />
+                <TextComponent
+                    text={t('training_point_details.student_name_label').replace(
+                        '{fullName}',
+                        authData?.fullName || '',
+                    )}
+                    className='font-interMd mt-2'
                     size={20}
                     center
                 />
                 <TextComponent
-                    text={`Năm học ${data?.semesterYear.year} - ${+data?.semesterYear.year! + 1} | Học Kỳ ${romanize(data?.semesterYear.semester.toString()!)}`}
+                    text={t('training_point_details.semester_year_label')
+                        .replace('{year}', data?.semesterYear.year.toString() || '')
+                        .replace('{nextYear}', (+data?.semesterYear.year! + 1).toString())
+                        .replace('{semester}', romanize(data?.semesterYear.semester.toString()!))}
                     color={colors.text400}
-                    className="mt-2"
+                    className='mt-2'
                     size={16}
                 />
                 <SpaceComponent height={16} />
                 <RowComponent>
                     <ButtonComponent
-                        title="Tự đánh giá"
-                        type="primary"
-                        size="small"
+                        title={t('training_point_details.self_assessment_button')}
+                        type='primary'
+                        size='small'
                         onPress={() => {
                             if (data?.isLocked) {
                                 Alert.alert(
-                                    'Thông báo',
-                                    'Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau',
+                                    t('training_point_details.notification_title'),
+                                    t('training_point_details.locked_message'),
                                 );
                             } else {
                                 router.push({
@@ -95,14 +110,14 @@ export default function TrainingPointDetails() {
                     />
                     <SpaceComponent width={10} />
                     <ButtonComponent
-                        title="Tải minh chứng"
-                        type="primary"
-                        size="small"
+                        title={t('training_point_details.upload_evidence_button')}
+                        type='primary'
+                        size='small'
                         onPress={() => {
                             if (data?.isLocked) {
                                 Alert.alert(
-                                    'Thông báo',
-                                    'Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau',
+                                    t('training_point_details.notification_title'),
+                                    t('training_point_details.locked_message'),
                                 );
                             } else {
                                 router.push({
@@ -114,7 +129,7 @@ export default function TrainingPointDetails() {
                     />
                 </RowComponent>
             </SectionComponent>
-            <SectionComponent className="items-center">
+            <SectionComponent className='items-center'>
                 <TableBorderComponent data={data?.criteria} />
             </SectionComponent>
             <SpaceComponent height={40} />
@@ -122,5 +137,3 @@ export default function TrainingPointDetails() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

@@ -3,28 +3,30 @@ import { Regex } from '.';
 
 type passwordType = 'Login' | 'SignUp';
 
-export const schemasCustom: {
-    username: z.ZodString;
-    email: z.ZodString;
-    password: (type: passwordType) => z.ZodString;
-    confirmPassword: z.ZodString;
-} = {
+export const schemasCustom = (t: (key: string) => string) => ({
     username: z
         .string()
-        .min(1, { message: 'Mã số sinh viên là bắt buộc' })
-        .min(8, { message: 'Mã số sinh viên không hợp lệ' }),
+        .min(1, { message: t('schemas_custom_zod.username_required') })
+        .min(8, { message: t('schemas_custom_zod.username_invalid') }),
 
-    email: z.string().min(1, { message: 'Email là bắt buộc' }).email({ message: 'Email không hợp lệ' }),
+    email: z
+        .string()
+        .min(1, { message: t('schemas_custom_zod.email_required') })
+        .email({ message: t('schemas_custom_zod.email_invalid') }),
+
     password: (type: passwordType) => {
         if (type === 'Login') {
-            return z.string().min(1, { message: 'Mật khẩu là bắt buộc' });
+            return z.string().min(1, { message: t('schemas_custom_zod.password_required') });
         }
-        return z.string().min(8, { message: 'Mật khẩu phải chứa ít nhất 8 ký tự' }).regex(Regex.password, {
-            message: 'Mật khẩu phải chứa ít nhất 1 chữ cái và 1 số',
-        });
+        return z
+            .string()
+            .min(8, { message: t('schemas_custom_zod.password_min_length') })
+            .regex(Regex.password, {
+                message: t('schemas_custom_zod.password_invalid'),
+            });
     },
 
     confirmPassword: z.string().min(8, {
-        message: 'Mật khẩu không khớp',
+        message: t('schemas_custom_zod.confirm_password_invalid'),
     }),
-};
+});

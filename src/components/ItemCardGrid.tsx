@@ -2,7 +2,7 @@ import { colors } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import clsx from 'clsx';
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
@@ -37,16 +37,14 @@ export default function ItemCardGrid(props: Props) {
 
             <View className={containerTextClass}>
                 <TextComponent className={textClass} numberOfLines={2} text={data?.title} />
-                <RowComponent className="">
-                    <Ionicons name="calendar" size={14} color={colors.black} />
+                <RowComponent className=''>
+                    <Ionicons name='calendar' size={14} color={colors.black} />
                     <TextComponent
                         text={dateFormatLocale(data?.createdAt)}
-                        className="ml-1 text-[13px] text-text-400"
+                        className='ml-1 text-[13px] text-text-400'
                     />
                 </RowComponent>
             </View>
         </CardComponent>
     );
 }
-
-const styles = StyleSheet.create({});

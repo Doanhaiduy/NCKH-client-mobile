@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 import { Portal } from 'react-native-portalize';
 import { Modalize } from 'react-native-modalize';
 
@@ -30,7 +30,5 @@ const PortalizeComponent = forwardRef((props: Props, ref) => {
         </Portal>
     );
 });
-
-const styles = StyleSheet.create({});
 
 export default PortalizeComponent;

@@ -1,6 +1,365 @@
 {
-    "common": {
+    "language": {
         "test": "Chọn ngôn ngữ của bạn:",
-        "test2": "Ngôn ngữ"
+        "test2": "Ngôn ngữ",
+        "language_changed": "Ngôn ngữ đã được thay đổi",
+        "notification_title": "Thông báo",
+        "language_changed_message": "Ngôn ngữ đã được thay đổi",
+        "ok": "OK",
+        "error_title": "Lỗi",
+        "error_message": "Đã có lỗi xảy ra, vui lòng thử lại sau!"
+    },
+    "forgot": {
+        "forgot_password": "Quên mật khẩu?",
+        "enter_email": "Vui lòng nhập địa chỉ email đã liên kết với tài khoản của bạn.",
+        "send_otp_info": "Chúng tôi sẽ gửi một mã OTP.",
+        "email_placeholder": "Email",
+        "send_otp": "Gửi mã OTP",
+        "or": "Hoặc",
+        "login": "Đăng nhập"
+    },
+    "set_password": {
+        "create_new_password": "Tạo mật khẩu mới",
+        "password_requirement": "Mật khẩu mới của bạn phải khác với mật khẩu đã sử dụng trước đó.",
+        "new_password_placeholder": "Mật khẩu mới",
+        "reset_password": "Đặt lại mật khẩu",
+        "password_error": "Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ cái và số",
+        "success_title": "Thành công",
+        "success_message": "Mật khẩu đã được đặt lại thành công!",
+        "error_title": "Lỗi",
+        "error_message": "Đã có lỗi xảy ra, vui lòng thử lại sau!"
+    },
+    "login": {
+        "app_name": "NTU Student",
+        "student_id_placeholder": "Mã số sinh viên",
+        "password_placeholder": "Mật khẩu",
+        "forgot_password": "Quên mật khẩu",
+        "login_button": "Đăng nhập",
+        "success_message": "Đăng nhập thành công"
+    },
+    "verification": {
+        "verify_email": "Xác minh email",
+        "otp_sent": "Một mã OTP 6 chữ số đã được gửi đến email {email}.",
+        "check_and_enter": "Vui lòng kiểm tra và nhập mã.",
+        "verify_button": "Xác minh",
+        "invalid_otp": "Mã OTP không hợp lệ",
+        "resend_prompt": "Chưa nhận được mã OTP?",
+        "resend": "Gửi lại",
+        "otp_expires_in": "Mã xác minh sẽ hết hạn trong {seconds} giây"
+    },
+    "activity": {
+        "title": "Hoạt động",
+        "search_placeholder": "Tìm kiếm hoạt động",
+        "no_data": "Không có dữ liệu",
+        "ongoing_activities": "Hoạt động đang diễn ra"
+    },
+    "activity_details": {
+        "title": "Hoạt động ngoại khóa",
+        "no_data": "Không có dữ liệu",
+        "register": "Đăng ký",
+        "unregister": "Hủy đăng ký",
+        "full": "Đã đủ số lượng",
+        "expired": "Hết hạn đăng ký",
+        "already": "Đã điểm danh",
+        "prevent_unregister": "Hủy đăng ký",
+        "prevent_unregister_alert_title": "Thông báo",
+        "prevent_unregister_alert_message": "Không thể hủy đăng ký khi sự kiện sắp diễn ra",
+        "ok": "OK"
+    },
+    "news": {
+        "title": "Tin tức",
+        "search_placeholder": "Tìm kiếm tin tức",
+        "no_data": "Không có dữ liệu"
+    },
+    "news_details": {
+        "title": "Tin tức",
+        "no_data": "Không có dữ liệu"
+    },
+    "home": {
+        "title": "NTU Student",
+        "featured_activities": "Hoạt động nổi bật",
+        "quick_access": "Truy cập nhanh"
+    },
+    "attendance": {
+        "title": "Điểm danh",
+        "ongoing_activities": "Hoạt động đang diễn ra",
+        "registered_activities": "Hoạt động đã đăng ký",
+        "past_activities": "Hoạt động đã diễn ra",
+        "no_data": "Không có dữ liệu",
+        "view_attended_activities": "Xem hoạt động đã điểm danh"
+    },
+    "list_attendance": {
+        "title": "Đã điểm danh",
+        "attended_activities": "Hoạt động đã tham gia",
+        "no_data": "Không có dữ liệu"
+    },
+    "attendance_details": {
+        "title": "Điểm Danh",
+        "event_code": "Mã sự kiện: {code}",
+        "location": "Địa điểm: {location}",
+        "start_time": "Thời gian bắt đầu: {time}",
+        "end_time": "Thời gian kết thúc: {time}",
+        "check_in": "Điểm danh",
+        "no_event": "Không tìm thấy sự kiện"
+    },
+    "scan_qr": {
+        "title": "Quét mã QR",
+        "camera_permission_prompt": "Ứng dụng cần quyền truy cập máy ảnh để quét mã QR. Vui lòng bật quyền truy cập máy ảnh.",
+        "grant_camera_access": "Cấp quyền truy cập máy ảnh",
+        "scan_qr_instruction": "Hướng camera về phía mã QR",
+        "take_photo_instruction": "Đưa khuôn mặt vào khung và chụp ảnh",
+        "photo_title": "Ảnh chụp",
+        "confirm": "Xác nhận",
+        "retake": "Chụp lại",
+        "scan_again": "Quét lại",
+        "check_in_success": "Điểm danh thành công",
+        "check_in_success_message": "Bạn đã điểm danh thành công sự kiện: ",
+        "check_in_failed": "Điểm danh không thành công",
+        "check_in_failed_message": "Đã có lỗi xảy ra trong quá trình điểm danh",
+        "location_permission_prompt": "Ứng dụng cần quyền truy cập vị trí để điểm danh.",
+        "open_settings": "Mở cài đặt",
+        "back": "Quay lại",
+        "invalid_qr": "Mã QR không hợp lệ",
+        "invalid_time": "Thời gian điểm danh không hợp lệ",
+        "distance_error": "Bạn cần đến gần hơn {distance} mét để điểm danh.",
+        "processing_qr": "Đang xử lý mã QR",
+        "reading_qr": "Đang đọc mã QR",
+        "processing_image": "Đang xử lý ảnh",
+        "checking_in": "Đang điểm danh",
+        "gallery_permission_prompt": "Ứng dụng cần quyền truy cập thư viện ảnh để quét mã QR.",
+        "no_event": "Không tìm thấy sự kiện",
+        "no_qr_found": "Không tìm thấy mã QR trong ảnh",
+        "invalid_image": "Ảnh không hợp lệ"
+    },
+    "notification": {
+        "title": "Thông báo",
+        "no_notifications": "Không có thông báo nào"
+    },
+    "reset_password": {
+        "title": "Đổi mật khẩu",
+        "password_requirement": "Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt.",
+        "current_password_placeholder": "Mật khẩu hiện tại",
+        "new_password_placeholder": "Mật khẩu mới",
+        "confirm_password_placeholder": "Nhập lại mật khẩu mới",
+        "forgot_password": "Quên mật khẩu?",
+        "update_password": "Cập nhật mật khẩu",
+        "success_title": "Thành công",
+        "success_message": "Cập nhật mật khẩu thành công!",
+        "agree_button": "Đồng ý",
+        "password_mismatch": "Mật khẩu không khớp"
+    },
+    "set_password_v2": {
+        "title": "Tạo mật khẩu mới",
+        "password_requirement": "Mật khẩu mới của bạn phải có tối thiếu 6 ký tự, bao gồm cả số, chữ cái và ký tự đặc biệt.",
+        "new_password_placeholder": "Mật khẩu mới",
+        "confirm_password_placeholder": "Nhập lại mật khẩu",
+        "create_password_button": "Tạo mật khẩu",
+        "password_mismatch": "Mật khẩu không khớp",
+        "success_title": "Thành công",
+        "success_message": "Mật khẩu đã được đặt lại thành công!",
+        "error_title": "Lỗi",
+        "error_message": "Đã có lỗi xảy ra, vui lòng thử lại sau!"
+    },
+    "verification_v2": {
+        "title": "Quên mật khẩu",
+        "sent_otp_message": "Chúng tôi đã gửi mã của bạn đến email {email}",
+        "check_otp_instruction": "Vui lòng kiểm tra mã trong email của bạn. Mã này gồm 6 số.",
+        "otp_expiry_message": "Mã xác minh sẽ hết hạn trong {seconds} giây",
+        "no_otp_message": "Chưa nhận được mã OTP?",
+        "resend_otp": "Gửi lại",
+        "enter_otp_instruction": "Nhập mã gồm 6 chữ số",
+        "invalid_otp": "Mã OTP không hợp lệ",
+        "verify_button": "Xác minh",
+        "cancel_button": "Hủy"
+    },
+    "helps": {
+        "title": "Trợ giúp",
+        "user_guide": "Hướng dẫn sử dụng",
+        "terms_policies": "Điều khoản và chính sách"
+    },
+    "terms_policies": {
+        "title": "Điều khoản và chính sách",
+        "terms_of_use": "Điều khoản sử dụng",
+        "privacy_policy": "Chính sách bảo mật"
+    },
+    "user_guide": {
+        "title": "Hướng dẫn sử dụng",
+        "help_question": "Chúng tôi có thể giúp gì cho bạn?",
+        "functionality_title": "Chức năng"
+    },
+    "settings": {
+        "title": "Cài đặt",
+        "student_id_label": "MSSV: {username}",
+        "language": "Ngôn ngữ",
+        "change_password": "Đổi mật khẩu",
+        "help": "Trợ giúp",
+        "logout": "Đăng xuất",
+        "logout_alert_title": "Thông báo",
+        "logout_alert_message": "Bạn có chắc chắn muốn đăng xuất?",
+        "cancel_button": "Hủy",
+        "agree_button": "Đồng ý"
+    },
+    "profile": {
+        "title": "Chi tiết tài khoản",
+        "student_id_label": "Mã số sinh viên",
+        "full_name_label": "Họ và tên sinh viên",
+        "email_label": "Email",
+        "class_label": "Lớp",
+        "faculty_label": "Khoa",
+        "role_label": "Chức vụ",
+        "no_data": "Không có dữ liệu"
+    },
+    "training_point": {
+        "title": "Kết quả rèn luyện",
+        "student_id_label": "Mã sinh viên: {username}",
+        "student_name_label": "Tên sinh viên: {fullName}",
+        "year_label": "Năm học",
+        "semester_label": "Học kỳ",
+        "self_assessment_score": "Điểm tự đánh giá",
+        "view_details_button": "Xem chi tiết",
+        "no_data": "Không có dữ liệu",
+        "self_assessment_time_label": "Thời gian tự đánh giá",
+        "from_label": "Từ: {startTime}",
+        "to_label": "Đến: {endTime}",
+        "not_yet_time": "Chưa đến thời gian đánh giá"
+    },
+    "training_point_details": {
+        "title": "Kết quả rèn luyện",
+        "student_id_label": "Mã sinh viên: {username}",
+        "student_name_label": "Tên sinh viên: {fullName}",
+        "semester_year_label": "Năm học {year} - {nextYear} | Học Kỳ {semester}",
+        "self_assessment_button": "Tự đánh giá",
+        "upload_evidence_button": "Tải minh chứng",
+        "notification_title": "Thông báo",
+        "locked_message": "Chưa tới thời gian đánh giá điểm rèn luyện, hãy quay lại sau"
+    },
+    "assessment": {
+        "title": "Tự đánh giá",
+        "student_id_label": "Mã sinh viên: {username}",
+        "student_name_label": "Tên sinh viên: {fullName}",
+        "semester_year_label": "Năm học {year} - {nextYear} | Học Kỳ {semester}",
+        "submit_button": "Gửi",
+        "notification_title": "Thông báo",
+        "confirm_message": "Xác nhận đánh giá?",
+        "cancel_button": "Hủy",
+        "agree_button": "Đồng ý",
+        "processing_message": "Đang xử lý"
+    },
+    "upload": {
+        "title": "Tải lên minh chứng",
+        "student_id_label": "Mã sinh viên: {username}",
+        "student_name_label": "Tên sinh viên: {fullName}",
+        "semester_year_label": "Năm học {year} - {nextYear} | Học Kỳ {semester}",
+        "submit_button": "Gửi",
+        "notification_title": "Thông báo",
+        "confirm_message": "Gửi minh chứng?",
+        "cancel_button": "Hủy",
+        "agree_button": "Đồng ý"
+    },
+    "upload_image": {
+        "title": "Tải lên ảnh",
+        "student_id_label": "Mã sinh viên: {username}",
+        "student_name_label": "Tên sinh viên: {fullName}",
+        "evidence_label": "Tải lên minh chứng mục 1.2",
+        "upload_image_button": "Tải ảnh lên",
+        "save_button": "Lưu",
+        "select_from_library": "Chọn từ thư viện",
+        "take_photo": "Chụp ảnh",
+        "permission_denied": "Cần cấp quyền truy cập thư viện ảnh!",
+        "no_image_error_title": "Lỗi",
+        "no_image_error_message": "Vui lòng chọn ảnh để tải lên",
+        "save_confirmation_title": "Lưu",
+        "save_confirmation_message": "Bạn có chắc chắn muốn lưu minh chứng này?",
+        "cancel_button": "Hủy",
+        "success_title": "Thông báo",
+        "success_message": "Tải ảnh lên thành công",
+        "error_title": "Lỗi",
+        "error_message": "Tải ảnh lên thất bại",
+        "loading_data_message": "Đang tải dữ liệu",
+        "uploading_message": "Đang tải ảnh lên"
+    },
+    "feedback": {
+        "title": "Góp ý",
+        "student_id_label": "Mã số sinh viên",
+        "full_name_label": "Họ và tên sinh viên",
+        "class_label": "Lớp",
+        "faculty_label": "Khoa",
+        "content_label": "Nội dung góp ý",
+        "content_placeholder": "Nhập nội dung tại đây",
+        "submit_button": "Gửi",
+        "submit_title": "Gửi góp ý",
+        "empty_content_message": "Vui lòng nhập nội dung góp ý",
+        "confirm_message": "Bạn có chắc chắn muốn gửi góp ý này?",
+        "cancel_button": "Hủy",
+        "success_message": "Gửi góp ý thành công",
+        "failure_message": "Gửi góp ý thất bại",
+        "failure_message_with_error": "Gửi góp ý thất bại, {error}"
+    },
+    "action_list_component": {
+        "news": "Tin tức",
+        "activity": "Hoạt động",
+        "attendance": "Đã điểm danh",
+        "training_point": "Kết quả rèn luyện",
+        "help": "Trợ giúp",
+        "feedback": "Góp ý",
+        "setting": "Cài đặt",
+        "nothing": "Không có gì",
+        "all": "Tất cả",
+        "attendance_short": "Điểm danh"
+    },
+    "collapsible_guide_component": {
+        "expand": "Mở rộng",
+        "collapse": "Thu gọn"
+    },
+    "dropdown_item_component": {
+        "extracurricular_activities": "Hoạt động ngoại khóa"
+    },
+    "image_component": {
+        "permission_denied": "Quyền truy cập thư viện ảnh bị từ chối!",
+        "download_success_title": "Tải ảnh thành công",
+        "download_success_message": "Ảnh đã được tải xuống thư viện ảnh của bạn"
+    },
+    "item_card_list_component": {
+        "attendance": "Điểm danh"
+    },
+    "table_border_component": {
+        "criteria_code": "Mã TC",
+        "criteria_name": "Tên tiêu chí",
+        "upload_evidence": "Tải lên minh chứng",
+        "max_score": "Điểm tối đa",
+        "approved_score": "Điểm đã duyệt",
+        "self_assessment_score": "Điểm tự đánh giá",
+        "upload": "Tải lên",
+        "uploaded": "Đã tải lên",
+        "notification": "Thông báo"
+    },
+    "table_component": {
+        "index": "#",
+        "activity_name": "Tên hoạt động",
+        "time": "Thời gian"
+    },
+    "loading_modal_component": {
+        "loading": "Đang tải..."
+    },
+    "notification_modal_component": {
+        "view_details": "Xem chi tiết"
+    },
+    "language_selector_component": {
+        "select_language": "Chọn Ngôn Ngữ",
+        "languages": {
+            "vi": "Tiếng Việt",
+            "en": "English"
+        }
+    },
+
+    "schemas_custom_zod": {
+        "username_required": "Mã số sinh viên là bắt buộc",
+        "username_invalid": "Mã số sinh viên không hợp lệ",
+        "email_required": "Email là bắt buộc",
+        "email_invalid": "Email không hợp lệ",
+        "password_required": "Mật khẩu là bắt buộc",
+        "password_min_length": "Mật khẩu phải chứa ít nhất 8 ký tự",
+        "password_invalid": "Mật khẩu phải chứa ít nhất 1 chữ cái và 1 số",
+        "confirm_password_invalid": "Mật khẩu không khớp"
     }
 }

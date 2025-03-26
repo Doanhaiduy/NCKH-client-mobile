@@ -13,7 +13,8 @@ import { Feather } from '@expo/vector-icons';
 import { useQueries } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React from 'react';
-import { StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StatusBar, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface Section {
     title: string;
@@ -23,6 +24,7 @@ interface Section {
 export default function Home() {
     const modalizeRef = React.useRef<any>(null);
     const { expoPushToken, notification } = usePushNotifications();
+    const { t } = useTranslation();
     const [posts] = useQueries({
         queries: [
             {
@@ -42,7 +44,7 @@ export default function Home() {
     return (
         <ContainerComponent
             isScroll
-            title='NTU Student'
+            title={t('home.title')}
             isHome
             _refreshing={posts.isFetching}
             handleRefresh={() => {
@@ -56,14 +58,14 @@ export default function Home() {
         >
             <StatusBar barStyle={'light-content'} />
             <SectionComponent className='flex-1 w-full'>
-                <TextComponent text='Hoạt động nổi bật' fontBold color={colors.primary500} />
+                <TextComponent text={t('home.featured_activities')} fontBold color={colors.primary500} />
 
                 <View className='pt-4 w-full -ml-1'>
                     <SlideCardComponent data={posts.data?.posts || []} autoPlay duration={4000} />
                 </View>
             </SectionComponent>
             <SectionComponent className='flex-1'>
-                <TextComponent text='Truy cập nhanh' fontBold />
+                <TextComponent text={t('home.quick_access')} fontBold />
                 <ActionListComponents
                     onShowAll={() => {
                         modalizeRef.current?.open();
@@ -75,7 +77,7 @@ export default function Home() {
                 ref={modalizeRef}
                 children={
                     <View className='shadow-xl gap-5 p-3 pt-4 bg-white mx-auto'>
-                        <TextComponent text='Truy cập nhanh' fontBold />
+                        <TextComponent text={t('home.quick_access')} fontBold />
                         <ActionListComponents
                             full
                             onClose={() => {
@@ -88,5 +90,3 @@ export default function Home() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});

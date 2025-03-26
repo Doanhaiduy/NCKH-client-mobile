@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import {
@@ -9,6 +9,7 @@ import {
     TextComponent,
 } from '@/components';
 import { colors } from '@/constants/colors';
+import { useTranslation } from 'react-i18next';
 
 interface GuideContent {
     content: string;
@@ -99,10 +100,11 @@ const guideSections: GuideSection[] = [
 ];
 
 const DetailsUserGuid = () => {
+    const { t } = useTranslation();
     const { id, title } = useLocalSearchParams();
 
     return (
-        <ContainerComponent iconLeft='back' title='Hướng dẫn sử dụng' notification isScroll>
+        <ContainerComponent iconLeft='back' title={t('user_guide.title')} notification isScroll>
             <SectionComponent className='flex-1'>
                 <View style={styles.header}>
                     <TextComponent text={title.toString()} color={colors.primary400} size={20} fontBold />
@@ -116,7 +118,7 @@ const DetailsUserGuid = () => {
                 </View>
 
                 <View className='py-4'>
-                    <TextComponent text={'Chức năng'} color={colors.black} size={18} fontBold />
+                    <TextComponent text={t('user_guide.functionality_title')} color={colors.black} size={18} fontBold />
                     <SpaceComponent height={8} />
                     <CollapsibleGuideComponent sections={guideSections} />
                 </View>

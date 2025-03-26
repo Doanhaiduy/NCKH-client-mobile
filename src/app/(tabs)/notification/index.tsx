@@ -4,16 +4,18 @@ import { ContainerComponent, NotificationCard } from '@/components';
 import { useCustomRouter } from '@/hooks/useCustomRouter';
 import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useRefreshing } from '@/hooks/useRefreshing';
-import { LoadingModal, NotificationModal } from '@/modals';
+import { NotificationModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Text } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function NotificationPage() {
     const { authData } = useSelector(authSelector);
     const [visible, setVisible] = React.useState(false);
+    const { t } = useTranslation();
 
     const router = useCustomRouter();
     const [notificationDetails, setNotificationDetails] = React.useState<_Notification | null>(null);
@@ -66,7 +68,7 @@ export default function NotificationPage() {
     return (
         <ContainerComponent
             iconLeft='logo'
-            title='Thông báo'
+            title={t('notification.title')}
             notification
             isScroll
             handleRefresh={handleRefresh}
@@ -85,7 +87,7 @@ export default function NotificationPage() {
                     />
                 ))
             ) : (
-                <Text>Không có thông báo nào</Text>
+                <Text>{t('notification.no_notifications')}</Text>
             )}
             {/* {isFetching && <LoadingModal />} */}
             <NotificationModal
@@ -97,5 +99,3 @@ export default function NotificationPage() {
         </ContainerComponent>
     );
 }
-
-const styles = StyleSheet.create({});
