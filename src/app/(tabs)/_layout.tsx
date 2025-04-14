@@ -67,21 +67,29 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name='attendance'
                 options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <TouchableOpacity
-                            activeOpacity={0.3}
-                            className='items-center justify-center h-14 w-14  bg-primary-400 mb-10'
-                            style={{
-                                borderRadius: 99,
-                            }}
-                            onPress={() => {
-                                router.navigate('/attendance');
-                            }}
-                        >
-                            <MaterialIcons name='qr-code-scanner' size={26} color={colors.white} />
-                        </TouchableOpacity>
+                    tabBarIcon: ({}) => (
+                        <View className='items-center justify-center'>
+                            <View className='p-2 bg-white rounded-full items-center justify-center h-18 w-18 -mt-12'>
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    className='items-center justify-center h-16 w-16 bg-primary-500'
+                                    style={{
+                                        borderRadius: 100,
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.2,
+                                        shadowRadius: 3,
+                                        elevation: 4,
+                                    }}
+                                    onPress={() => {
+                                        router.navigate('/attendance');
+                                    }}
+                                >
+                                    <MaterialIcons name='qr-code-scanner' size={36} color={colors.white} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     ),
-                    headerTitle: 'Điểm danh',
                     title: '',
                 }}
             />

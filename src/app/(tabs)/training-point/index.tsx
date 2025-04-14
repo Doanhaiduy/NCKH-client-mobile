@@ -9,11 +9,10 @@ import {
 } from '@/components';
 import { colors } from '@/constants/colors';
 import { useRefreshing } from '@/hooks/useRefreshing';
-import { SemesterData, YearData } from '@/mockData';
 import { LoadingModal } from '@/modals';
 import { authSelector } from '@/stores/reducers/authReducer';
 import { setTrainingPointRefresh } from '@/stores/reducers/refreshReducer';
-import { getSemesterYears } from '@/utils';
+import { getCurrentSemesterYear, getSemesterYears } from '@/utils';
 import { dateTimeFormat } from '@/utils/dateTime';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -24,9 +23,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 export default function TrainingPoint() {
+    const { semester, year } = getCurrentSemesterYear();
+    const currentAcademicYear = `${year}-${year + 1}`;
     const { t } = useTranslation();
-    const [selectedYear, setSelectedYear] = useState<String>(YearData[3].value.toString());
-    const [selectedSemester, setSelectedSemester] = useState<String>(SemesterData[0].value.toString());
+    const [selectedYear, setSelectedYear] = useState(currentAcademicYear);
+    const [selectedSemester, setSelectedSemester] = useState(semester.toString());
     const [trainingPointOption, setTrainingPointOption] = useState<{
         year: Year[];
         semester: Semester[];

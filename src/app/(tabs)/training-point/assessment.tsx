@@ -66,6 +66,7 @@ export default function Assessment() {
                                         // @ts-ignore
                                         const updated = await tableBorderRef.current.handleSubmit();
                                         if (!updated) {
+                                            setIsLoading(false);
                                             return;
                                         }
                                     }

@@ -42,8 +42,8 @@ class TrainingPointAPI {
         return await this.HandleTrainingPoint(`/${id}`, undefined, 'get', option);
     };
 
-    getCriteriaEvidence = async (id = '', option: AxiosRequestConfig = {}): Promise<Evidence> => {
-        return await this.HandleTrainingPoint(`/${id}/criteria-evidence`, undefined, 'get', option);
+    getCriteriaEvidence = async (id = '', option: AxiosRequestConfig = {}): Promise<Criteria> => {
+        return await this.HandleTrainingPoint(`/criteria/${id}`, undefined, 'get', option);
     };
 
     updateCriteriaEvidence = async (id = '', data: FormData, option: AxiosRequestConfig = {}): Promise<any> => {

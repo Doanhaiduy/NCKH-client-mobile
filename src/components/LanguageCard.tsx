@@ -25,7 +25,7 @@ export default function LanguageCard(props: Props) {
     );
 
     return (
-        <TouchableOpacity onPress={() => onPress?.(lang ?? 'vi')} className={containerClasses}>
+        <TouchableOpacity disabled={active} onPress={() => onPress?.(lang ?? 'vi')} className={containerClasses}>
             <RowComponent>
                 <Image
                     source={icon}

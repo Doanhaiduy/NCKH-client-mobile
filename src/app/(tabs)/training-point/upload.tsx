@@ -46,26 +46,6 @@ export default function Upload() {
             isScroll
             handleRefresh={handleRefresh}
             _refreshing={refreshing}
-            iconRight={
-                <TouchableOpacity
-                    onPress={() =>
-                        Alert.alert(t('upload.notification_title'), t('upload.confirm_message'), [
-                            {
-                                text: t('upload.cancel_button'),
-                                style: 'cancel',
-                            },
-                            {
-                                text: t('upload.agree_button'),
-                                onPress: () => {
-                                    router.back();
-                                },
-                            },
-                        ])
-                    }
-                >
-                    <TextComponent text={t('upload.submit_button')} size={20} color={colors.primary400} />
-                </TouchableOpacity>
-            }
         >
             <SectionComponent className='items-center justify-center'>
                 <SpaceComponent height={16} />
@@ -91,7 +71,7 @@ export default function Upload() {
                 />
             </SectionComponent>
             <SectionComponent className='items-center'>
-                <TableBorderComponent isUpload data={data?.criteria} />
+                <TableBorderComponent isUpload data={data?.criteria} isLocked={data?.isLocked} />
             </SectionComponent>
         </ContainerComponent>
     );

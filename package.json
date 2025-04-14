@@ -1,6 +1,6 @@
 {
     "name": "ntu-student",
-    "version": "1.0.9",
+    "version": "2.0.0",
     "main": "expo-router/entry",
     "expo": {
         "doctor": {
@@ -75,6 +75,7 @@
         "react-i18next": "^15.4.1",
         "react-native": "0.76.6",
         "react-native-animated-dots-carousel": "^1.0.2",
+        "react-native-barcode-mask": "^1.2.4",
         "react-native-collapsible": "^1.6.2",
         "react-native-gesture-handler": "~2.20.2",
         "react-native-keyboard-aware-scroll-view": "^0.9.5",

@@ -1,5 +1,5 @@
 import { colors } from '@/constants/colors';
-import { Feather } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useImperativeHandle } from 'react';
 import { Alert, TextInput, View } from 'react-native';
@@ -15,31 +15,25 @@ interface Props {
     isUpload?: boolean;
     isAssessment?: boolean;
     idTrainingPoint?: string;
+    isLocked?: boolean;
 }
 
 function TableBorderComponent(props: Props, ref: any) {
     const { t } = useTranslation();
-    const { numOfColumns = 3, isUpload, data, isAssessment, idTrainingPoint } = props;
+    const { numOfColumns = 3, isUpload, data, isAssessment, idTrainingPoint, isLocked } = props;
     const [flattenedData, setFlattenedData] = React.useState<flattenCriteria[] | null>(null);
-
     const handleChange = (value: number, id: string) => {
         const maxScore = flattenedData?.find((item) => item._id === id)?.maxScore;
-        if (value > maxScore! && maxScore! >= 0) {
+        if (value > maxScore! && maxScore! > 0) {
             return;
         }
-
-        if (maxScore! >= 0 && value < 0) {
+        if (maxScore! > 0 && value < 0) {
             return;
-        }
-        if (maxScore! < 0 && value > 0) {
-            if (value > -maxScore!) {
-                return;
-            }
         }
 
         const newData = flattenedData?.map((item) => {
             if (item._id === id) {
-                return { ...item, tempScore: maxScore! < 0 ? -value : value };
+                return { ...item, tempScore: maxScore! === 0 ? -value : value };
             }
             return item;
         });
@@ -54,7 +48,14 @@ function TableBorderComponent(props: Props, ref: any) {
         try {
             const newData: CriteriaScoreParams[] | undefined = flattenedData
                 ?.filter((item) => item.activeChange)
-                ?.filter((item) => item.tempScore !== item.totalScore)
+                ?.filter((item) => {
+                    if (item.maxScore === 0 && item.activeChange) {
+                        return true;
+                    } else {
+                        return item.totalScore !== item.tempScore;
+                    }
+                })
+                ?.filter((item) => !isNaN(item.tempScore))
                 ?.map((item) => {
                     return { criteriaId: item._id, score: item.tempScore };
                 });
@@ -73,6 +74,91 @@ function TableBorderComponent(props: Props, ref: any) {
             setFlattenedData(flattenCriteria(data!));
         }
     }, [data]);
+
+    const renderButton = (item: flattenCriteria) => {
+        if (item.require && !item.evidence) {
+            return (
+                <ButtonComponent
+                    onPress={() => {
+                        router.push({
+                            pathname: '/training-point/upload-image',
+                            params: { id: item._id, criteriaCode: item.criteriaCode, isLocked: isLocked ? 1 : 0 },
+                        });
+                    }}
+                    title={t('table_border_component.upload')}
+                    type='outline'
+                    size='small'
+                    icon={<Feather name='upload' size={18} color={colors.primary400} />}
+                />
+            );
+        } else {
+            const status = item.evidence?.status;
+            switch (status) {
+                case 'pending':
+                    return (
+                        <ButtonComponent
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/training-point/upload-image',
+                                    params: {
+                                        id: item._id,
+                                        criteriaCode: item.criteriaCode,
+                                        isLocked: isLocked ? 1 : 0,
+                                        hasCount: item.hasCount ? 1 : 0,
+                                    },
+                                });
+                            }}
+                            title={t('table_border_component.uploaded')}
+                            type='outline'
+                            size='small'
+                            icon={<Feather name='image' size={18} color={colors.primary400} />}
+                        />
+                    );
+                case 'approved':
+                    return (
+                        <ButtonComponent
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/training-point/upload-image',
+                                    params: {
+                                        id: item._id,
+                                        criteriaCode: item.criteriaCode,
+                                        isLocked: isLocked ? 1 : 0,
+                                    },
+                                });
+                            }}
+                            title={t('table_border_component.approved')}
+                            type='primary'
+                            size='small'
+                            iconContainerClass='mr-1'
+                            icon={<AntDesign name='checkcircleo' size={20} color='white' />}
+                        />
+                    );
+                case 'rejected':
+                    return (
+                        <ButtonComponent
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/training-point/upload-image',
+                                    params: {
+                                        id: item._id,
+                                        criteriaCode: item.criteriaCode,
+                                        isLocked: isLocked ? 1 : 0,
+                                    },
+                                });
+                            }}
+                            title={t('table_border_component.rejected')}
+                            type='grey'
+                            size='small'
+                            iconContainerClass='mr-1'
+                            icon={<AntDesign name='closecircleo' size={20} color='white' />}
+                        />
+                    );
+                default:
+                    return null;
+            }
+        }
+    };
 
     return (
         <View className='min-w-full px-2'>
@@ -134,7 +220,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                 }}
                             >
                                 <TextComponent
-                                    text={`${item.title}`}
+                                    text={`${item.title} ${item.description ? `(${item.description})` : ''}`}
                                     style={{
                                         fontWeight: item.level === 1 ? 'bold' : item.level === 2 ? 'normal' : 'normal',
                                     }}
@@ -143,35 +229,7 @@ function TableBorderComponent(props: Props, ref: any) {
 
                             {isUpload ? (
                                 <View className='flex-1 py-3 px-1 border-text-200 border-r-[1px] items-center justify-center'>
-                                    {item.require && !item.evidence && (
-                                        <ButtonComponent
-                                            onPress={() => {
-                                                router.push({
-                                                    pathname: '/training-point/upload-image',
-                                                    params: { id: item._id },
-                                                });
-                                            }}
-                                            title={t('table_border_component.upload')}
-                                            type='outline'
-                                            size='small'
-                                            icon={<Feather name='upload' size={18} color={colors.primary400} />}
-                                        />
-                                    )}
-
-                                    {item.require && item.evidence && (
-                                        <ButtonComponent
-                                            onPress={() => {
-                                                router.push({
-                                                    pathname: '/training-point/upload-image',
-                                                    params: { id: item._id },
-                                                });
-                                            }}
-                                            title={t('table_border_component.uploaded')}
-                                            type='outline'
-                                            size='small'
-                                            icon={<Feather name='image' size={18} color={colors.primary400} />}
-                                        />
-                                    )}
+                                    {renderButton(item)}
                                 </View>
                             ) : isAssessment ? (
                                 <>
@@ -182,7 +240,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                         {
                                             <TextComponent
                                                 className='absolute left-1'
-                                                text={item?.maxScore < 0 ? '-' : ''}
+                                                text={item?.maxScore === 0 && item.activeChange ? '-' : ''}
                                             />
                                         }
                                         <TextInput
@@ -194,14 +252,20 @@ function TableBorderComponent(props: Props, ref: any) {
                                             keyboardType='numbers-and-punctuation'
                                             readOnly={!item.activeChange}
                                             value={
-                                                item?.tempScore.toString() === '0'
-                                                    ? ''
-                                                    : item?.tempScore < 0
-                                                      ? (-item?.tempScore).toString()
-                                                      : item?.tempScore.toString()
+                                                item.maxScore === 0
+                                                    ? item?.tempScore.toString() === '0'
+                                                        ? '0'
+                                                        : item?.tempScore < 0
+                                                          ? (-item?.tempScore).toString()
+                                                          : item?.tempScore.toString()
+                                                    : ''
                                             }
                                             onChange={(e) => {
-                                                if (!Number(e.nativeEvent.text) && e.nativeEvent.text !== '') {
+                                                if (
+                                                    !Number(e.nativeEvent.text) &&
+                                                    item.maxScore !== 0 &&
+                                                    e.nativeEvent.text !== ''
+                                                ) {
                                                     return;
                                                 }
                                                 handleChange(+e.nativeEvent.text, item._id);

@@ -114,17 +114,10 @@ export default function TrainingPointDetails() {
                         type='primary'
                         size='small'
                         onPress={() => {
-                            if (data?.isLocked) {
-                                Alert.alert(
-                                    t('training_point_details.notification_title'),
-                                    t('training_point_details.locked_message'),
-                                );
-                            } else {
-                                router.push({
-                                    pathname: '/training-point/upload',
-                                    params: { id },
-                                });
-                            }
+                            router.push({
+                                pathname: '/training-point/upload',
+                                params: { id },
+                            });
                         }}
                     />
                 </RowComponent>

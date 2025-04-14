@@ -24,6 +24,21 @@ type Criteria = {
     evidence?: Evidence;
     subCriteria: Criteria[] | [];
     _id: string;
+    scoringRules: ScoringRules[] | [];
+    hasCount: boolean;
+    evidenceScore?: number;
+};
+
+type ScoringRules = {
+    condition: string;
+    description: string;
+    scoreValue: number;
+};
+
+type OtherConditions = {
+    condition: string;
+    description: string;
+    scoreValue: number;
 };
 
 type TrainingPointsParams = {
@@ -37,8 +52,10 @@ type Evidence = {
     dataType: string;
     data: ResponseEvidence[];
     _id: string;
-    status: string;
+    status: 'pending' | 'approved' | 'rejected';
     createdAt: string;
+    otherConditions?: OtherConditions;
+    count: number;
 };
 
 type ResponseEvidence = {
@@ -63,9 +80,12 @@ type flattenCriteria = {
     maxScore: number;
     totalScore: number;
     tempScore: number;
+    description: string;
     require: boolean;
     level: number;
     criteriaCode: string;
     evidence?: Evidence;
     activeChange?: boolean;
+    scoringRules: ScoringRules[] | [];
+    hasCount: boolean;
 };

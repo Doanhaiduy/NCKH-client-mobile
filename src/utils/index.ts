@@ -101,7 +101,10 @@ export const flattenCriteria = (criteria: Criteria[]) => {
                 evidence: item.evidenceType === 'none' ? undefined : item.evidence ? item.evidence : undefined,
                 criteriaCode: item.criteriaCode,
                 tempScore: item.tempScore,
-                activeChange: item.subCriteria.length === 0 && !item.isAutoScore,
+                activeChange: item.subCriteria.length === 0 && !item.isAutoScore && item.evidenceType === 'none',
+                scoringRules: item.scoringRules || [],
+                hasCount: item.hasCount || false,
+                description: item.description,
             });
 
             if (item.subCriteria && item.subCriteria.length > 0) {

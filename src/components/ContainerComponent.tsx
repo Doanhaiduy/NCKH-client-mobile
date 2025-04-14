@@ -103,25 +103,23 @@ export default function ContainerComponent(props: Props) {
                     }}
                 >
                     {isHome ? null : (
-                        <View className='w-[10%]'>
+                        <View className='min-w-[10%]'>
                             {iconLeft === 'back' && (
                                 <TouchableOpacity onPress={() => (onBack ? onBack() : router.back())} className=''>
                                     <Ionicons name='chevron-back' size={24} color={colors.primary500} />
                                 </TouchableOpacity>
                             )}
                             {iconLeft === 'logo' && (
-                                <TouchableOpacity onPress={() => {}}>
-                                    <Image
-                                        source={require('../assets/images/icon.png')}
-                                        width={28}
-                                        height={28}
-                                        resizeMode='cover'
-                                    />
-                                </TouchableOpacity>
+                                <Image
+                                    source={require('../assets/images/icon.png')}
+                                    width={28}
+                                    height={28}
+                                    resizeMode='cover'
+                                />
                             )}
                         </View>
                     )}
-                    <View className={`${!isHome && 'w-[80%]'}`}>
+                    <View className={`${!isHome && 'max-w-[80%]'}`}>
                         {title && (
                             <TextComponent
                                 numberOfLines={1}
@@ -137,7 +135,7 @@ export default function ContainerComponent(props: Props) {
                             />
                         )}
                     </View>
-                    <View className='w-[10%] items-end'>
+                    <View className='min-w-[10%] items-end'>
                         {notification ? (
                             <TouchableOpacity onPress={() => router.navigate('/notification')} className='px-1'>
                                 <Feather name='bell' size={26} color={colors.primary500} />
