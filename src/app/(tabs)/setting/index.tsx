@@ -23,6 +23,8 @@ export default function SettingPage() {
             router.navigate('/sign-in');
         } catch (error) {
             console.log(error);
+            dispatch(logout());
+            router.navigate('/sign-in');
         }
     };
     return (

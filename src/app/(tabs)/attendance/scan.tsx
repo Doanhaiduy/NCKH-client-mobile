@@ -427,6 +427,8 @@ export default function ScanQRScreen() {
 
     // Submit check-in with photo verification
     const handleSubmitCheckIn = useCallback(async () => {
+        modalizeQRInstructions.current?.close();
+        modalizePhotoInstructions.current?.close();
         try {
             setLoadingMessage(t('scan_qr.processing_image'));
             setIsLoading(true);
@@ -441,10 +443,10 @@ export default function ScanQRScreen() {
                     name: picture.uri.split('/').pop(),
                 });
             }
-            formData.append('name', authData?.username || '');
+            formData.append('username', authData?.username || '');
 
             // Call face detection API
-            const dataDetect = await handleDetectFace(formData);
+            // const dataDetect = await handleDetectFace(formData);
 
             // For development, we're skipping the face detection check
             // In production, uncomment the real condition
@@ -459,7 +461,7 @@ export default function ScanQRScreen() {
 
                 // Submit check-in
                 const dataLocation = eventDetails?.location;
-                // mutate(dataLocation as EventLocation);
+                mutate(dataLocation as EventLocation);
                 modalizeShowPhoto.current?.close();
             } else {
                 setError(t('scan_qr.invalid_image'));

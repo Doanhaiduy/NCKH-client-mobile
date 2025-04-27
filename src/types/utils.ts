@@ -15,3 +15,13 @@ interface AttendanceOption {
         semester: string;
     };
 }
+
+type GuideContent = {
+    content: string;
+    image?: string;
+};
+type GuideSection = {
+    title: string;
+    content: string | string[] | GuideContent[];
+    image?: string;
+};

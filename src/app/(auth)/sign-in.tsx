@@ -69,7 +69,7 @@ export default function LoginPage() {
         mutationFn: (variables: FormLogin) => authAPI.login(variables),
         onSuccess: async (data) => {
             dispatch(login(data));
-            await AsyncStorage.setItem('USER_LANGUAGE', JSON.stringify(data.lang));
+            await AsyncStorage.setItem('USER_LANGUAGE', JSON.stringify(data.lang) || 'vi');
             router.navigate('/');
             Alert.alert(t('login.success_message'));
         },

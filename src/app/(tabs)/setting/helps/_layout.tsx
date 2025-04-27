@@ -10,7 +10,12 @@ export default function SettingHelpsLayout() {
         >
             <Stack.Screen name='index' />
             <Stack.Screen name='user-guide' />
-            <Stack.Screen name='terms-policies' />
+            <Stack.Screen
+                name='terms-policies'
+                options={{
+                    presentation: 'fullScreenModal',
+                }}
+            />
             <Stack.Screen
                 name='[id]'
                 options={{

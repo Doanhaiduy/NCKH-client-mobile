@@ -1,6 +1,7 @@
 import { appInfo } from '@/constants/appInfo';
 import { updateToken } from '@/stores/reducers/authReducer';
 import store from '@/stores/store';
+import i18n from '@/utils/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -98,6 +99,9 @@ axiosClient.interceptors.request.use(async (config: any) => {
     config.headers = {
         Accept: 'application/json',
         ...config.headers,
+        // add language
+        'Accept-Language': i18n.language,
+        'Content-Language': i18n.language,
     };
     if (accessToken) config.headers['Authorization'] = `Bearer ${accessToken}`;
     config.data;

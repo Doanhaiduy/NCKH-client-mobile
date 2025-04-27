@@ -269,6 +269,243 @@ const LanguageData = [
     },
 ];
 
+const attendanceGuide: GuideSection[] = [
+    {
+        title: 'Giới thiệu chức năng điểm danh bằng mã QR',
+        content:
+            'Chức năng giúp bạn điểm danh nhanh chóng tại các sự kiện như chào cờ, hội thảo bằng cách quét mã QR. Hệ thống sử dụng vị trí GPS, xác thực khuôn mặt và thời gian thực để đảm bảo chính xác. Hãy làm theo các bước dưới đây để điểm danh thành công!',
+    },
+    {
+        title: 'Cách điểm danh tại sự kiện',
+        content: [
+            {
+                content:
+                    'Mở ứng dụng và vào "Trang chủ". Nhấn biểu tượng "Quét mã QR" ở thanh điều hướng dưới cùng (bottom tab).',
+            },
+            {
+                content:
+                    'Ứng dụng sẽ chuyển sang "Danh sách sự kiện". Tìm và chọn sự kiện bạn đang tham gia, sau đó nhấn nút "Điểm danh".',
+                image: 'https://i.imgur.com/AYRd9Kk.jpeg',
+            },
+            {
+                content:
+                    'Tại màn hình "Thông tin chi tiết sự kiện", bạn sẽ thấy thông tin như tên sự kiện, địa điểm, thời gian và khoảng cách từ vị trí hiện tại đến nơi tổ chức. Hãy kiểm tra kỹ thông tin này!',
+            },
+            {
+                content:
+                    'Nếu cần tìm đường, nhấn nút "Chỉ đường" để mở ứng dụng bản đồ trên điện thoại. Khi sẵn sàng, nhấn "Điểm danh" để chuyển sang màn hình "Quét mã QR".',
+                image: 'https://i.imgur.com/fNvzrui.jpeg',
+            },
+            {
+                content:
+                    'Đưa mã QR (do ban tổ chức cung cấp) vào khung hình trên màn hình để quét. Đảm bảo ánh sáng tốt và mã QR rõ nét. Hệ thống sẽ kiểm tra vị trí, thời gian và thông tin của bạn.',
+                image: 'https://i.imgur.com/LFAdVxQ.jpeg',
+            },
+            {
+                content:
+                    'Nếu quét mã thành công, bạn sẽ được chuyển đến màn hình "Chụp ảnh khuôn mặt". Làm theo hướng dẫn để chụp ảnh rõ nét, không che mặt. Nhấn "Xác nhận" để gửi ảnh.',
+                image: 'https://i.imgur.com/C4dRiCZ.jpeg',
+            },
+            {
+                content:
+                    'Chờ vài giây để hệ thống xác minh. Nếu mọi thứ hợp lệ, bạn sẽ thấy thông báo "Điểm danh thành công" và được chuyển đến "Lịch sử điểm danh". Nếu có lỗi (như mã QR hết hạn hoặc ảnh không khớp), hệ thống sẽ hiển thị thông báo và bạn có thể thử lại.',
+            },
+        ],
+    },
+    {
+        title: 'Lưu ý khi điểm danh',
+        content: [
+            'Đảm bảo điện thoại có kết nối Internet và GPS được bật.',
+            'Quét mã QR trong thời gian sự kiện diễn ra, vì mã có thể hết hạn.',
+            'Chụp ảnh khuôn mặt ở nơi đủ sáng, không đeo kính râm hoặc che mặt.',
+            'Nếu gặp lỗi, kiểm tra lại vị trí hoặc liên hệ ban tổ chức để được hỗ trợ.',
+        ],
+    },
+];
+
+const trainingPointGuide: GuideSection[] = [
+    {
+        title: 'Giới thiệu chức năng quản lý điểm rèn luyện',
+        content:
+            'Chức năng giúp bạn theo dõi, tự đánh giá và gửi minh chứng cho điểm rèn luyện mỗi học kỳ. Bạn có thể xem danh sách tiêu chí, nhập điểm và tải lên hình ảnh minh chứng một cách dễ dàng. Làm theo các bước dưới đây để bắt đầu!',
+    },
+    {
+        title: 'Cách tự đánh giá điểm rèn luyện',
+        content: [
+            {
+                content:
+                    'Từ "Trang chủ", nhấn biểu tượng "Kết quả rèn luyện" trong phần truy cập nhanh để vào màn hình "Chi tiết đánh giá điểm rèn luyện".',
+            },
+            {
+                content:
+                    'Tại màn hình "Kết quả rèn luyện", chọn học kỳ và năm học bạn muốn xem. Bạn sẽ thấy thông tin cá nhân, điểm đã duyệt (nếu có), điểm tự đánh giá và thời gian quy định để nộp.',
+                image: 'https://i.imgur.com/VggR9Kv.jpeg',
+            },
+            {
+                content:
+                    'Nhấn nút "Tự đánh giá" để vào màn hình nhập điểm. Danh sách tiêu chí sẽ hiển thị dưới dạng bảng, bao gồm mã tiêu chí, nội dung và điểm tối đa.',
+                image: 'https://i.imgur.com/jIMbSxB.jpeg',
+            },
+            {
+                content:
+                    'Nhập điểm tương ứng cho từng tiêu chí dựa trên hoạt động bạn đã thực hiện. Kiểm tra kỹ trước khi nhấn "Gửi" ở góc trên để lưu và gửi điểm tự đánh giá.',
+            },
+        ],
+    },
+    {
+        title: 'Cách gửi minh chứng điểm rèn luyện',
+        content: [
+            {
+                content:
+                    'Từ màn hình "Chi tiết đánh giá điểm rèn luyện", nhấn nút "Tải minh chứng" để vào giao diện gửi minh chứng.',
+            },
+            {
+                content:
+                    'Danh sách tiêu chí yêu cầu minh chứng sẽ hiển thị, kèm trạng thái như "Chưa tải lên", "Đã tải lên", "Đã duyệt" hoặc "Bị từ chối". Nhấn vào tiêu chí cần gửi minh chứng.',
+            },
+            {
+                content:
+                    'Tại giao diện "Tải lên ảnh", chọn ảnh từ thư viện hoặc chụp ảnh trực tiếp. Đảm bảo ảnh rõ ràng, đúng yêu cầu (ví dụ: bằng khen, giấy chứng nhận).',
+                image: 'https://i.imgur.com/1T9csml.png',
+            },
+            {
+                content:
+                    'Nếu tiêu chí yêu cầu thông tin bổ sung (như số lượng bằng khen hoặc ghi chú), một cửa sổ sẽ hiện ra để bạn điền. Nhập đầy đủ và chính xác.',
+            },
+            {
+                content:
+                    'Nhấn "Lưu" để gửi minh chứng. Hệ thống sẽ hiển thị trạng thái "Đang chờ duyệt". Bạn có thể kiểm tra lại trạng thái trong mục "Kết quả rèn luyện".',
+            },
+        ],
+    },
+    {
+        title: 'Lưu ý khi quản lý điểm rèn luyện',
+        content: [
+            'Chỉ gửi minh chứng trong thời gian quy định của học kỳ.',
+            'Đảm bảo ảnh minh chứng rõ nét, đúng định dạng (JPG, PNG).',
+            'Nếu minh chứng bị từ chối, kiểm tra thông báo từ cố vấn và gửi lại ảnh đúng yêu cầu.',
+            'Liên hệ cố vấn học tập nếu cần hỗ trợ hoặc giải đáp thắc mắc.',
+        ],
+    },
+];
+
+const registerActivityGuide: GuideSection[] = [
+    {
+        title: 'Giới thiệu tính năng đăng ký hoạt động ngoại khóa',
+        content:
+            'Tính năng đăng ký hoạt động ngoại khóa giúp bạn tham gia các sự kiện, lớp học ngoại khóa do nhà trường tổ chức. Sau khi đăng ký, bạn có thể thực hiện điểm danh cho hoạt động đó giống như quét mã QR, đồng thời hệ thống sẽ ghi nhận sự tham gia của bạn và được cộng thẳng vào điểm rèn luyện.',
+    },
+    {
+        title: 'Các bước đăng ký hoạt động',
+        content: [
+            'Mở ứng dụng và đăng nhập vào tài khoản sinh viên của bạn.',
+            'Truy cập vào mục "Hoạt động" trên thanh menu.',
+            'Xem danh sách các hoạt động đang diễn ra hoặc sắp tới.',
+            'Chọn hoạt động bạn muốn tham gia.',
+            'Nhấn nút "Đăng ký" để xác nhận tham gia hoạt động.',
+        ],
+        image: 'https://i.imgur.com/5CCR9My.png',
+    },
+    {
+        title: 'Kiểm tra hoạt động đã đăng ký',
+        content: [
+            'Sau khi đăng ký thành công, vào mục "Điểm danh".',
+            'Tại phần "Hoạt động đã đăng ký", bạn sẽ thấy danh sách các hoạt động mà bạn đã đăng ký tham gia.',
+        ],
+        image: 'https://i.imgur.com/HVBkEdh.png',
+    },
+    {
+        title: 'Cách điểm danh cho hoạt động đã đăng ký',
+        content: [
+            'Điểm danh cho hoạt động đã đăng ký cũng tương tự như điểm danh cho các sự kiện khác, bạn chỉ cần vào mục "Điểm danh", chọn hoạt động đã đăng ký và làm theo hướng dẫn để quét mã QR.',
+        ],
+    },
+    {
+        title: 'Lưu ý khi đăng ký và điểm danh',
+        content: [
+            'Hãy đảm bảo bạn đăng ký trước thời gian diễn ra hoạt động để được phép điểm danh.',
+            'Một số hoạt động có giới hạn số lượng người tham gia, hãy đăng ký sớm để đảm bảo suất.',
+            'Nếu gặp sự cố khi đăng ký hoặc điểm danh, vui lòng liên hệ bộ phận hỗ trợ của trường.',
+        ],
+    },
+];
+
+const passwordResetGuide: GuideSection[] = [
+    {
+        title: 'Giới thiệu chức năng quên mật khẩu',
+        content:
+            'Nếu bạn quên mật khẩu, ứng dụng cung cấp cách khôi phục mật khẩu dễ dàng, dù bạn đang ở màn hình đăng nhập hay đã đăng nhập vào ứng dụng. Quy trình sử dụng mã OTP gửi qua email để đảm bảo an toàn. Hãy làm theo các bước dưới đây để lấy lại mật khẩu!',
+    },
+    {
+        title: 'Quên mật khẩu khi chưa đăng nhập',
+        content: [
+            {
+                content:
+                    'Tại màn hình "Đăng nhập", nhấn vào liên kết "Quên mật khẩu?" (thường nằm dưới ô nhập mật khẩu).',
+            },
+            {
+                content:
+                    'Bạn sẽ được chuyển đến màn hình "Nhập email". Nhập địa chỉ email đã dùng để đăng ký tài khoản, sau đó nhấn "Gửi mã OTP". Đảm bảo email bạn nhập chính xác!',
+                image: 'https://i.imgur.com/iDXjasQ.png',
+            },
+            {
+                content:
+                    'Kiểm tra hộp thư email (bao gồm cả thư mục Spam hoặc Quảng cáo) để nhận mã OTP gồm 6 chữ số. Mã này có hiệu lực trong "60 giây". Lưu ý: Bạn cần có kết nối Internet để nhận mã.',
+            },
+            {
+                content:
+                    'Tại màn hình "Nhập mã xác minh", nhập mã OTP vừa nhận được. Nếu mã đúng, bạn sẽ được chuyển sang màn hình "Tạo mật khẩu mới". Nếu mã hết hạn hoặc sai, nhấn "Gửi lại mã" để nhận mã mới.',
+                image: 'https://i.imgur.com/RFHrZgj.png',
+            },
+            {
+                content:
+                    'Ở màn hình "Tạo mật khẩu mới", nhập mật khẩu mới và nhập lại lần nữa vào ô xác nhận. Mật khẩu nên có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số để đảm bảo an toàn. Nhấn "Xác nhận" để lưu.',
+                image: 'https://i.imgur.com/80I8CFY.png',
+            },
+            {
+                content:
+                    'Hệ thống sẽ thông báo "Đặt lại mật khẩu thành công". Bạn sẽ được chuyển về màn hình "Đăng nhập". Hãy sử dụng mật khẩu mới để đăng nhập.',
+            },
+        ],
+    },
+    {
+        title: 'Quên mật khẩu khi đã đăng nhập',
+        content: [
+            {
+                content:
+                    'Từ "Trang chủ" của ứng dụng, nhấn vào biểu tượng "Cài đặt" (thường là biểu tượng bánh răng ở góc trên cùng).',
+            },
+            {
+                content: 'Trong menu "Cài đặt", chọn mục "Đổi mật khẩu" để vào màn hình thay đổi mật khẩu.',
+                image: 'https://i.imgur.com/7onxzYG.png',
+            },
+            {
+                content:
+                    'Nếu bạn nhớ mật khẩu cũ, hãy nhập "mật khẩu cũ", "mật khẩu mới", và "xác nhận mật khẩu mới", sau đó nhấn "Xác nhận" để đổi mật khẩu.',
+            },
+            {
+                content:
+                    'Nếu quên mật khẩu cũ, nhấn vào liên kết "Quên mật khẩu?" trong màn hình "Đổi mật khẩu". Bạn sẽ được chuyển đến quy trình khôi phục giống như khi chưa đăng nhập.',
+            },
+            {
+                content:
+                    'Thực hiện các bước tiếp theo tương tự như mục "Quên mật khẩu khi chưa đăng nhập": nhập email, nhận và nhập mã OTP, tạo mật khẩu mới, và xác nhận. Sau khi hoàn tất, bạn sẽ thấy thông báo "Đặt lại mật khẩu thành công".',
+            },
+        ],
+    },
+    {
+        title: 'Lưu ý khi khôi phục mật khẩu',
+        content: [
+            'Đảm bảo kết nối Internet ổn định để nhận mã OTP qua email.',
+            'Kiểm tra kỹ địa chỉ email nhập vào, vì mã OTP chỉ gửi đến email đã đăng ký.',
+            'Mã OTP chỉ có hiệu lực trong 60 giây. Nếu quá thời gian, nhấn "Gửi lại mã" để nhận mã mới.',
+            'Mật khẩu mới nên khác với mật khẩu cũ và dễ nhớ nhưng khó đoán.',
+            'Nếu không nhận được mã OTP sau vài phút, kiểm tra thư mục Spam hoặc liên hệ hỗ trợ qua email của nhà trường.',
+            'Nếu gặp lỗi trong quá trình khôi phục, thử đăng xuất và đăng nhập lại, hoặc liên hệ cố vấn học tập để được hỗ trợ.',
+        ],
+    },
+];
+
 export {
     EventData,
     YearData,
@@ -278,4 +515,8 @@ export {
     NotificationData,
     AttendanceOptionData,
     LanguageData,
+    attendanceGuide,
+    trainingPointGuide,
+    registerActivityGuide,
+    passwordResetGuide,
 };

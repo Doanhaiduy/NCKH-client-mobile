@@ -224,7 +224,8 @@
     "helps": {
         "title": "Help",
         "user_guide": "User Guide",
-        "terms_policies": "Terms and Policies"
+        "terms_policies": "Terms and Policies",
+        "description": "The QR code attendance feature allows you to easily manage attendance for classes or events without the need for manual roll call. The system automatically records attendance information by scanning the QR code."
     },
     "terms_policies": {
         "title": "Terms and Policies",
@@ -364,7 +365,9 @@
         "setting": "Settings",
         "nothing": "Nothing",
         "all": "All",
-        "attendance_short": "Attendance"
+        "attendance_short": "Attendance",
+        "register_activities": "Register for activities",
+        "forgot_password": "Forgot password"
     },
     "collapsible_guide_component": {
         "expand": "Expand",

@@ -99,15 +99,15 @@ const ScoringRulesModal: React.FC<PopupProps> = ({
 
         if (scoringRules.length > 0 && selectedRuleIndex !== null) {
             const selectedRule = scoringRules[selectedRuleIndex];
-            if (numberValue * selectedRule.scoreValue > maxScore!) {
-                setCountError(t('scoring_rules.count_exceeds_max_score', { maxScore }));
-                return false;
-            }
+            // if (numberValue * selectedRule.scoreValue > maxScore!) {
+            //     setCountError(t('scoring_rules.count_exceeds_max_score', { maxScore }));
+            //     return false;
+            // }
         } else {
-            if (numberValue * evidenceScore! > maxScore!) {
-                setCountError(t('scoring_rules.count_exceeds_max_score', { maxScore }));
-                return false;
-            }
+            // if (numberValue * evidenceScore! > maxScore!) {
+            //     setCountError(t('scoring_rules.count_exceeds_max_score', { maxScore }));
+            //     return false;
+            // }
         }
 
         setCountError('');

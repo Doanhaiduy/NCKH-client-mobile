@@ -436,22 +436,21 @@ export default function UploadImage() {
                     ref={modalizeRef}
                     children={
                         <View className='shadow-xl gap-3 p-3'>
-                            {data?.scoringRules!?.length > 0 ||
-                                (data?.hasCount && (
-                                    <TouchableOpacity
-                                        className='flex-row items-center'
-                                        onPress={() => {
-                                            setPopupVisible(true);
-                                            modalizeRef.current?.close();
-                                        }}
-                                    >
-                                        <Ionicons name='options' size={24} color='black' />
-                                        <TextComponent
-                                            text={t('upload_image.select_options')}
-                                            className='ml-2 font-medium'
-                                        />
-                                    </TouchableOpacity>
-                                ))}
+                            {(data?.scoringRules!?.length > 0 || data?.hasCount) && (
+                                <TouchableOpacity
+                                    className='flex-row items-center'
+                                    onPress={() => {
+                                        setPopupVisible(true);
+                                        modalizeRef.current?.close();
+                                    }}
+                                >
+                                    <Ionicons name='options' size={24} color='black' />
+                                    <TextComponent
+                                        text={t('upload_image.select_options')}
+                                        className='ml-2 font-medium'
+                                    />
+                                </TouchableOpacity>
+                            )}
                             <TouchableOpacity
                                 className='flex-row items-center'
                                 onPress={() => {

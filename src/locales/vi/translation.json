@@ -224,7 +224,8 @@
     "helps": {
         "title": "Trợ giúp",
         "user_guide": "Hướng dẫn sử dụng",
-        "terms_policies": "Điều khoản và chính sách"
+        "terms_policies": "Điều khoản và chính sách",
+        "description": "Tính năng điểm danh bằng mã QR giúp bạn dễ dàng quản lý việc điểm danh lớp học hoặc sự kiện mà không cần điểm danh thủ công từng người. Hệ thống sẽ tự động ghi nhận thông tin điểm danh thông qua việc quét mã QR."
     },
     "terms_policies": {
         "title": "Điều khoản và chính sách",
@@ -363,7 +364,9 @@
         "setting": "Cài đặt",
         "nothing": "Không có gì",
         "all": "Tất cả",
-        "attendance_short": "Điểm danh"
+        "attendance_short": "Điểm danh",
+        "register_activities": "Đăng ký hoạt động",
+        "forgot_password": "Quên mật khẩu"
     },
     "collapsible_guide_component": {
         "expand": "Mở rộng",

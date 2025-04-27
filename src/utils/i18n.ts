@@ -54,12 +54,12 @@ const LANGUAGE_DETECTOR = {
     init: (): void => {},
     cacheUserLanguage: async (language: LanguageCode): Promise<void> => {
         try {
-            await AsyncStorage.setItem('USER_LANGUAGE', language);
+            await AsyncStorage.setItem('USER_LANGUAGE', language || 'vi');
 
             const authStorage = await AsyncStorage.getItem('auth');
             if (authStorage) {
                 const parsedAuth = JSON.parse(authStorage);
-                parsedAuth.language = language;
+                parsedAuth.language = language || 'vi';
                 await AsyncStorage.setItem('auth', JSON.stringify(parsedAuth));
             }
         } catch (error) {

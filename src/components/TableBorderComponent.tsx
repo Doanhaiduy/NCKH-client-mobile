@@ -258,7 +258,7 @@ function TableBorderComponent(props: Props, ref: any) {
                                                         : item?.tempScore < 0
                                                           ? (-item?.tempScore).toString()
                                                           : item?.tempScore.toString()
-                                                    : ''
+                                                    : item?.tempScore.toString()
                                             }
                                             onChange={(e) => {
                                                 if (

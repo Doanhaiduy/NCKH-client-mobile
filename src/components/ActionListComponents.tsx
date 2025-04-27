@@ -10,6 +10,7 @@ let ActionDataTemp: {
     icon: string;
     text: string;
     path: string;
+    type?: string;
 }[] = [
     {
         icon: require('../assets/images/home/icon_news.png'),
@@ -46,57 +47,57 @@ let ActionDataTemp: {
         text: 'action_list_component.setting',
         path: '/setting',
     },
-    {
-        icon: require('../assets/images/logo-login.png'),
-        text: 'action_list_component.nothing',
-        path: '',
-    },
-    {
-        icon: require('../assets/images/logo-login.png'),
-        text: 'action_list_component.nothing',
-        path: '',
-    },
-    {
-        icon: require('../assets/images/logo-login.png'),
-        text: 'action_list_component.nothing',
-        path: '',
-    },
-    {
-        icon: require('../assets/images/logo-login.png'),
-        text: 'action_list_component.nothing',
-        path: '',
-    },
+    // {
+    //     icon: require('../assets/images/logo-login.png'),
+    //     text: 'action_list_component.nothing',
+    //     path: '',
+    // },
+    // {
+    //     icon: require('../assets/images/logo-login.png'),
+    //     text: 'action_list_component.nothing',
+    //     path: '',
+    // },
+    // {
+    //     icon: require('../assets/images/logo-login.png'),
+    //     text: 'action_list_component.nothing',
+    //     path: '',
+    // },
+    // {
+    //     icon: require('../assets/images/logo-login.png'),
+    //     text: 'action_list_component.nothing',
+    //     path: '',
+    // },
 ];
 
 let ActionDataTempHelper: {
     icon: string;
     text: string;
     path: string;
+    type?: string;
 }[] = [
     {
-        icon: require('../assets/images/home/icon_news.png'),
-        text: 'action_list_component.news',
-        path: '/setting/helps/news',
+        icon: require('../assets/images/home/icon_activity.png'),
+        text: 'action_list_component.register_activities',
+        path: '/setting/helps/register-activity',
+        type: 'registerActivity',
     },
     {
-        icon: require('../assets/images/home/icon_activity.png'),
-        text: 'action_list_component.activity',
-        path: '/setting/helps/activity',
-    },
-    {
-        icon: require('../assets/images/home/icon_activity.png'),
+        icon: require('../assets/images/home/icon_scanQr.png'),
         text: 'action_list_component.attendance_short',
         path: '/setting/helps/attendance',
+        type: 'attendance',
     },
     {
         icon: require('../assets/images/home/icon_assessment.png'),
         text: 'action_list_component.training_point',
         path: '/setting/helps/training-point',
+        type: 'trainingPoint',
     },
     {
-        icon: require('../assets/images/home/icon_feedback.png'),
-        text: 'action_list_component.feedback',
-        path: '/setting/helps/feedback',
+        icon: require('../assets/images/home/icon_forgot_password.png'),
+        text: 'action_list_component.forgot_password',
+        path: '/setting/helps/password-reset',
+        type: 'passwordReset',
     },
 ];
 
@@ -104,12 +105,14 @@ const ActionCard = ({
     text,
     icon,
     path,
+    type,
     onPress,
     onClose,
 }: {
     text: string;
     icon: any;
     path: string;
+    type?: string;
     onPress?: () => void;
     onClose?: () => void;
 }) => {
@@ -131,6 +134,7 @@ const ActionCard = ({
                             params: {
                                 back: path === '/attendance/list' ? 'to_home' : 'nothing',
                                 title: t(text),
+                                type: type || '',
                             },
                         });
                     }
@@ -184,6 +188,7 @@ export default function ActionListComponents(props: ActionListComponentsProps) {
                     text={item.text}
                     icon={item.icon}
                     path={item.path}
+                    type={item.type}
                     onPress={() => onShowAll && onShowAll()}
                     onClose={() => onClose && onClose()}
                 />

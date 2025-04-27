@@ -3,7 +3,7 @@
         "name": "NTU Student",
         "slug": "ntu_student",
         "scheme": "ntustudent",
-        "version": "2.0.0",
+        "version": "2.0.3",
         "orientation": "portrait",
         "userInterfaceStyle": "light",
         "icon": "./assets/icon_v2.png",

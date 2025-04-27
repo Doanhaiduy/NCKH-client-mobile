@@ -77,6 +77,16 @@ const CollapsibleGuide: React.FC<CollapsibleGuideProps> = ({ sections }) => {
         if (Array.isArray(section.content)) {
             return (
                 <View style={styles.content}>
+                    {section.image && (
+                        <ImageComponent
+                            url={section.image}
+                            height={200}
+                            objectFit='contain'
+                            rounded={12}
+                            showImageModal
+                        />
+                    )}
+
                     {section.content.map((item, index) => {
                         if (typeof item === 'string') {
                             return (
