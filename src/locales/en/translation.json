@@ -415,7 +415,6 @@
             "en": "English"
         }
     },
-
     "schemas_custom_zod": {
         "username_required": "Student ID is required",
         "username_invalid": "Invalid student ID",
@@ -426,7 +425,6 @@
         "password_invalid": "Password must contain at least 1 letter and 1 number",
         "confirm_password_invalid": "Passwords do not match"
     },
-
     "scoring_rules": {
         "title": "Select Achievement Evidence",
         "enter_count": "Enter number of certificates/awards/achievements",
@@ -436,5 +434,53 @@
         "count_greater_than_zero": "Quantity must be greater than 0",
         "enter_valid_number": "Please enter a valid number",
         "count_exceeds_max_score": "Quantity exceeds maximum score of {{maxScore}}"
+    },
+    "chatbot": {
+        "title": "AI Assistant",
+        "subtitle": "Always ready to help you",
+        "loading_history": "Loading chat history...",
+        "error": {
+            "history": "Unable to load chat history",
+            "send": "Failed to send message"
+        },
+        "input_placeholder": "Enter content here",
+        "input_placeholder_android": "Enter message...",
+        "empty_state": {
+            "header": "NTU Student AI Assistant",
+            "subheader": "Ask questions about the app, academics, or technical support.",
+            "suggestions_title": "Suggestions for you:",
+            "suggestions": {
+                "qr_attendance": "Guide to QR code attendance process",
+                "programming": "Help solving a difficult programming problem?",
+                "assessment": "I'm having trouble with student performance evaluation, can you help?",
+                "contact_support": "Contact support",
+                "bottom_hint": "Tap a suggestion or ask your own question"
+            }
+        },
+        "data_input_placeholder": "Search for information...",
+        "instruction_2": "Get guidance on using app features like attendance, training point evaluation, and performance tracking",
+        "instruction_3": "Stay updated on events, important announcements, and campus activities",
+        "instruction_4": "Receive support for technical issues or other inquiries",
+        "instruction_5": "Your conversations are saved to improve service quality",
+        "intro_title": "Welcome to Your AI Chatbot!",
+        "intro_subtitle": "Chat naturally or query data with ease.",
+        "instruction_conversation_mode": "Switch to Conversation Mode to ask questions and get support.",
+        "instruction_data_mode": "Switch to Data Mode to search for specific information.",
+        "instruction_history": "Scroll up to load older messages or clear chat history.",
+        "instruction_get_started": "Start chatting now and explore all features!",
+        "get_started": "Start Chatting",
+        "thinking": "Thinking...",
+        "conversation_mode": "Conversation",
+        "data_mode": "Data",
+        "delete_history_title": "Delete Chat History",
+        "delete_history_confirm": "Are you sure you want to delete chat history?",
+        "delete_history_success": "Chat history deleted successfully",
+        "delete_history_error": "Unable to delete chat history",
+        "no_history": "No chat history available",
+        "no_data": "No data available",
+        "no_data_found": "No data found",
+        "no_data_found_message": "Please try again later!",
+        "cancel": "Cancel",
+        "delete": "Delete"
     }
 }

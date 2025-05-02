@@ -414,7 +414,6 @@
             "en": "English"
         }
     },
-
     "schemas_custom_zod": {
         "username_required": "Mã số sinh viên là bắt buộc",
         "username_invalid": "Mã số sinh viên không hợp lệ",
@@ -434,5 +433,53 @@
         "count_greater_than_zero": "Số lượng phải lớn hơn 0",
         "enter_valid_number": "Vui lòng nhập số hợp lệ",
         "count_exceeds_max_score": "Số lượng vượt quá điểm tối đa là {{maxScore}}"
+    },
+    "chatbot": {
+        "title": "Trợ lý ảo",
+        "subtitle": "Luôn sẵn sàng hỗ trợ bạn",
+        "loading_history": "Đang tải lịch sử chat...",
+        "error": {
+            "history": "Không thể tải lịch sử chat",
+            "send": "Không thể gửi tin nhắn"
+        },
+        "input_placeholder": "Nhập nội dung trò chuyện...",
+        "input_placeholder_android": "Nhập tin nhắn...",
+        "empty_state": {
+            "header": "Trợ lý ảo NTU Student",
+            "subheader": "Hãy đặt câu hỏi về ứng dụng, nội dung học tập, hoặc cần trợ giúp kỹ thuật.",
+            "suggestions_title": "Gợi ý cho bạn:",
+            "suggestions": {
+                "qr_attendance": "Hướng dẫn quy trình điểm danh bằng mã QR",
+                "programming": "Giúp giải 1 bài toán lập trình khó?",
+                "assessment": "Tôi gặp vấn đề khi đánh giá điểm rèn luyện, có thể giúp tôi không?",
+                "contact_support": "Liên hệ với bộ phận hỗ trợ",
+                "bottom_hint": "Nhấn vào một gợi ý hoặc hỏi câu hỏi của riêng bạn"
+            }
+        },
+        "data_input_placeholder": "Tìm kiếm thông tin...",
+        "instruction_2": "Hướng dẫn sử dụng các tính năng của ứng dụng như điểm danh, đánh giá điểm rèn luyện, và theo dõi kết quả",
+        "instruction_3": "Cập nhật thông tin sự kiện, thông báo quan trọng và các hoạt động trường",
+        "instruction_4": "Hỗ trợ khi gặp sự cố kỹ thuật hoặc cần giải đáp thắc mắc khác",
+        "instruction_5": "Cuộc trò chuyện của bạn sẽ được lưu để nâng cao chất lượng hỗ trợ",
+        "intro_title": "Chào mừng đến với Chatbot AI của bạn!",
+        "intro_subtitle": "Trò chuyện tự nhiên hoặc truy vấn dữ liệu dễ dàng.",
+        "instruction_conversation_mode": "Sử dụng chế độ Trò chuyện để giải đáp câu hỏi và nhận hỗ trợ.",
+        "instruction_data_mode": "Chuyển sang chế độ Dữ liệu để tìm kiếm thông tin cụ thể.",
+        "instruction_history": "Cuộn lên để tải thêm tin nhắn cũ hoặc xóa lịch sử trò chuyện.",
+        "instruction_get_started": "Bắt đầu trò chuyện ngay bây giờ và khám phá mọi tính năng!",
+        "get_started": "Bắt đầu Trò chuyện",
+        "thinking": "Đang suy nghĩ...",
+        "conversation_mode": "Trò chuyện",
+        "data_mode": "Dữ liệu",
+        "delete_history_title": "Xóa lịch sử trò chuyện",
+        "delete_history_confirm": "Bạn có chắc chắn muốn xóa lịch sử trò chuyện không?",
+        "delete_history_success": "Lịch sử trò chuyện đã được xóa thành công",
+        "delete_history_error": "Không thể xóa lịch sử trò chuyện",
+        "no_history": "Không có lịch sử trò chuyện nào",
+        "no_data": "Không có dữ liệu nào",
+        "no_data_found": "Không tìm thấy dữ liệu nào",
+        "no_data_found_message": "Vui lòng thử lại sau!",
+        "cancel": "Hủy",
+        "delete": "Xóa"
     }
 }

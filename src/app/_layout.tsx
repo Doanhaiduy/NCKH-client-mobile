@@ -5,10 +5,10 @@ import store from '@/stores/store';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
 import { Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { useFonts } from 'expo-font';
-import { Slot } from 'expo-router';
+import { Slot, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, LogBox, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Animated, LogBox, Platform, TouchableOpacity, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider, useDispatch } from 'react-redux';
 import '../../global.css';
@@ -20,6 +20,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAuth } from '@/stores/reducers/authReducer';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/utils/i18n';
+import { useRouter } from 'expo-router';
+import * as Haptics from 'expo-haptics';
+import { Image } from 'expo-image';
+import { colors } from '@/constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Block "react-native-render-html" error log
 LogBox.ignoreLogs(['Use JavaScript default parameters instead.']);
@@ -54,6 +59,94 @@ const queryClient = new QueryClient({
 
 export const unstable_settings = {
     initialRouteName: '/',
+};
+
+const FloatingChatIcon: React.FC = () => {
+    const router = useRouter();
+    const pathname = usePathname();
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+    const rotateAnim = useRef(new Animated.Value(0)).current;
+
+    const rotateInterpolate = rotateAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '180deg'],
+    });
+    // Pulse animation
+    useEffect(() => {
+        if (pathname === '/') {
+            const pulse = Animated.loop(
+                Animated.sequence([
+                    Animated.timing(scaleAnim, {
+                        toValue: 1.1,
+                        duration: 800,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(scaleAnim, {
+                        toValue: 1,
+                        duration: 800,
+                        useNativeDriver: true,
+                    }),
+                ]),
+            );
+            pulse.start();
+            return () => pulse.stop();
+        }
+    }, [scaleAnim, pathname]);
+
+    if (pathname !== '/') {
+        return null;
+    }
+    const handleOpenChat = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch((error) => console.error('Haptic error:', error));
+        Animated.parallel([
+            Animated.spring(scaleAnim, {
+                toValue: 0, // Thu nhỏ
+                friction: 10, // Giảm độ ma sát
+                tension: 60, // Tăng độ đàn hồi
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            router.push('/chat');
+        });
+    };
+
+    return (
+        <Animated.View
+            style={{
+                transform: [{ scale: scaleAnim }, { rotate: rotateInterpolate }],
+                position: 'absolute',
+                bottom: Platform.OS === 'ios' ? 100 : 80,
+                right: 20,
+                zIndex: 1000,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 6,
+                elevation: 8,
+            }}
+        >
+            <TouchableOpacity onPress={handleOpenChat} activeOpacity={0.9}>
+                <LinearGradient
+                    colors={[colors.primary300, colors.primary400]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                        borderRadius: 32,
+                        width: 64,
+                        height: 64,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                    }}
+                >
+                    <View className='w-12 h-12 rounded-full bg-[#e6f0ff] items-center justify-center'>
+                        <Image source={require('@/assets/images/logo_chatbot.png')} style={{ width: 32, height: 32 }} />
+                    </View>
+                </LinearGradient>
+            </TouchableOpacity>
+        </Animated.View>
+    );
 };
 
 export default function RootLayout() {
@@ -119,6 +212,7 @@ function RootLayoutNav() {
         <GestureHandlerRootView className='flex-1 bg-white'>
             <Host>
                 <Slot />
+                <FloatingChatIcon />
             </Host>
         </GestureHandlerRootView>
     );

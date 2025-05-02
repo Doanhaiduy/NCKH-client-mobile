@@ -3,7 +3,7 @@ import axiosClient from '@/apis';
 
 // const handleDetectFace : params: formdata with image file and user_id
 const handleDetectFace = async (formData: FormData) => {
-    return await axiosClient.post(`${appInfo.base_url_face_detect}/verify`, formData, {
+    return await axiosClient.post(`${appInfo.base_url_face_detect}/predict`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

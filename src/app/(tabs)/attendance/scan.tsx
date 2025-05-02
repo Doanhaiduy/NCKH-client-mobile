@@ -397,6 +397,7 @@ export default function ScanQRScreen() {
             } else {
                 throw new Error('No QR code found');
             }
+            setIsLoading(false);
         } catch (error) {
             console.error('Error processing image:', error);
             setIsLoading(false);
@@ -445,13 +446,9 @@ export default function ScanQRScreen() {
             }
             formData.append('username', authData?.username || '');
 
-            // Call face detection API
-            // const dataDetect = await handleDetectFace(formData);
+            const dataDetect = await handleDetectFace(formData);
 
-            // For development, we're skipping the face detection check
-            // In production, uncomment the real condition
-            // if (dataDetect.result) {
-            if (true) {
+            if (dataDetect) {
                 setLoadingMessage(t('scan_qr.checking_in'));
 
                 // Get location name if needed

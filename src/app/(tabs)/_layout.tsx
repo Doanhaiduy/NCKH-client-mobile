@@ -33,7 +33,7 @@ export default function TabsLayout() {
                     backgroundColor: '#fff',
                     paddingTop: 15,
                     height: Platform.OS === 'ios' ? 80 : 60,
-                    display: path === '/attendance/scan' ? 'none' : 'flex',
+                    display: path === '/attendance/scan' || path === '/chat' ? 'none' : 'flex',
                 },
                 tabBarActiveTintColor: colors.primary400,
             }}

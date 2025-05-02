@@ -3,7 +3,23 @@
 module.exports = {
     content: ['./App.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
     theme: {
-        extend: {},
+        extend: {
+            animation: {
+                bounce: 'bounce 0.6s infinite alternate',
+            },
+            keyframes: {
+                bounce: {
+                    '0%': {
+                        transform: 'translateY(0)',
+                        opacity: '0.6',
+                    },
+                    '100%': {
+                        transform: 'translateY(-4px)',
+                        opacity: '1',
+                    },
+                },
+            },
+        },
         colors: {
             black: '#000000',
             white: '#ffffff',
