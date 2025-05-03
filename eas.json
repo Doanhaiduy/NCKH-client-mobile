@@ -7,7 +7,14 @@
         "development": {
             "developmentClient": true,
             "distribution": "internal",
-            "channel": "development"
+            "channel": "development",
+            "env": {
+                "EXPO_PUBLIC_BASE_URL": "http://192.168.1.84:3000/api/v1",
+                "EXPO_PUBLIC_CRYPTO_SECRET_KEY": "7488e9f6650c9fe7eef741f6abf3a67aaf4e6f15ac9e002aca011d585a30f08e",
+                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY",
+                "EXPO_PUBLIC_MAPBOX_API_KEY": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA",
+                "MAPBOX_DOWNLOADS_TOKEN": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA"
+            }
         },
         "preview": {
             "distribution": "internal",
@@ -18,7 +25,9 @@
             "env": {
                 "EXPO_PUBLIC_BASE_URL": "http://192.168.1.84:3000/api/v1",
                 "EXPO_PUBLIC_CRYPTO_SECRET_KEY": "7488e9f6650c9fe7eef741f6abf3a67aaf4e6f15ac9e002aca011d585a30f08e",
-                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY"
+                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY",
+                "EXPO_PUBLIC_MAPBOX_API_KEY": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA",
+                "MAPBOX_DOWNLOADS_TOKEN": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA"
             }
         },
         "production": {
@@ -27,7 +36,9 @@
             "env": {
                 "EXPO_PUBLIC_BASE_URL": "http://192.168.1.84:3000/api/v1",
                 "EXPO_PUBLIC_CRYPTO_SECRET_KEY": "7488e9f6650c9fe7eef741f6abf3a67aaf4e6f15ac9e002aca011d585a30f08e",
-                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY"
+                "EXPO_PUBLIC_HERE_LOCATION_API_KEY": "zQooxv0iylfvwq46LeAidvzavSl9RIuhgBkvBF9-0JY",
+                "EXPO_PUBLIC_MAPBOX_API_KEY": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA",
+                "MAPBOX_DOWNLOADS_TOKEN": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA"
             },
             "channel": "production"
         }

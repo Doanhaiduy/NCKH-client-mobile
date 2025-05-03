@@ -40,6 +40,8 @@ yarn-error.*
 # build eas
 eas.json
 
+.netrc
+
 
 service_play_console.json
 google-services.json

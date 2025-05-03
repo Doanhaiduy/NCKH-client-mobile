@@ -6,7 +6,7 @@ import { checkTimeActive, dateTimeFormat } from '@/utils/dateTime';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Linking, Platform, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Dimensions, LogBox } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,13 +17,16 @@ interface Coordinates {
     longitude: number;
 }
 
+LogBox.ignoreLogs(['Warning: This synthetic event is reused for performance reasons']);
+
 export default function Details() {
     const { id } = useLocalSearchParams();
     const { t } = useTranslation();
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
     const [hasLocationPermission, setHasLocationPermission] = useState<boolean | null>(null);
+    const { height: screenHeight } = Dimensions.get('window');
 
-    const { data, refetch } = useQuery<EventDetails>({
+    const { data, refetch } = useQuery({
         queryKey: ['event', id],
         queryFn: () => eventAPI.getDetailEvents(id?.toString() || ''),
         refetchInterval: 60000,
@@ -31,7 +34,6 @@ export default function Details() {
 
     const { refreshing, handleRefresh } = useRefreshing(refetch);
 
-    // Request location permission and get current location
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
@@ -56,35 +58,13 @@ export default function Details() {
         })();
     }, []);
 
-    // Handle directions to event location
-    const handleGetDirections = () => {
-        if (!data?.location?.lat || !data?.location?.lng) {
-            return;
-        }
-
-        const latitude = data.location.lat;
-        const longitude = data.location.lng;
-        const label = data.location.name || t('attendance_details.event_location');
-
-        const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
-        const latLng = `${latitude},${longitude}`;
-        const url = Platform.select({
-            ios: `${scheme}${label}@${latLng}`,
-            android: `${scheme}${latLng}(${label})`,
-        });
-
-        if (url) {
-            Linking.openURL(url);
-        }
-    };
-
     const calculateDistance = (): string | null => {
         if (!userLocation || !data?.location?.lat || !data?.location?.lng) {
             return null;
         }
 
         const toRad = (value: number): number => (value * Math.PI) / 180;
-        const R = 6371; // Earth radius (km)
+        const R = 6371;
         const dLat = toRad(data.location.lat - userLocation.latitude);
         const dLon = toRad(data.location.lng - userLocation.longitude);
 
@@ -100,7 +80,6 @@ export default function Details() {
         return distance.toFixed(1);
     };
 
-    // Display remaining time until event starts
     const getRemainingTime = (): string | null => {
         if (!data?.startAt) return null;
 
@@ -121,10 +100,7 @@ export default function Details() {
             } else {
                 return `${t('attendance_details.starts_in')} ${minutes} ${t('attendance_details.minutes')}`;
             }
-        }
-
-        // Trường hợp 2: Sự kiện đang diễn ra
-        else if (eventEnd && isWithinInterval(now, { start: eventStart, end: eventEnd })) {
+        } else if (eventEnd && isWithinInterval(now, { start: eventStart, end: eventEnd })) {
             const diffMs = differenceInMilliseconds(eventEnd, now);
             const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -137,10 +113,7 @@ export default function Details() {
             } else {
                 return `${t('attendance_details.ends_in')} ${minutes} ${t('attendance_details.minutes')}`;
             }
-        }
-
-        // Trường hợp 3: Sự kiện đã kết thúc
-        else if (eventEnd && isAfter(now, eventEnd)) {
+        } else if (eventEnd && isAfter(now, eventEnd)) {
             const diffMs = differenceInMilliseconds(now, eventEnd);
             const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -162,6 +135,17 @@ export default function Details() {
     const distance = calculateDistance();
 
     const activeScan = checkTimeActive(data?.startAt || 0, data?.endAt || 0);
+    const activeMap = () => {
+        if (
+            !userLocation?.latitude ||
+            !userLocation?.longitude ||
+            !data?.location?.lat ||
+            !data?.location?.lng ||
+            !hasLocationPermission
+        ) {
+            return false;
+        } else return true;
+    };
 
     return (
         <ContainerComponent
@@ -191,7 +175,6 @@ export default function Details() {
                             </View>
                         </View>
 
-                        {/* Event time */}
                         <View style={styles.timeContainer}>
                             <View style={styles.timeItem}>
                                 <Ionicons name='time-outline' size={18} color={colors.primary400} />
@@ -226,10 +209,9 @@ export default function Details() {
                             </View>
                         </View>
 
-                        {/* Countdown and distance */}
                         {(remainingTime || distance) && (
                             <View style={styles.timeContainer}>
-                                {true && (
+                                {remainingTime && (
                                     <View style={styles.infoCard}>
                                         <Ionicons name='alarm' size={24} color={colors.primary400} />
                                         <TextComponent
@@ -238,7 +220,7 @@ export default function Details() {
                                             className='mt-1 text-gray-500'
                                         />
                                         <TextComponent
-                                            text={remainingTime || ''}
+                                            text={remainingTime}
                                             size={16}
                                             className='font-bold text-center'
                                         />
@@ -269,33 +251,47 @@ export default function Details() {
                         )}
                     </SectionComponent>
 
-                    {/* QR Code */}
-                    <SectionComponent className='items-center mb-2'>
-                        <TouchableOpacity onPress={handleGetDirections} style={styles.qrContainer}>
-                            <View style={styles.qrHeader}>
-                                <Ionicons name='navigate' size={20} color={colors.primary400} />
-                                <TextComponent
-                                    text={t('attendance_details.get_directions')}
-                                    size={16}
-                                    className='ml-2 font-extrabold'
-                                />
-                            </View>
-                        </TouchableOpacity>
+                    <SectionComponent className='mb-2'>
+                        <ButtonComponent
+                            title={t('attendance_details.show_map')}
+                            size='large'
+                            icon={<Ionicons name='map-outline' size={22} color='white' style={{ marginRight: 8 }} />}
+                            type={!activeMap() ? 'grey' : 'primary'}
+                            disabled={!activeMap()}
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/attendance/map',
+                                    params: {
+                                        id,
+                                        eventCode: data?.eventCode,
+                                        userLatitude: userLocation?.latitude?.toString(),
+                                        userLongitude: userLocation?.longitude?.toString(),
+                                        eventLatitude: data?.location?.lat?.toString(),
+                                        eventLongitude: data?.location?.lng?.toString(),
+                                        eventName: data?.location?.name,
+                                        hasLocationPermission: hasLocationPermission?.toString(),
+                                        startAt: data?.startAt,
+                                        endAt: data?.endAt,
+                                    },
+                                });
+                            }}
+                        />
                     </SectionComponent>
 
-                    {/* Check In Button */}
                     <SectionComponent className='items-center px-6 mb-6'>
                         <ButtonComponent
                             title={t('attendance_details.check_in')}
                             type={activeScan ? 'primary' : 'grey'}
                             size='large'
                             disabled={!activeScan}
-                            icon={<Ionicons name='scan-outline' size={22} color='white' style={{ marginRight: 8 }} />}
+                            icon={
+                                <Ionicons name='qr-code-outline' size={22} color='white' style={{ marginRight: 8 }} />
+                            }
                             onPress={() => {
                                 router.push({
                                     pathname: '/attendance/scan',
                                     params: {
-                                        id: id,
+                                        id,
                                         eventCode: data?.eventCode,
                                     },
                                 });
@@ -348,61 +344,12 @@ const styles = StyleSheet.create({
         padding: 12,
         flex: 1,
     },
-
     infoCard: {
         backgroundColor: '#f8f9fa',
         borderRadius: 12,
         padding: 16,
         alignItems: 'center',
         flex: 1,
-    },
-    mapContainer: {
-        height: 200,
-        borderRadius: 12,
-        overflow: 'hidden',
-        marginVertical: 10,
-    },
-    map: {
-        width: '100%',
-        height: '100%',
-    },
-    markerContainer: {
-        alignItems: 'center',
-    },
-    userMarkerContainer: {
-        backgroundColor: colors.primary400,
-        borderRadius: 50,
-        padding: 6,
-    },
-    directionsButton: {
-        position: 'absolute',
-        bottom: 12,
-        right: 12,
-        backgroundColor: colors.primary400,
-        borderRadius: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    qrContainer: {
-        backgroundColor: '#f8f9fa',
-        borderRadius: 16,
-        padding: 16,
-    },
-    qrHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        fontWeight: 'bold',
-    },
-    qrImageContainer: {
-        alignItems: 'center',
-        padding: 8,
-    },
-    qrImage: {
-        width: '100%',
-        height: 260,
-        resizeMode: 'contain',
     },
     noDataContainer: {
         alignItems: 'center',

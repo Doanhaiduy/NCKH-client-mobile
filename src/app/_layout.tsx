@@ -25,7 +25,11 @@ import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { colors } from '@/constants/colors';
 import { LinearGradient } from 'expo-linear-gradient';
+import Mapbox from '@rnmapbox/maps';
 
+const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_API_KEY!;
+
+Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 // Block "react-native-render-html" error log
 LogBox.ignoreLogs(['Use JavaScript default parameters instead.']);
 
@@ -71,6 +75,7 @@ const FloatingChatIcon: React.FC = () => {
         inputRange: [0, 1],
         outputRange: ['0deg', '180deg'],
     });
+
     // Pulse animation
     useEffect(() => {
         if (pathname === '/') {

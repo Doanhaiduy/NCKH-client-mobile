@@ -4,6 +4,7 @@ import React from 'react';
 export default function HomeLayout() {
     return (
         <Stack
+            initialRouteName='index'
             screenOptions={{
                 headerShown: false,
             }}

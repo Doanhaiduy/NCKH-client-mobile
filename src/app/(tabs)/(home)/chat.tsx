@@ -41,7 +41,6 @@ const EnhancedChatScreen: React.FC = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
-
     const messagesPerPage = 10;
     const { authData } = useSelector(authSelector);
 
@@ -160,7 +159,6 @@ const EnhancedChatScreen: React.FC = () => {
             }
         } catch (error) {
             console.error('Error fetching chat history:', error);
-            Alert.alert('Error', t('chatbot.error.history'));
         } finally {
             setIsFetching(false);
         }

@@ -34,8 +34,8 @@
             },
             "package": "com.doanhaiduy.mobile",
             "permissions": [
-                "android.permission.USE_BIOMETRIC",
-                "android.permission.USE_FINGERPRINT",
+                "USE_BIOMETRIC",
+                "USE_FINGERPRINT",
                 "CAMERA",
                 "WRITE_EXTERNAL_STORAGE",
                 "CAMERA_ROLL",
@@ -91,6 +91,19 @@
                 {
                     "icon": "./assets/icon_v2.png",
                     "color": "#FFFFFF"
+                }
+            ],
+            [
+                "@rnmapbox/maps",
+                {
+                    "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZG9hbmhhaWR1eSIsImEiOiJjbWE2dnM5cWcwNDlnMmtxemVnZGEwa3RhIn0.CyseJf23SFU4lUEF6ndZiA",
+                    "RNMapboxMapsVersion": "11.0.0"
+                }
+            ],
+            [
+                "expo-location",
+                {
+                    "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
                 }
             ]
         ],

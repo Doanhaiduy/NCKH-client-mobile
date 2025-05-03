@@ -19,6 +19,12 @@ export default function AttendanceLayout() {
             <Stack.Screen name='list' />
 
             <Stack.Screen name='[id]' />
+            <Stack.Screen
+                name='map'
+                options={{
+                    presentation: 'containedModal',
+                }}
+            />
         </Stack>
     );
 }

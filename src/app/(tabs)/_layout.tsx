@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 export default function TabsLayout() {
     const path = usePathname();
     const { authData } = useSelector(authSelector);
+    const [hasCheckedInitialRoute, setHasCheckedInitialRoute] = React.useState(false);
 
     useEffect(() => {
         if (!authData || !authData.accessToken) {
@@ -18,6 +19,15 @@ export default function TabsLayout() {
             }, 100);
         }
     }, [authData]);
+
+    useEffect(() => {
+        if (!hasCheckedInitialRoute) {
+            if (path === '/chat') {
+                router.replace('/(tabs)/(home)');
+            }
+            setHasCheckedInitialRoute(true);
+        }
+    }, [hasCheckedInitialRoute, path]);
 
     return (
         <Tabs
@@ -33,7 +43,8 @@ export default function TabsLayout() {
                     backgroundColor: '#fff',
                     paddingTop: 15,
                     height: Platform.OS === 'ios' ? 80 : 60,
-                    display: path === '/attendance/scan' || path === '/chat' ? 'none' : 'flex',
+                    display:
+                        path === '/attendance/scan' || path === '/chat' || path === '/attendance/map' ? 'none' : 'flex',
                 },
                 tabBarActiveTintColor: colors.primary400,
             }}
