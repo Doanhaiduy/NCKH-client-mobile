@@ -56,7 +56,7 @@ const EventMap = ({
     const [travelTime, setTravelTime] = useState<string | null>(null);
     const [travelDistance, setTravelDistance] = useState<string | null>(null);
     const [selectedTransportMode, setSelectedTransportMode] = useState<string>('walking');
-    const [showBottomControls, setShowBottomControls] = useState(true);
+    const [showBottomControls, setShowBottomControls] = useState(false);
     const [lateMinutes, setLateMinutes] = useState<number>(0);
     const modalizeRef = useRef<Modalize>(null);
 
@@ -66,7 +66,6 @@ const EventMap = ({
         { id: 'cycling', icon: 'bicycle-outline', label: t('map.bike') },
     ];
 
-    // Kiểm tra xem Mapbox có hoạt động không
     useEffect(() => {
         const checkMapboxStatus = async () => {
             if (!MAPBOX_ACCESS_TOKEN || MAPBOX_ACCESS_TOKEN === 'YOUR_BACKUP_TOKEN') {
@@ -237,7 +236,7 @@ const EventMap = ({
             }
         }
     }, [startAt, travelTime]);
-    console.log(eventLocation);
+
     const openExternalMap = () => {
         if (!userLocation || !eventLocation?.lat || !eventLocation?.lng) {
             setLateMinutes(0);
