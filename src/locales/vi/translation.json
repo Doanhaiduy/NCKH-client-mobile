@@ -217,7 +217,8 @@
         "qr_instruction_4": "Sau khi quét thành công, bạn sẽ được yêu cầu chụp ảnh khuôn mặt để xác thực",
         "qr_instruction_5": "Nếu không thể quét mã QR, bạn có thể tải ảnh chứa mã QR từ thư viện",
         "taking_photo": "Đang chụp ảnh...",
-        "switching_camera": "Đang chuyển đổi camera..."
+        "switching_camera": "Đang chuyển đổi camera...",
+        "no_face_detected": "Không phát hiện khuôn mặt"
     },
     "notification": {
         "title": "Thông báo",

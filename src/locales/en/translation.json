@@ -217,7 +217,8 @@
         "qr_instruction_4": "After successful scanning, you will be prompted to take a photo of your face for verification",
         "qr_instruction_5": "If you can't scan the QR code, you can upload an image containing the QR code from your gallery",
         "taking_photo": "Taking photo...",
-        "switching_camera": "Switching camera..."
+        "switching_camera": "Switching camera...",
+        "no_face_detected": "No face detected"
     },
     "notification": {
         "title": "Notifications",

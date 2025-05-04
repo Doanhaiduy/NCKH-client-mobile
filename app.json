@@ -3,7 +3,7 @@
         "name": "NTU Student",
         "slug": "ntu_student",
         "scheme": "ntustudent",
-        "version": "2.0.4",
+        "version": "2.0.6",
         "orientation": "portrait",
         "userInterfaceStyle": "light",
         "icon": "./assets/icon_v2.png",
@@ -11,6 +11,7 @@
         "experiments": {
             "tsconfigPaths": true
         },
+        "jsEngine": "hermes",
         "notification": {
             "icon": "./assets/icon_v2.png"
         },
@@ -29,6 +30,7 @@
             }
         },
         "android": {
+            "minSdkVersion": 26,
             "adaptiveIcon": {
                 "foregroundImage": "./assets/icon_v2.png"
             },
@@ -40,7 +42,9 @@
                 "WRITE_EXTERNAL_STORAGE",
                 "CAMERA_ROLL",
                 "ACCESS_FINE_LOCATION",
-                "ACCESS_COARSE_LOCATION"
+                "ACCESS_COARSE_LOCATION",
+                "FOREGROUND_SERVICE",
+                "FOREGROUND_SERVICE_CAMERA"
             ],
             "googleServicesFile": "./google-services.json",
             "useNextNotificationsApi": true,
@@ -104,6 +108,15 @@
                 "expo-location",
                 {
                     "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+                }
+            ],
+            "react-native-vision-camera",
+            [
+                "expo-build-properties",
+                {
+                    "android": {
+                        "minSdkVersion": 26
+                    }
                 }
             ]
         ],

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Alert, Image, Linking, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -16,6 +16,7 @@ import jsQR from 'jsqr';
 import jpeg from 'jpeg-js';
 import BarcodeMask from 'react-native-barcode-mask';
 import axios from 'axios';
+import LivenessFaceDetection from '@components/LivenessFaceDetection'; // Import the new component
 
 // Local imports
 import eventAPI from '@/apis/eventApi';
@@ -35,6 +36,7 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { setEventNeedsRefresh } from '@/stores/reducers/refreshReducer';
 import handleDetectFace from '@/services/detectApi';
 import { GeoLocation } from '@/types/geoLocation';
+import { Camera, PhotoFile } from 'react-native-vision-camera';
 
 const PNG = require('pngjs/browser').PNG;
 
@@ -47,7 +49,6 @@ const PhotoInstructionsModal = ({ onClose, t }: { onClose: () => void; t: (key: 
         <View className='items-center'>
             <TextComponent className='text-center text-xl font-bold' text={t('scan_qr.photo_instructions_title')} />
         </View>
-
         <View className='mt-2'>
             {[1, 2, 3, 4, 5].map((num) => (
                 <View key={`photo-instruction-${num}`} className='flex-row items-start mb-3'>
@@ -55,13 +56,11 @@ const PhotoInstructionsModal = ({ onClose, t }: { onClose: () => void; t: (key: 
                     <TextComponent className='ml-2 flex-1' text={t(`scan_qr.photo_instruction_${num}`)} />
                 </View>
             ))}
-
             <View className='flex-row items-start mb-3'>
                 <Ionicons name='warning' size={22} color={colors.error} style={{ marginTop: 2 }} />
                 <TextComponent className='ml-2 flex-1' text={t('scan_qr.photo_instruction_warning')} />
             </View>
         </View>
-
         <View className='mt-3'>
             <ButtonComponent title={t('scan_qr.got_it')} onPress={onClose} type='primary' size='large' />
         </View>
@@ -77,6 +76,7 @@ export default function ScanQRScreen() {
 
     // Refs
     const cameraRef = useRef<CameraView>(null);
+    const cameraDetectorRef = useRef<Camera>(null);
     const modalizeRefFailed = useRef<Modalize>(null);
     const modalizeRefSuccess = useRef<Modalize>(null);
     const modalizeShowPhoto = useRef<Modalize>(null);
@@ -88,8 +88,9 @@ export default function ScanQRScreen() {
     // Camera and scanning states
     const [scanned, setScanned] = useState(false);
     const [isTakePhoto, setIsTakePhoto] = useState(false);
-    const [picture, setPicture] = useState<CameraCapturedPicture | null>(null);
+    const [picture, setPicture] = useState<PhotoFile | null>(null);
     const [cameraFacing, setCameraFacing] = useState<'front' | 'back'>('back');
+    const [facesDetected, setFacesDetected] = useState<any[]>([]); // State for face detection
 
     // Location states
     const [currentLocation, setCurrentLocation] = useState<EventLocation>();
@@ -106,7 +107,6 @@ export default function ScanQRScreen() {
     // Load event details on component mount
     useEffect(() => {
         if (!id) return;
-
         const fetchEventDetails = async () => {
             try {
                 const data = await eventAPI.getDetailEvents(id.toString());
@@ -120,10 +120,10 @@ export default function ScanQRScreen() {
                 ]);
             }
         };
-
         fetchEventDetails();
     }, [id, t]);
 
+    console.log(eventDetails?.qrCodeUrl);
     // Show QR instructions when event details are loaded
     useEffect(() => {
         if (eventDetails && modalizeQRInstructions.current) {
@@ -136,8 +136,6 @@ export default function ScanQRScreen() {
     // Initialize location tracking
     useEffect(() => {
         getCurrentLocation();
-
-        // Optional: Set up periodic location updates if needed for real-time distance checking
         const intervalId = setInterval(getCurrentLocation, DISTANCE_CHECK_INTERVAL);
         return () => clearInterval(intervalId);
     }, []);
@@ -191,9 +189,7 @@ export default function ScanQRScreen() {
                 ]);
                 return;
             }
-
             if (permission.status === 'granted') {
-                // Try to get last known position first for faster response
                 const location = await Location.getLastKnownPositionAsync({});
                 if (location) {
                     setCurrentLocation({
@@ -203,7 +199,7 @@ export default function ScanQRScreen() {
                     });
                 } else {
                     const location = await Location.getCurrentPositionAsync({
-                        accuracy: Location.Accuracy.Balanced, // Balance between accuracy and battery usage
+                        accuracy: Location.Accuracy.Balanced,
                     });
                     setCurrentLocation({
                         lat: location.coords.latitude,
@@ -220,8 +216,7 @@ export default function ScanQRScreen() {
     // Reverse geocode to get location name
     const reverseLocation = useCallback(async (lat: number, long: number) => {
         try {
-            const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VN&apiKey=${process
-                .env.EXPO_PUBLIC_HERE_LOCATION_API_KEY!}`;
+            const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VN&apiKey=${process.env.EXPO_PUBLIC_HERE_LOCATION_API_KEY!}`;
             const res = await axios<{ items: GeoLocation[] }>(api);
             if (res && res.status === 200) {
                 setCurrentLocation((prev) => ({
@@ -237,34 +232,25 @@ export default function ScanQRScreen() {
     // Validate check-in requirements
     const validateCheckIn = useCallback(
         async (dataDecrypt: EncryptedEventDetails | null) => {
-            // Check if location available
             if (!currentLocation) {
                 await getCurrentLocation();
                 return false;
             }
-
-            // Verify event code
             const correctEventCode = eventCode || eventDetails?.eventCode;
             if (correctEventCode !== dataDecrypt?.eventCode) {
                 setError(t('scan_qr.invalid_qr'));
                 return false;
             }
-
-            // Check if event is active
             if (!checkTimeActive(dataDecrypt?.startAt || 0, dataDecrypt?.endAt || 0)) {
                 setError(t('scan_qr.invalid_time'));
                 return false;
             }
-
-            // Verify distance
             if (eventDetails?.location) {
                 const dataLocation = eventDetails.location;
                 const distance = getDistance(
                     { latitude: currentLocation.lat, longitude: currentLocation.lng },
                     { latitude: dataLocation.lat, longitude: dataLocation.lng },
                 );
-
-                // If there's a distance limit and user is outside that limit
                 if (distance > eventDetails?.distanceLimit && eventDetails?.distanceLimit !== 0) {
                     setError(
                         t('scan_qr.distance_error').replace(
@@ -275,7 +261,6 @@ export default function ScanQRScreen() {
                     return false;
                 }
             }
-
             return true;
         },
         [currentLocation, eventCode, eventDetails, t, getCurrentLocation],
@@ -288,20 +273,15 @@ export default function ScanQRScreen() {
             try {
                 setLoadingMessage(t('scan_qr.processing_qr'));
                 await sleep(1000);
-
-                // Parse and decrypt data
                 const dataParse = JSON.parse(data);
                 const dataDecrypt = decryptData(dataParse.data);
                 setEncryptedData(dataParse.data);
-
                 if (!dataDecrypt) {
                     setError(t('scan_qr.invalid_qr'));
                     setScanned(true);
                     modalizeRefFailed.current?.open();
                     return;
                 }
-
-                // Validate check-in requirements
                 const isValid = await validateCheckIn(dataDecrypt);
                 if (isValid) {
                     switchToFrontCamera();
@@ -322,7 +302,6 @@ export default function ScanQRScreen() {
     // Handle image upload from gallery
     const handlePickImageAndScanQR = useCallback(async () => {
         try {
-            // Request permissions
             const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (!permissionResult.granted) {
                 Alert.alert(t('scan_qr.gallery_permission_prompt'), t('scan_qr.gallery_permission_prompt'), [
@@ -335,27 +314,21 @@ export default function ScanQRScreen() {
                 ]);
                 return;
             }
-
-            // Pick image
             const result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'images',
-                quality: 0.1, // Low quality for faster processing
+                quality: 0.1,
             });
-
             if (result.canceled || !result.assets.length) {
                 return;
             }
-
             setLoadingMessage(t('scan_qr.reading_qr'));
             setIsLoading(true);
             setScanned(false);
-
-            // Process image for QR scanning
             const manipulatedImage = await ImageManipulator.manipulateAsync(
                 result.assets[0].uri,
-                [{ resize: { width: 800 } }], // Resize for performance
+                [{ resize: { width: 800 } }],
                 {
-                    compress: 0.2, // Slightly increased for better QR detection
+                    compress: 0.2,
                     format:
                         result.assets[0].mimeType === 'image/jpeg'
                             ? ImageManipulator.SaveFormat.JPEG
@@ -363,17 +336,13 @@ export default function ScanQRScreen() {
                     base64: true,
                 },
             );
-
             if (!manipulatedImage.base64) {
                 throw new Error('Failed to process image');
             }
-
-            // Process image data based on type
             const base64Buffer = Buffer.from(manipulatedImage.base64, 'base64');
             const image = result.assets[0];
             let pixelData;
             let imageBuffer;
-
             if (image.mimeType === 'image/jpeg' || image.uri.endsWith('.jpg')) {
                 pixelData = jpeg.decode(base64Buffer, { useTArray: true });
                 imageBuffer = pixelData.data;
@@ -383,15 +352,11 @@ export default function ScanQRScreen() {
             } else {
                 throw new Error('Unsupported image format');
             }
-
             if (!pixelData || !pixelData.width || !pixelData.height) {
                 throw new Error('Invalid image data');
             }
-
-            // Scan QR code in image
             const data = Uint8ClampedArray.from(imageBuffer);
             const code = jsQR(data, pixelData.width, pixelData.height);
-
             if (code) {
                 handleBarCodeScanned({ type: 'qr', data: code.data });
             } else {
@@ -412,13 +377,12 @@ export default function ScanQRScreen() {
         try {
             setLoadingMessage(t('scan_qr.taking_photo'));
             setIsLoading(true);
-            const photo = await cameraRef?.current?.takePictureAsync({
-                quality: 0.5, // Medium quality is sufficient for face detection
-                skipProcessing: true, // Skip additional processing for faster capture
-            });
+            const photo = await cameraDetectorRef?.current?.takePhoto({});
+            console.log('Photo taken:', photo);
             setPicture(photo || null);
             setIsLoading(false);
             modalizeShowPhoto.current?.open();
+            setIsLoading(false);
         } catch (error) {
             console.error('Error taking photo:', error);
             setIsLoading(false);
@@ -433,30 +397,22 @@ export default function ScanQRScreen() {
         try {
             setLoadingMessage(t('scan_qr.processing_image'));
             setIsLoading(true);
-
-            // Prepare form data for face detection
             const formData = new FormData();
             if (picture) {
                 /* @ts-ignore */
                 formData.append('image', {
-                    uri: picture.uri,
+                    uri: 'file://' + picture.path,
                     type: 'image/jpeg',
-                    name: picture.uri.split('/').pop(),
+                    name: picture.path.split('/').pop(),
                 });
             }
             formData.append('username', authData?.username || '');
-
             const dataDetect = await handleDetectFace(formData);
-
             if (dataDetect) {
                 setLoadingMessage(t('scan_qr.checking_in'));
-
-                // Get location name if needed
                 if (currentLocation && (!currentLocation.name || currentLocation.name === 'Not found name')) {
                     await reverseLocation(currentLocation.lat, currentLocation.lng);
                 }
-
-                // Submit check-in
                 const dataLocation = eventDetails?.location;
                 mutate(dataLocation as EventLocation);
                 modalizeShowPhoto.current?.close();
@@ -479,14 +435,8 @@ export default function ScanQRScreen() {
     const switchToFrontCamera = useCallback(async () => {
         setLoadingMessage(t('scan_qr.switching_camera'));
         setIsLoading(true);
-
-        // First set state that we're in photo mode
         setIsTakePhoto(true);
-
-        // Add short delay to let Android properly handle camera switch
         await sleep(300);
-
-        // Then switch camera
         setCameraFacing('front');
         setIsLoading(false);
     }, [t]);
@@ -494,14 +444,8 @@ export default function ScanQRScreen() {
     const switchToBackCamera = useCallback(async () => {
         setLoadingMessage(t('scan_qr.switching_camera'));
         setIsLoading(true);
-
-        // First switch camera facing
         setCameraFacing('back');
-
-        // Add delay to let Android properly handle camera switch
         await sleep(300);
-
-        // Then set state that we're in QR mode
         setIsTakePhoto(false);
         setScanned(false);
         setIsLoading(false);
@@ -534,110 +478,19 @@ export default function ScanQRScreen() {
     // Camera UI for taking photo
     const CameraUI = useMemo(
         () => (
-            <CameraView
-                facing={cameraFacing}
-                style={styles.camera}
-                ref={cameraRef}
-                barcodeScannerSettings={{
-                    barcodeTypes: ['qr', 'pdf417'],
-                }}
-                onBarcodeScanned={!isTakePhoto && !scanned ? handleBarCodeScanned : undefined}
-            >
-                {/* Camera UI content based on mode */}
+            <>
                 {isTakePhoto ? (
-                    <>
-                        {/* Photo capture UI */}
-                        <View style={styles.header}>
-                            <TouchableOpacity onPress={switchToBackCamera} style={styles.backButton}>
-                                <Ionicons name='chevron-back' size={28} color='white' />
-                            </TouchableOpacity>
-                            <Text style={styles.headerTitle}>{t('scan_qr.take_photo')}</Text>
-                            <TouchableOpacity
-                                style={styles.flashButton}
-                                onPress={() => modalizePhotoInstructions.current?.open()}
-                            >
-                                <Entypo name='info-with-circle' size={24} color='white' />
-                            </TouchableOpacity>
-                        </View>
-                        <View
-                            style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                width: 280,
-                                height: 300,
-                                marginLeft: -140,
-                                marginTop: -180,
-                                borderWidth: 4,
-                                borderColor: colors.white,
-                                borderRadius: 150,
-                                backgroundColor: 'transparent',
-                            }}
-                        />
-
-                        <View
-                            style={{
-                                position: 'absolute',
-                                top: '30%',
-                                left: 0,
-                                right: 0,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <View style={[styles.scanInstruction, { marginTop: -100 }]}>
-                                <Text style={styles.scanInstructionText}>{t('scan_qr.take_photo_instruction')}</Text>
-                            </View>
-                        </View>
-
-                        <View
-                            style={{
-                                position: 'absolute',
-                                bottom: 60,
-                                left: 0,
-                                right: 0,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={handleTakePhoto}
-                                style={{
-                                    width: 70,
-                                    height: 70,
-                                    borderRadius: 35,
-                                    backgroundColor: 'white',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderWidth: 4,
-                                    borderColor: colors.primary400,
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        width: 58,
-                                        height: 58,
-                                        borderRadius: 29,
-                                        backgroundColor: 'white',
-                                        borderWidth: 1,
-                                        borderColor: '#000',
-                                    }}
-                                />
-                            </TouchableOpacity>
-
-                            <Text
-                                style={{
-                                    color: 'white',
-                                    marginTop: 10,
-                                    fontSize: 16,
-                                    fontWeight: '500',
-                                }}
-                            >
-                                {t('scan_qr.tap_to_capture')}
-                            </Text>
-                        </View>
-                    </>
+                    <></>
                 ) : (
-                    <>
-                        {/* QR scanner UI */}
+                    <CameraView
+                        facing={cameraFacing}
+                        style={styles.camera}
+                        ref={cameraRef}
+                        barcodeScannerSettings={{
+                            barcodeTypes: ['qr', 'pdf417'],
+                        }}
+                        onBarcodeScanned={!isTakePhoto && !scanned ? handleBarCodeScanned : undefined}
+                    >
                         <View style={styles.header}>
                             <TouchableOpacity onPress={() => router.dismiss()} style={styles.backButton}>
                                 <Ionicons name='chevron-back' size={28} color='white' />
@@ -650,7 +503,6 @@ export default function ScanQRScreen() {
                                 <Entypo name='info-with-circle' size={24} color='white' />
                             </TouchableOpacity>
                         </View>
-
                         <View style={styles.maskContainer}>
                             <BarcodeMask
                                 width={300}
@@ -662,14 +514,44 @@ export default function ScanQRScreen() {
                                 animatedLineColor={colors.primary300}
                             />
                         </View>
+                    </CameraView>
+                )}
+                {isTakePhoto && (
+                    <>
+                        <View style={styles.header}>
+                            <TouchableOpacity onPress={switchToBackCamera} style={styles.backButton}>
+                                <Ionicons name='chevron-back' size={28} color='white' />
+                            </TouchableOpacity>
+                            <Text style={styles.headerTitle}>{t('scan_qr.take_photo')}</Text>
+                            <TouchableOpacity
+                                style={styles.flashButton}
+                                onPress={() => modalizePhotoInstructions.current?.open()}
+                            >
+                                <Entypo name='info-with-circle' size={24} color='white' />
+                            </TouchableOpacity>
+                        </View>
+                        <LivenessFaceDetection
+                            isActive={isTakePhoto}
+                            onFaceDetected={(faces) => setFacesDetected(faces)}
+                            handleTakePhoto={handleTakePhoto}
+                            cameraRef={cameraDetectorRef}
+                        />
                     </>
                 )}
-            </CameraView>
+            </>
         ),
-        [cameraFacing, isTakePhoto, scanned, t, handleBarCodeScanned, handleTakePhoto, switchToBackCamera],
+        [
+            cameraFacing,
+            isTakePhoto,
+            scanned,
+            t,
+            handleBarCodeScanned,
+            handleTakePhoto,
+            switchToBackCamera,
+            facesDetected,
+        ],
     );
 
-    // Show camera permission request if permission not granted
     if (!permission) {
         return <View />;
     }
@@ -681,11 +563,7 @@ export default function ScanQRScreen() {
     return (
         <View style={styles.container}>
             <StatusBar barStyle='light-content' translucent={true} />
-
-            {/* Main UI - combined camera view */}
             {CameraUI}
-
-            {/* Only show bottom section for QR scanner mode */}
             {!isTakePhoto && (
                 <View style={styles.bottomSection}>
                     <View style={styles.bottomButtons}>
@@ -698,7 +576,6 @@ export default function ScanQRScreen() {
                             </View>
                             <Text style={styles.bottomButtonText}>{t('scan_qr.event_info')}</Text>
                         </TouchableOpacity>
-
                         <TouchableOpacity style={styles.bottomButton} onPress={handlePickImageAndScanQR}>
                             <View style={styles.bottomButtonIcon}>
                                 <Ionicons name='images' size={24} color='black' />
@@ -708,8 +585,6 @@ export default function ScanQRScreen() {
                     </View>
                 </View>
             )}
-
-            {/* Modal: Failed check-in */}
             <PortalizeComponent
                 onClose={async () => {
                     await sleep(1000);
@@ -744,8 +619,6 @@ export default function ScanQRScreen() {
                     </View>
                 </View>
             </PortalizeComponent>
-
-            {/* Modal: Successful check-in */}
             <PortalizeComponent ref={modalizeRefSuccess}>
                 <View className='shadow-xl gap-5 p-3 bg-white'>
                     <View className='border-[2px] border-white items-center' style={{ borderRadius: 99 }}>
@@ -775,15 +648,13 @@ export default function ScanQRScreen() {
                     </View>
                 </View>
             </PortalizeComponent>
-
-            {/* Modal: Photo preview */}
             <PortalizeComponent ref={modalizeShowPhoto}>
                 <View className='shadow-xl gap-5 p-3 bg-white'>
                     <TextComponent className='text-center text-xl font-bold' text={t('scan_qr.photo_title')} />
                     {picture && (
                         <View className='rounded-2xl overflow-hidden border-2 border-gray-100 mb-5'>
                             <Image
-                                source={{ uri: picture.uri || '' }}
+                                source={{ uri: 'file://' + picture.path || '' }}
                                 className='w-full h-[50vh] self-center'
                                 resizeMode='cover'
                             />
@@ -819,14 +690,11 @@ export default function ScanQRScreen() {
                     </View>
                 </View>
             </PortalizeComponent>
-
-            {/* Modal: Event details */}
             <PortalizeComponent ref={modalizeRefEventDetails}>
                 <View className='shadow-xl gap-4 p-4 bg-white'>
                     <View className='items-center'>
                         <TextComponent className='text-center text-xl font-bold' text={t('scan_qr.event_title')} />
                     </View>
-
                     {eventDetails ? (
                         <View className='mt-2'>
                             <View className='flex-row flex-wrap mb-3'>
@@ -834,7 +702,6 @@ export default function ScanQRScreen() {
                                 <TextComponent className='ml-2 font-interMd' text={t('scan_qr.event_name')} />
                                 <TextComponent className='ml-2 flex-1' text={eventDetails.name} />
                             </View>
-
                             <View className='flex-row flex-wrap mb-3'>
                                 <Ionicons name='time-outline' size={22} color={colors.primary400} />
                                 <TextComponent className='ml-2 font-interMd' text={t('scan_qr.event_time')} />
@@ -843,19 +710,16 @@ export default function ScanQRScreen() {
                                     text={`${dateTimeFormat(eventDetails.startAt)} - ${dateTimeFormat(eventDetails.endAt)}`}
                                 />
                             </View>
-
                             <View className='flex-row flex-wrap mb-3'>
                                 <Ionicons name='location-outline' size={22} color={colors.primary400} />
                                 <TextComponent className='ml-2 font-interMd' text={t('scan_qr.event_location')} />
                                 <TextComponent className='ml-2 flex-1' text={eventDetails.location?.name || ''} />
                             </View>
-
                             <View className='flex-row flex-wrap mb-3'>
                                 <Ionicons name='information-circle-outline' size={22} color={colors.primary400} />
                                 <TextComponent className='ml-2 font-interMd' text={t('scan_qr.event_description')} />
                                 <TextComponent className='ml-2 flex-1' text={eventDetails.description || ''} />
                             </View>
-
                             <View className='flex-row flex-wrap mb-3'>
                                 <Ionicons name='people-outline' size={22} color={colors.primary400} />
                                 <TextComponent className='ml-2 font-interMd' text={t('scan_qr.event_max_attendees')} />
@@ -864,7 +728,6 @@ export default function ScanQRScreen() {
                                     text={eventDetails.maxAttendees?.toString() || t('scan_qr.unlimited')}
                                 />
                             </View>
-
                             <View className='flex-row flex-wrap mb-3'>
                                 <Ionicons name='navigate-outline' size={22} color={colors.primary400} />
                                 <TextComponent className='ml-2 font-interMd' text={t('scan_qr.event_distance_limit')} />
@@ -883,7 +746,6 @@ export default function ScanQRScreen() {
                             <TextComponent text={t('scan_qr.event_no_info')} />
                         </View>
                     )}
-
                     <View className='mt-2'>
                         <ButtonComponent
                             title={t('scan_qr.event_close')}
@@ -894,13 +756,9 @@ export default function ScanQRScreen() {
                     </View>
                 </View>
             </PortalizeComponent>
-
-            {/* Modal: Photo instructions */}
             <PortalizeComponent ref={modalizePhotoInstructions}>
                 <PhotoInstructionsModal onClose={() => modalizePhotoInstructions.current?.close()} t={t} />
             </PortalizeComponent>
-
-            {/* Modal: QR scanning instructions */}
             <PortalizeComponent ref={modalizeQRInstructions}>
                 <View className='shadow-xl gap-4 p-4 bg-white'>
                     <View className='items-center'>
@@ -909,7 +767,6 @@ export default function ScanQRScreen() {
                             text={t('scan_qr.qr_instructions_title')}
                         />
                     </View>
-
                     <View className='mt-2'>
                         {[1, 2, 3, 4].map((num) => (
                             <View key={`qr-instruction-${num}`} className='flex-row items-start mb-3'>
@@ -922,7 +779,6 @@ export default function ScanQRScreen() {
                                 <TextComponent className='ml-2 flex-1' text={t(`scan_qr.qr_instruction_${num}`)} />
                             </View>
                         ))}
-
                         <View className='flex-row items-start mb-3'>
                             <Ionicons
                                 name='information-circle'
@@ -933,7 +789,6 @@ export default function ScanQRScreen() {
                             <TextComponent className='ml-2 flex-1' text={t('scan_qr.qr_instruction_5')} />
                         </View>
                     </View>
-
                     <View className='mt-3'>
                         <ButtonComponent
                             title={t('scan_qr.got_it')}
@@ -944,8 +799,6 @@ export default function ScanQRScreen() {
                     </View>
                 </View>
             </PortalizeComponent>
-
-            {/* Loading overlay */}
             {(isPending || isLoading) && (
                 <LoadingModal message={isLoading ? loadingMessage : t('scan_qr.processing_qr')} />
             )}
@@ -953,7 +806,6 @@ export default function ScanQRScreen() {
     );
 }
 
-// Styles moved to bottom for better readability
 const styles = StyleSheet.create({
     container: {
         flex: 1,
