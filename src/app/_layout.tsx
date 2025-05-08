@@ -62,7 +62,7 @@ const queryClient = new QueryClient({
 });
 
 export const unstable_settings = {
-    initialRouteName: '/',
+    initialRouteName: '(tabs)/(home)/index',
 };
 
 const FloatingChatIcon: React.FC = () => {

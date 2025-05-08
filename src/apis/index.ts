@@ -110,7 +110,7 @@ axiosClient.interceptors.request.use(async (config: any) => {
 
 axiosClient.interceptors.response.use(
     (response) => {
-        if (response.status === 200 && response.data.result) {
+        if (response.status === 200 && response.data.hasOwnProperty('result')) {
             return response.data.result;
         } else {
             if ((response.status === 200 || response.status === 201) && response.data) {
