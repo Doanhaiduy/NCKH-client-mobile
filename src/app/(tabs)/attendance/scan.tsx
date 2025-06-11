@@ -16,6 +16,7 @@ import jsQR from 'jsqr';
 import jpeg from 'jpeg-js';
 import BarcodeMask from 'react-native-barcode-mask';
 import axios from 'axios';
+import * as Device from 'expo-device';
 
 // Local imports
 import eventAPI from '@/apis/eventApi';
@@ -35,11 +36,29 @@ import { authSelector } from '@/stores/reducers/authReducer';
 import { setEventNeedsRefresh } from '@/stores/reducers/refreshReducer';
 import handleDetectFace from '@/services/detectApi';
 import { GeoLocation } from '@/types/geoLocation';
+import utilAPI from '@/apis/utilApi';
 
 const PNG = require('pngjs/browser').PNG;
+// Enhanced Location Tracker Hook with Real-time Updates
+interface LocationTrackerProps {
+    eventLocation?: EventLocation;
+    currentLocation?: EventLocation;
+    setCurrentLocation: React.Dispatch<React.SetStateAction<EventLocation | undefined>>;
+}
 
-// Constants
-const DISTANCE_CHECK_INTERVAL = 5000; // 5 seconds
+interface LocationTrackerResult {
+    distanceMeters: number;
+    locationAccuracy: number | null;
+    isTracking: boolean;
+    startLocationTracking: () => Promise<Location.LocationSubscription | null>;
+    stopLocationTracking: () => void;
+}
+
+// Constants - Optimized for better real-time tracking
+const LOCATION_UPDATE_INTERVAL = 5000; // 2 seconds - faster updates
+const MIN_DISTANCE_CHANGE = 3; // 3 meters - more sensitive to movement
+const LOCATION_ACCURACY_THRESHOLD = 20; // Only use locations with accuracy better than 20m
+const MAX_LOCATION_AGE = 10000; // 10 seconds - reject stale locations
 
 // Component extraction for modal contents
 const PhotoInstructionsModal = ({ onClose, t }: { onClose: () => void; t: (key: string) => string }) => (
@@ -68,6 +87,183 @@ const PhotoInstructionsModal = ({ onClose, t }: { onClose: () => void; t: (key: 
     </View>
 );
 
+const useLocationTracker = ({
+    eventLocation,
+    currentLocation,
+    setCurrentLocation,
+}: LocationTrackerProps): LocationTrackerResult => {
+    const [distanceMeters, setDistanceMeters] = useState<number>(0);
+    const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
+    const [isTracking, setIsTracking] = useState<boolean>(false);
+    const locationSubscriptionRef = useRef<Location.LocationSubscription | null>(null);
+    const lastLocationUpdateRef = useRef<EventLocation | null>(null);
+
+    // Function to validate location quality
+    const isLocationValid = useCallback((location: Location.LocationObject): boolean => {
+        if (!location || !location.coords) return false;
+
+        // Check accuracy threshold
+        if (location.coords.accuracy && location.coords.accuracy > LOCATION_ACCURACY_THRESHOLD) {
+            console.log(`Location accuracy too low: ${location.coords.accuracy}m`);
+            return false;
+        }
+
+        // Check location age
+        const locationAge = Date.now() - location.timestamp;
+        if (locationAge > MAX_LOCATION_AGE) {
+            console.log(`Location too old: ${locationAge}ms`);
+            return false;
+        }
+
+        return true;
+    }, []);
+
+    // Function to calculate and update distance
+    const updateLocationAndDistance = useCallback(
+        (location: Location.LocationObject): void => {
+            if (!isLocationValid(location)) return;
+
+            const newLocation: EventLocation = {
+                lat: location.coords.latitude,
+                lng: location.coords.longitude,
+                name: currentLocation?.name || 'Updating location...',
+            };
+
+            // Update accuracy info
+            setLocationAccuracy(location.coords.accuracy || null);
+
+            // Only update if location has changed significantly or if it's the first update
+            const lastLocation = lastLocationUpdateRef.current;
+            if (
+                !lastLocation ||
+                getDistance(
+                    { latitude: newLocation.lat, longitude: newLocation.lng },
+                    { latitude: lastLocation.lat, longitude: lastLocation.lng },
+                ) >= MIN_DISTANCE_CHANGE
+            ) {
+                setCurrentLocation(newLocation);
+                lastLocationUpdateRef.current = newLocation;
+
+                // Calculate distance to event if available
+                if (eventLocation) {
+                    const distance = getDistance(
+                        { latitude: newLocation.lat, longitude: newLocation.lng },
+                        { latitude: eventLocation.lat, longitude: eventLocation.lng },
+                    );
+
+                    setDistanceMeters(distance);
+
+                    console.log('Real-time Location Update:', {
+                        timestamp: new Date().toISOString(),
+                        currentLat: newLocation.lat.toFixed(6),
+                        currentLng: newLocation.lng.toFixed(6),
+                        eventLat: eventLocation.lat.toFixed(6),
+                        eventLng: eventLocation.lng.toFixed(6),
+                        distanceMeters: distance,
+                        distanceKm: (distance / 1000).toFixed(2),
+                        accuracy: location.coords.accuracy?.toFixed(1) + 'm',
+                        speed: location.coords.speed ? (location.coords.speed * 3.6).toFixed(1) + 'km/h' : 'N/A',
+                    });
+                }
+            }
+        },
+        [eventLocation, currentLocation, setCurrentLocation, isLocationValid],
+    );
+
+    // Start location tracking
+    const startLocationTracking = useCallback(async (): Promise<Location.LocationSubscription | null> => {
+        try {
+            // Request permissions with more specific requirements
+            const permission = await Location.requestForegroundPermissionsAsync();
+            if (permission.status !== 'granted') {
+                console.log('Location permission denied');
+                return null;
+            }
+
+            setIsTracking(true);
+
+            // Get initial location with high accuracy
+            try {
+                const initialLocation = await Location.getCurrentPositionAsync({
+                    accuracy: Location.Accuracy.BestForNavigation,
+                    distanceInterval: MIN_DISTANCE_CHANGE,
+                    timeInterval: LOCATION_UPDATE_INTERVAL,
+                });
+
+                if (isLocationValid(initialLocation)) {
+                    updateLocationAndDistance(initialLocation);
+                }
+            } catch (error) {
+                console.log('Could not get initial location:', error);
+                // Try with lower accuracy as fallback
+                try {
+                    const fallbackLocation = await Location.getCurrentPositionAsync({
+                        accuracy: Location.Accuracy.High,
+                        distanceInterval: MIN_DISTANCE_CHANGE,
+                        timeInterval: LOCATION_UPDATE_INTERVAL,
+                    });
+                    if (isLocationValid(fallbackLocation)) {
+                        updateLocationAndDistance(fallbackLocation);
+                    }
+                } catch (fallbackError) {
+                    console.log('Fallback location also failed:', fallbackError);
+                }
+            }
+
+            // Set up continuous location watching
+            const subscription = await Location.watchPositionAsync(
+                {
+                    accuracy: Location.Accuracy.BestForNavigation,
+                    timeInterval: LOCATION_UPDATE_INTERVAL,
+                    distanceInterval: MIN_DISTANCE_CHANGE,
+                    mayShowUserSettingsDialog: false,
+                },
+                (location) => {
+                    updateLocationAndDistance(location);
+                },
+            );
+
+            locationSubscriptionRef.current = subscription;
+            return subscription;
+        } catch (error) {
+            console.error('Error starting location tracking:', error);
+            setIsTracking(false);
+            return null;
+        }
+    }, [updateLocationAndDistance, isLocationValid]);
+
+    // Stop location tracking
+    const stopLocationTracking = useCallback((): void => {
+        if (locationSubscriptionRef.current) {
+            locationSubscriptionRef.current.remove();
+            locationSubscriptionRef.current = null;
+        }
+        setIsTracking(false);
+        console.log('Location tracking stopped');
+    }, []);
+
+    // Start tracking when eventLocation is available
+    useEffect(() => {
+        if (eventLocation) {
+            startLocationTracking();
+        }
+
+        // Cleanup on unmount
+        return () => {
+            stopLocationTracking();
+        };
+    }, [eventLocation, startLocationTracking, stopLocationTracking]);
+
+    // Return tracking status and distance info
+    return {
+        distanceMeters,
+        locationAccuracy,
+        isTracking,
+        startLocationTracking,
+        stopLocationTracking,
+    };
+};
+
 export default function ScanQRScreen() {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -86,7 +282,7 @@ export default function ScanQRScreen() {
 
     // State groups
     // Camera and scanning states
-    const [scanned, setScanned] = useState(false);
+    const [scanned, setScanned] = useState(true);
     const [isTakePhoto, setIsTakePhoto] = useState(false);
     const [picture, setPicture] = useState<CameraCapturedPicture | null>(null);
     const [cameraFacing, setCameraFacing] = useState<'front' | 'back'>('back');
@@ -103,25 +299,38 @@ export default function ScanQRScreen() {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState('');
 
+    // Enhanced location tracking with real-time updates
+    const { distanceMeters, locationAccuracy, isTracking } = useLocationTracker({
+        eventLocation: eventDetails?.location,
+        currentLocation,
+        setCurrentLocation,
+    });
     // Load event details on component mount
     useEffect(() => {
-        if (!id) return;
+        const initialize = async () => {
+            setIsLoading(true);
+            setLoadingMessage(t('scan_qr.initializing_location'));
 
-        const fetchEventDetails = async () => {
-            try {
-                const data = await eventAPI.getDetailEvents(id.toString());
-                setEventDetails(data);
-            } catch (error) {
-                Alert.alert(t('scan_qr.no_event'), t('scan_qr.no_event'), [
-                    {
-                        text: t('scan_qr.back'),
-                        onPress: () => router.dismiss(),
-                    },
-                ]);
+            await getCurrentLocation();
+
+            if (id) {
+                try {
+                    const data = await eventAPI.getDetailEvents(id.toString());
+                    setEventDetails(data);
+                } catch (error) {
+                    Alert.alert(t('scan_qr.no_event'), t('scan_qr.no_event'), [
+                        {
+                            text: t('scan_qr.back'),
+                            onPress: () => router.dismiss(),
+                        },
+                    ]);
+                }
             }
+
+            setIsLoading(false);
         };
 
-        fetchEventDetails();
+        initialize();
     }, [id, t]);
 
     // Show QR instructions when event details are loaded
@@ -133,15 +342,6 @@ export default function ScanQRScreen() {
         }
     }, [eventDetails]);
 
-    // Initialize location tracking
-    useEffect(() => {
-        getCurrentLocation();
-
-        // Optional: Set up periodic location updates if needed for real-time distance checking
-        const intervalId = setInterval(getCurrentLocation, DISTANCE_CHECK_INTERVAL);
-        return () => clearInterval(intervalId);
-    }, []);
-
     // Check-in mutation
     const { mutate, isPending } = useMutation({
         mutationFn: (dataLocation: EventLocation) =>
@@ -150,13 +350,7 @@ export default function ScanQRScreen() {
                     checkInAt: new Date().toISOString(),
                     location: currentLocation!,
                     userId: authData?._id!,
-                    distance: getDistance(
-                        { latitude: currentLocation?.lat!, longitude: currentLocation?.lng! },
-                        {
-                            latitude: dataLocation?.lat,
-                            longitude: dataLocation?.lng,
-                        },
-                    ),
+                    distance: distanceMeters, // Use real-time calculated distance
                     encryptedData: encryptedData || '',
                 },
                 id?.toString()!,
@@ -175,11 +369,17 @@ export default function ScanQRScreen() {
         },
     });
 
-    // Get current location with permission handling
+    // Enhanced location getter with better error handling
     const getCurrentLocation = useCallback(async () => {
         try {
             const permission = await Location.requestForegroundPermissionsAsync();
             if (!permission.canAskAgain || permission.status === 'denied') {
+                await logAlert({
+                    type: 'USER_ERROR',
+                    severity: 'MEDIUM',
+                    message: t('scan_qr.location_permission_denied'),
+                    context: { permission_status: permission.status, canAskAgain: permission.canAskAgain },
+                });
                 Alert.alert(t('scan_qr.location_permission_prompt'), t('scan_qr.location_permission_prompt'), [
                     {
                         text: t('scan_qr.open_settings'),
@@ -193,27 +393,69 @@ export default function ScanQRScreen() {
             }
 
             if (permission.status === 'granted') {
-                // Try to get last known position first for faster response
-                const location = await Location.getLastKnownPositionAsync({});
-                if (location) {
-                    setCurrentLocation({
-                        lat: location.coords.latitude,
-                        lng: location.coords.longitude,
-                        name: currentLocation?.name || 'Not found name',
-                    });
-                } else {
+                try {
                     const location = await Location.getCurrentPositionAsync({
-                        accuracy: Location.Accuracy.Balanced, // Balance between accuracy and battery usage
+                        accuracy: Location.Accuracy.BestForNavigation,
+                        timeInterval: LOCATION_UPDATE_INTERVAL,
+                        distanceInterval: MIN_DISTANCE_CHANGE,
                     });
+
+                    if (location.mocked) {
+                        await logAlert({
+                            type: 'MOCKED_LOCATION',
+                            severity: 'CRITICAL',
+                            message: t('scan_qr.mocked_location_detected'),
+                            context: {
+                                latitude: location.coords.latitude,
+                                longitude: location.coords.longitude,
+                                accuracy: location.coords.accuracy,
+                            },
+                        });
+                        setError(t('scan_qr.mocked_location_detected'));
+                        modalizeRefFailed.current?.open();
+                        return;
+                    }
+
                     setCurrentLocation({
                         lat: location.coords.latitude,
                         lng: location.coords.longitude,
-                        name: currentLocation?.name || 'Not found name',
+                        name: currentLocation?.name || 'Getting location name...',
                     });
+                } catch (highAccuracyError: string | any) {
+                    console.log('High accuracy failed, trying balanced:', highAccuracyError);
+                    try {
+                        const location = await Location.getCurrentPositionAsync({
+                            accuracy: Location.Accuracy.Balanced,
+                            timeInterval: LOCATION_UPDATE_INTERVAL,
+                            distanceInterval: MIN_DISTANCE_CHANGE,
+                        });
+
+                        setCurrentLocation({
+                            lat: location.coords.latitude,
+                            lng: location.coords.longitude,
+                            name: currentLocation?.name || 'Getting location name...',
+                        });
+                    } catch (balancedError: string | any) {
+                        console.log('Balanced accuracy also failed:', balancedError);
+                        const lastKnown = await Location.getLastKnownPositionAsync();
+                        if (lastKnown) {
+                            setCurrentLocation({
+                                lat: lastKnown.coords.latitude,
+                                lng: lastKnown.coords.longitude,
+                                name: currentLocation?.name || 'Last known location',
+                            });
+                        }
+                    }
                 }
             }
-        } catch (error) {
-            console.log('Error getting location:', error);
+        } catch (error: string | any) {
+            console.log('General location error:', error);
+            await logAlert({
+                type: 'SYSTEM_ERROR',
+                severity: 'HIGH',
+                message: `Không thể lấy vị trí: ${error.message || error}`,
+                context: { error: error.message || error },
+            });
         }
     }, [currentLocation, t]);
 
@@ -223,10 +465,15 @@ export default function ScanQRScreen() {
             const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VN&apiKey=${process
                 .env.EXPO_PUBLIC_HERE_LOCATION_API_KEY!}`;
             const res = await axios<{ items: GeoLocation[] }>(api);
-            if (res && res.status === 200) {
+            if (res && res.status === 200 && res.data.items.length > 0) {
                 setCurrentLocation((prev) => ({
                     ...prev!,
                     name: res.data.items[0].address.label,
+                }));
+            } else {
+                setCurrentLocation((prev) => ({
+                    ...prev!,
+                    name: t('scan_qr.location_name_unavailable'),
                 }));
             }
         } catch (error: any) {
@@ -234,12 +481,143 @@ export default function ScanQRScreen() {
         }
     }, []);
 
-    // Validate check-in requirements
+    const logAlert = useCallback(
+        async ({
+            type,
+            severity,
+            message,
+            context,
+        }: {
+            type: AlertPayload['type'];
+            severity: AlertPayload['severity'];
+            message: string;
+            context?: any;
+        }) => {
+            try {
+                // Get device information
+                const deviceInfo: AlertPayload['deviceInfo'] = {
+                    model: Device.modelName ?? 'Unknown model',
+                    os: Device.osName ?? 'Unknown OS',
+                    osVersion: Device.osVersion?.toString() ?? 'Unknown Version',
+                    isEmulator: !Device.isDevice,
+                    isRooted: false,
+                    brand: Device.brand ?? 'Unknown Brand',
+                    deviceName: Device.deviceName ?? 'Unknown Device',
+                    deviceType: Device.deviceType === Device.DeviceType.PHONE ? 'mobile' : 'desktop',
+                    deviceId: Device.osInternalBuildId ?? 'Unknown Device ID',
+                };
+
+                // Get IP address (optional)
+                let ipAddress: string | undefined;
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    ipAddress = data.ip;
+                } catch (ipError: string | any) {
+                    console.log('Failed to get IP address:', ipError);
+                }
+
+                const payload: AlertPayload = {
+                    user: authData?._id || '',
+                    event: id?.toString(),
+                    time: new Date().toISOString(),
+                    type,
+                    severity,
+                    message,
+                    location: currentLocation,
+                    ipAddress,
+                    deviceInfo,
+                    context,
+                };
+
+                const response = await utilAPI.createAlert(payload);
+                console.log('Alert logged:', response.data);
+            } catch (error) {
+                console.error('Error logging alert:', error);
+            }
+        },
+        [authData, id, currentLocation],
+    );
+
+    const verifyLocationAuthenticity = async () => {
+        try {
+            const permission = await Location.requestForegroundPermissionsAsync();
+            if (permission.status !== 'granted') {
+                await logAlert({
+                    type: 'USER_ERROR',
+                    severity: 'LOW',
+                    message: t('scan_qr.location_permission_denied'),
+                    context: { permission_status: permission.status },
+                });
+                return false;
+            }
+
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.High,
+            });
+
+            if (location.mocked) {
+                await logAlert({
+                    type: 'MOCKED_LOCATION',
+                    severity: 'CRITICAL',
+                    message: t('scan_qr.mocked_location_detected'),
+                    context: {
+                        coordinates: {
+                            latitude: location.coords.latitude,
+                            longitude: location.coords.longitude,
+                        },
+                        accuracy: location.coords.accuracy,
+                    },
+                });
+                return false;
+            }
+
+            return true;
+        } catch (error: string | any) {
+            console.error('Error verifying location:', error);
+            await logAlert({
+                type: 'SYSTEM_ERROR',
+                severity: 'HIGH',
+                message: `Xác thực vị trí thất bại: ${error.message || error}`,
+                context: { error: error.message || 'Unknown error' },
+            });
+            return false;
+        }
+    };
+
+    // Enhanced validation with real-time distance checking
     const validateCheckIn = useCallback(
         async (dataDecrypt: EncryptedEventDetails | null) => {
             // Check if location available
-            if (!currentLocation) {
+            let retries = 3;
+            while (!currentLocation && retries > 0) {
                 await getCurrentLocation();
+                await sleep(1000);
+                retries--;
+            }
+
+            const verifyLocation = await verifyLocationAuthenticity();
+
+            if (!verifyLocation) {
+                await logAlert({
+                    type: 'MOCKED_LOCATION',
+                    severity: 'CRITICAL',
+                    message: t('scan_qr.mocked_location_detected'),
+                    context: { currentLocation },
+                });
+                setError(t('scan_qr.mocked_location_detected'));
+                modalizeRefFailed.current?.open();
+                return false;
+            }
+
+            if (!currentLocation) {
+                await logAlert({
+                    type: 'USER_ERROR',
+                    severity: 'HIGH',
+                    message: t('scan_qr.location_failed'),
+                    context: { retries },
+                });
+                setError(t('scan_qr.location_not_available'));
                 return false;
             }
 
@@ -256,20 +634,25 @@ export default function ScanQRScreen() {
                 return false;
             }
 
-            // Verify distance
-            if (eventDetails?.location) {
-                const dataLocation = eventDetails.location;
-                const distance = getDistance(
-                    { latitude: currentLocation.lat, longitude: currentLocation.lng },
-                    { latitude: dataLocation.lat, longitude: dataLocation.lng },
-                );
-
-                // If there's a distance limit and user is outside that limit
-                if (distance > eventDetails?.distanceLimit && eventDetails?.distanceLimit !== 0) {
+            // Verify distance using real-time calculated distance
+            if (eventDetails?.location && eventDetails?.distanceLimit !== 0) {
+                const currentDistance =
+                    distanceMeters ||
+                    getDistance(
+                        { latitude: currentLocation.lat, longitude: currentLocation.lng },
+                        { latitude: eventDetails.location.lat, longitude: eventDetails.location.lng },
+                    );
+                console.log(currentDistance > eventDetails?.distanceLimit, {
+                    currentDistance,
+                    distanceLimit: eventDetails?.distanceLimit,
+                    currentLocation,
+                    eventLocation: eventDetails.location,
+                });
+                if (currentDistance > eventDetails?.distanceLimit) {
                     setError(
                         t('scan_qr.distance_error').replace(
                             '{distance}',
-                            (distance - eventDetails?.distanceLimit).toString(),
+                            (currentDistance - eventDetails?.distanceLimit).toString(),
                         ),
                     );
                     return false;
@@ -278,7 +661,7 @@ export default function ScanQRScreen() {
 
             return true;
         },
-        [currentLocation, eventCode, eventDetails, t, getCurrentLocation],
+        [currentLocation, eventCode, eventDetails, t, getCurrentLocation, distanceMeters],
     );
 
     // Handle barcode scan
@@ -287,14 +670,19 @@ export default function ScanQRScreen() {
             setScanned(true);
             try {
                 setLoadingMessage(t('scan_qr.processing_qr'));
-                await sleep(1000);
-
                 // Parse and decrypt data
                 const dataParse = JSON.parse(data);
                 const dataDecrypt = decryptData(dataParse.data);
+                console.log('start decrypting data:', dataParse.data);
                 setEncryptedData(dataParse.data);
-
+                console.log('successfully decrypted data:', dataDecrypt);
                 if (!dataDecrypt) {
+                    await logAlert({
+                        type: 'INVALID_QR',
+                        severity: 'LOW',
+                        message: t('scan_qr.invalid_qr'),
+                        context: { rawData: data },
+                    });
                     setError(t('scan_qr.invalid_qr'));
                     setScanned(true);
                     modalizeRefFailed.current?.open();
@@ -303,14 +691,21 @@ export default function ScanQRScreen() {
 
                 // Validate check-in requirements
                 const isValid = await validateCheckIn(dataDecrypt);
+                console.log('successfully validated check-in:', isValid);
                 if (isValid) {
                     switchToFrontCamera();
                     modalizePhotoInstructions.current?.open();
                 } else {
                     modalizeRefFailed.current?.open();
                 }
-            } catch (error) {
+            } catch (error: string | any) {
                 console.error('Error processing QR code:', error);
+                await logAlert({
+                    type: 'SYSTEM_ERROR',
+                    severity: 'MEDIUM',
+                    message: `Xử lý mã QR thất bại: ${error.message || error}`,
+                    context: { error: error.message || error, rawData: data },
+                });
                 setError(t('scan_qr.invalid_qr'));
                 setScanned(true);
                 modalizeRefFailed.current?.open();
@@ -325,6 +720,12 @@ export default function ScanQRScreen() {
             // Request permissions
             const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (!permissionResult.granted) {
+                await logAlert({
+                    type: 'USER_ERROR',
+                    severity: 'LOW',
+                    message: t('scan_qr.gallery_permission_denied'),
+                    context: { permissionStatus: permissionResult.status },
+                });
                 Alert.alert(t('scan_qr.gallery_permission_prompt'), t('scan_qr.gallery_permission_prompt'), [
                     {
                         text: t('scan_qr.open_settings'),
@@ -355,7 +756,7 @@ export default function ScanQRScreen() {
                 result.assets[0].uri,
                 [{ resize: { width: 800 } }], // Resize for performance
                 {
-                    compress: 0.2, // Slightly increased for better QR detection
+                    compress: 0.5, // Slightly increased for better QR detection
                     format:
                         result.assets[0].mimeType === 'image/jpeg'
                             ? ImageManipulator.SaveFormat.JPEG
@@ -398,7 +799,13 @@ export default function ScanQRScreen() {
                 throw new Error('No QR code found');
             }
             setIsLoading(false);
-        } catch (error) {
+        } catch (error: string | any) {
+            await logAlert({
+                type: 'USER_ERROR',
+                severity: 'HIGH',
+                message: `Xử lý ảnh khuôn mặt thất bại: ${error.message || error}`,
+                context: { error: error.message || error },
+            });
             console.error('Error processing image:', error);
             setIsLoading(false);
             setError(t('scan_qr.no_qr_found'));
@@ -419,7 +826,13 @@ export default function ScanQRScreen() {
             setPicture(photo || null);
             setIsLoading(false);
             modalizeShowPhoto.current?.open();
-        } catch (error) {
+        } catch (error: string | any) {
+            await logAlert({
+                type: 'SYSTEM_ERROR',
+                severity: 'MEDIUM',
+                message: `Lỗi camera: ${error.message || error}`,
+                context: { error: error.message || error },
+            });
             console.error('Error taking photo:', error);
             setIsLoading(false);
             Alert.alert(t('scan_qr.camera_error'));
@@ -452,21 +865,38 @@ export default function ScanQRScreen() {
                 setLoadingMessage(t('scan_qr.checking_in'));
 
                 // Get location name if needed
-                if (currentLocation && (!currentLocation.name || currentLocation.name === 'Not found name')) {
+                if (
+                    currentLocation &&
+                    (!currentLocation.name ||
+                        currentLocation.name.includes('Getting') ||
+                        currentLocation.name === 'Not found name')
+                ) {
                     await reverseLocation(currentLocation.lat, currentLocation.lng);
                 }
 
-                // Submit check-in
+                // Submit check-in with current location
                 const dataLocation = eventDetails?.location;
                 mutate(dataLocation as EventLocation);
                 modalizeShowPhoto.current?.close();
             } else {
+                await logAlert({
+                    type: 'FACE_DETECTION_FAILED',
+                    severity: 'HIGH',
+                    message: t('scan_qr.invalid_image'),
+                    context: { username: authData?.username },
+                });
                 setError(t('scan_qr.invalid_image'));
                 setScanned(true);
                 modalizeShowPhoto.current?.close();
                 modalizeRefFailed.current?.open();
             }
-        } catch (error) {
+        } catch (error: string | any) {
+            await logAlert({
+                type: 'SYSTEM_ERROR',
+                severity: 'HIGH',
+                message: `Điểm danh thất bại: ${error.message || error}`,
+                context: { error: error.message || error },
+            });
             setError(t('scan_qr.check_in_failed_message') + `: ${error}`);
             setScanned(true);
             modalizeShowPhoto.current?.close();
@@ -484,10 +914,19 @@ export default function ScanQRScreen() {
         setIsTakePhoto(true);
 
         // Add short delay to let Android properly handle camera switch
-        await sleep(300);
-
+        // Retry mechanism
+        let attempts = 0;
+        while (attempts < 3) {
+            try {
+                await cameraRef.current?.resumePreview();
+                setCameraFacing('front');
+                break;
+            } catch (error) {
+                attempts++;
+                await sleep(500);
+            }
+        }
         // Then switch camera
-        setCameraFacing('front');
         setIsLoading(false);
     }, [t]);
 
@@ -671,7 +1110,11 @@ export default function ScanQRScreen() {
 
     // Show camera permission request if permission not granted
     if (!permission) {
-        return <View />;
+        return (
+            <ContainerComponent>
+                <TextComponent text={t('scan_qr.camera_permission_loading')} />
+            </ContainerComponent>
+        );
     }
 
     if (!permission.granted) {
@@ -901,7 +1344,7 @@ export default function ScanQRScreen() {
             </PortalizeComponent>
 
             {/* Modal: QR scanning instructions */}
-            <PortalizeComponent ref={modalizeQRInstructions}>
+            <PortalizeComponent ref={modalizeQRInstructions} onClose={() => scanned && setScanned(false)}>
                 <View className='shadow-xl gap-4 p-4 bg-white'>
                     <View className='items-center'>
                         <TextComponent
@@ -937,7 +1380,11 @@ export default function ScanQRScreen() {
                     <View className='mt-3'>
                         <ButtonComponent
                             title={t('scan_qr.got_it')}
-                            onPress={() => modalizeQRInstructions.current?.close()}
+                            onPress={async () => {
+                                modalizeQRInstructions.current?.close();
+                                await sleep(1000);
+                                setScanned(false);
+                            }}
                             type='primary'
                             size='large'
                         />
