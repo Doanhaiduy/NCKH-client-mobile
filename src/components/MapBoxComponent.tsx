@@ -1,16 +1,5 @@
-// Simplified MapBoxComponent.tsx for Student Event Navigation
-import React, { useState, useEffect, useRef } from 'react';
-import {
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    ActivityIndicator,
-    Platform,
-    Linking,
-    Animated,
-    Text,
-    Image,
-} from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Platform, Linking, Animated, Text } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -18,26 +7,16 @@ import { colors } from '@/constants/colors';
 import { TextComponent } from '@/components';
 import PortalizeComponent from './PortalizeComponent';
 import { Modalize } from 'react-native-modalize';
-
-// Lấy access token từ biến môi trường
-const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_API_KEY!;
-
-// Thiết lập public access token
-try {
-    Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
-} catch (error) {
-    console.error('Lỗi khi khởi tạo Mapbox:', error);
-}
+import { intervalToDuration } from 'date-fns';
+import * as Location from 'expo-location';
 
 const EventMap = ({
-    userLocation,
     eventLocation,
     hasLocationPermission,
     previewMode = false,
     fullscreenMode = false,
     startAt,
 }: {
-    userLocation: { latitude: number; longitude: number } | null;
     eventLocation: { lat: number; lng: number; name?: string } | null;
     hasLocationPermission: boolean | null;
     previewMode?: boolean;
@@ -59,31 +38,148 @@ const EventMap = ({
     const [showBottomControls, setShowBottomControls] = useState(false);
     const [lateMinutes, setLateMinutes] = useState<number>(0);
     const modalizeRef = useRef<Modalize>(null);
+    const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
     const transportModes = [
-        { id: 'walking', icon: 'walk-outline', label: t('map.walk') },
-        { id: 'driving', icon: 'car-outline', label: t('map.car') },
-        { id: 'cycling', icon: 'bicycle-outline', label: t('map.bike') },
+        {
+            id: 'driving',
+            icon: 'bicycle-outline',
+            label: t('map.bike'),
+            externalMap: { google: 'bicycling', apple: 'd' },
+        },
+        {
+            id: 'driving-traffic',
+            icon: 'car-outline',
+            label: t('map.car'),
+            externalMap: { google: 'driving', apple: 'd' },
+        },
+        { id: 'walking', icon: 'walk-outline', label: t('map.walk'), externalMap: { google: 'walking', apple: 'w' } },
     ];
+
+    const formatTime = (minutes: number): string => {
+        if (minutes < 60) {
+            return `${minutes} ${t('map.minutes')}`;
+        }
+        const duration = intervalToDuration({ start: 0, end: minutes * 60 * 1000 });
+        const parts = [];
+        if (duration.days && duration.days > 0) {
+            parts.push(`${duration.days} ${t('attendance_details.days')}`);
+        }
+        if (duration.hours && duration.hours > 0) {
+            parts.push(`${duration.hours} ${t('attendance_details.hours')}`);
+        }
+        if (duration.minutes && duration.minutes > 0) {
+            parts.push(`${duration.minutes} ${t('map.minutes')}`);
+        }
+        return parts.join(' ');
+    };
+
+    useEffect(() => {
+        let locationSubscription: Location.LocationSubscription | null = null;
+
+        const subscribeToLocation = async () => {
+            if (!hasLocationPermission) return;
+
+            locationSubscription = await Location.watchPositionAsync(
+                {
+                    accuracy: Location.Accuracy.High,
+                    distanceInterval: 5, // cập nhật mỗi khi di chuyển 5m
+                    timeInterval: 5000, // hoặc 5 giây
+                },
+                (locationUpdate) => {
+                    const { latitude, longitude } = locationUpdate.coords;
+                    setUserLocation({ latitude, longitude });
+                },
+            );
+        };
+
+        subscribeToLocation();
+
+        return () => {
+            locationSubscription?.remove();
+        };
+    }, [hasLocationPermission]);
+
+    const handleGetDirections = useCallback(async () => {
+        if (!userLocation || !eventLocation?.lat || !eventLocation?.lng) {
+            setLateMinutes(0);
+            modalizeRef.current?.open();
+            return;
+        }
+
+        setIsRouteFetching(true);
+        const start = [userLocation.longitude, userLocation.latitude];
+        const end = [eventLocation.lng, eventLocation.lat];
+
+        try {
+            const response = await fetch(
+                `https://api.mapbox.com/directions/v5/mapbox/${selectedTransportMode}/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${process.env.EXPO_PUBLIC_MAPBOX_API_KEY}`,
+            );
+
+            if (!response.ok) {
+                throw new Error(`Directions API error: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            if (responseData.routes && responseData.routes.length > 0) {
+                setRoute(responseData.routes[0].geometry);
+
+                const durationInSeconds = responseData.routes[0].duration;
+                const minutes = Math.round(durationInSeconds / 60);
+                const newTravelTime = formatTime(minutes);
+                if (newTravelTime !== travelTime) {
+                    setTravelTime(newTravelTime);
+                }
+
+                const distanceInMeters = responseData.routes[0].distance;
+                const newTravelDistance =
+                    distanceInMeters < 1000
+                        ? `(${Math.round(distanceInMeters)} m)`
+                        : `(${(distanceInMeters / 1000).toFixed(1)} km)`;
+                if (newTravelDistance !== travelDistance) {
+                    setTravelDistance(newTravelDistance);
+                }
+
+                Animated.sequence([
+                    Animated.timing(scaleAnim, {
+                        toValue: 1.1,
+                        duration: 150,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(scaleAnim, {
+                        toValue: 1,
+                        duration: 150,
+                        useNativeDriver: true,
+                    }),
+                ]).start();
+            } else {
+                setLateMinutes(0);
+                modalizeRef.current?.open();
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy lộ trình:', error);
+            setLateMinutes(0);
+            modalizeRef.current?.open();
+        } finally {
+            setIsRouteFetching(false);
+        }
+    }, [userLocation, eventLocation, selectedTransportMode, t, travelTime, travelDistance]);
 
     useEffect(() => {
         const checkMapboxStatus = async () => {
-            if (!MAPBOX_ACCESS_TOKEN || MAPBOX_ACCESS_TOKEN === 'YOUR_BACKUP_TOKEN') {
+            if (!process.env.EXPO_PUBLIC_MAPBOX_API_KEY) {
                 setMapError(t('map.missing_token'));
                 return;
             }
-
             try {
                 if (userLocation && eventLocation) {
                     const response = await fetch(
-                        `https://api.mapbox.com/geocoding/v5/mapbox.places/${eventLocation.lng},${eventLocation.lat}.json?access_token=${MAPBOX_ACCESS_TOKEN}`,
+                        `https://api.mapbox.com/geocoding/v5/mapbox.places/${eventLocation.lng},${eventLocation.lat}.json?access_token=${process.env.EXPO_PUBLIC_MAPBOX_API_KEY}`,
                         { method: 'GET' },
                     );
-
                     if (!response.ok) {
                         throw new Error(`Mapbox API error: ${response.status}`);
                     }
-
                     setIsMapReady(true);
                 }
             } catch (error) {
@@ -91,9 +187,41 @@ const EventMap = ({
                 setMapError(t('map.mapbox_error'));
             }
         };
-
         checkMapboxStatus();
     }, [userLocation, eventLocation, t]);
+
+    useEffect(() => {
+        if (userLocation && eventLocation) {
+            handleGetDirections();
+        }
+    }, [userLocation, eventLocation, selectedTransportMode, handleGetDirections]);
+
+    useEffect(() => {
+        if (startAt && travelTime && lateMinutes === 0) {
+            const eventStart = new Date(startAt);
+            const durationMinutes = Math.round(
+                travelTime.split(' ').reduce((acc, part, index, arr) => {
+                    if (part === t('map.days')) {
+                        return acc + parseInt(arr[index - 1]) * 24 * 60;
+                    }
+                    if (part === t('map.hours')) {
+                        return acc + parseInt(arr[index - 1]) * 60;
+                    }
+                    if (part === t('map.minutes')) {
+                        return acc + parseInt(arr[index - 1]);
+                    }
+                    return acc;
+                }, 0),
+            );
+            const expectedArrival = new Date(Date.now());
+            expectedArrival.setMinutes(expectedArrival.getMinutes() + durationMinutes);
+            if (expectedArrival > eventStart) {
+                const minutesLate = Math.round((expectedArrival.getTime() - eventStart.getTime()) / 60000);
+                setLateMinutes(minutesLate);
+                modalizeRef.current?.open();
+            }
+        }
+    }, [startAt, travelTime, lateMinutes, t]);
 
     const calculateZoomLevel = () => {
         if (!userLocation || !eventLocation) return 14;
@@ -125,118 +253,6 @@ const EventMap = ({
         return 14;
     };
 
-    const getBoundingBox = () => {
-        if (!userLocation || !eventLocation) return null;
-
-        // Increase padding for fullscreen mode
-        const padding = fullscreenMode ? 0.01 : 0.02;
-
-        const minLng = Math.min(userLocation.longitude, eventLocation.lng);
-        const maxLng = Math.max(userLocation.longitude, eventLocation.lng);
-        const minLat = Math.min(userLocation.latitude, eventLocation.lat);
-        const maxLat = Math.max(userLocation.latitude, eventLocation.lat);
-
-        // Make the bounding box a bit wider/taller for better visibility
-        const width = maxLng - minLng;
-        const height = maxLat - minLat;
-
-        return {
-            ne: [maxLng + padding * width, maxLat + padding * height],
-            sw: [minLng - padding * width, minLat - padding * height],
-            paddingTop: fullscreenMode ? 120 : 50,
-            paddingBottom: fullscreenMode ? 150 : 50,
-            paddingLeft: fullscreenMode ? 50 : 50,
-            paddingRight: fullscreenMode ? 50 : 50,
-        };
-    };
-
-    const handleGetDirections = async () => {
-        if (!userLocation || !eventLocation?.lat || !eventLocation?.lng) {
-            setLateMinutes(0);
-            modalizeRef.current?.open();
-            return;
-        }
-
-        setIsRouteFetching(true);
-        const start = [userLocation.longitude, userLocation.latitude];
-        const end = [eventLocation.lng, eventLocation.lat];
-
-        try {
-            const response = await fetch(
-                `https://api.mapbox.com/directions/v5/mapbox/${selectedTransportMode}/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`,
-            );
-
-            if (!response.ok) {
-                throw new Error(`Directions API error: ${response.status}`);
-            }
-
-            const responseData = await response.json();
-            if (responseData.routes && responseData.routes.length > 0) {
-                setRoute(responseData.routes[0].geometry);
-
-                // Calculate and set travel time
-                const durationInSeconds = responseData.routes[0].duration;
-                const minutes = Math.round(durationInSeconds / 60);
-                setTravelTime(`${minutes} ${t('map.minutes')}`);
-
-                // Calculate and set travel distance
-                const distanceInMeters = responseData.routes[0].distance;
-                if (distanceInMeters < 1000) {
-                    setTravelDistance(`(${Math.round(distanceInMeters)} m)`);
-                } else {
-                    const distanceInKm = (distanceInMeters / 1000).toFixed(1);
-                    setTravelDistance(`(${distanceInKm} km)`);
-                }
-
-                // Animate the UI feedback
-                Animated.sequence([
-                    Animated.timing(scaleAnim, {
-                        toValue: 1.1,
-                        duration: 150,
-                        useNativeDriver: true,
-                    }),
-                    Animated.timing(scaleAnim, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true,
-                    }),
-                ]).start();
-            } else {
-                setLateMinutes(0);
-                modalizeRef.current?.open();
-            }
-        } catch (error) {
-            console.error('Lỗi khi lấy lộ trình:', error);
-            setLateMinutes(0);
-            modalizeRef.current?.open();
-        } finally {
-            setIsRouteFetching(false);
-        }
-    };
-
-    // Get route when mounting the map or when transport mode changes
-    useEffect(() => {
-        if (userLocation && eventLocation) {
-            handleGetDirections();
-        }
-    }, [userLocation, eventLocation, selectedTransportMode]);
-
-    // Cảnh báo đi trễ sử dụng Modalize
-    useEffect(() => {
-        if (startAt && travelTime) {
-            const eventStart = new Date(startAt);
-            const durationMinutes = parseInt(travelTime.split(' ')[0]);
-            const expectedArrival = new Date(Date.now());
-            expectedArrival.setMinutes(expectedArrival.getMinutes() + durationMinutes);
-            if (expectedArrival > eventStart) {
-                console.log('Late warning triggered');
-                const minutesLate = Math.round((expectedArrival.getTime() - eventStart.getTime()) / 60000);
-                setLateMinutes(minutesLate);
-                modalizeRef.current?.open();
-            }
-        }
-    }, [startAt, travelTime]);
-
     const openExternalMap = () => {
         if (!userLocation || !eventLocation?.lat || !eventLocation?.lng) {
             setLateMinutes(0);
@@ -249,19 +265,20 @@ const EventMap = ({
         const label = eventLocation.name || t('map.event_location');
         const latLng = `${latitude},${longitude}`;
 
-        if (Platform.OS === 'ios') {
-            // Apple Maps with label + navigation
-            const appleMapsUrl = `maps:?q=${label}@${latLng}&dirflg=${selectedTransportMode?.[0] || 'd'}`;
+        const transportModeFinal = transportModes.find((mode) => mode.id === selectedTransportMode);
 
-            // Google Maps iOS
-            const googleMapsUrl = `comgooglemaps://?q=${latLng}(${label})&center=${latLng}&zoom=15&daddr=${latLng}&directionsmode=${selectedTransportMode}`;
+        if (Platform.OS === 'ios') {
+            const appleMode = transportModeFinal?.externalMap.apple || 'd';
+            const appleMapsUrl = `maps://?q=${encodeURIComponent(label)}&sll=${latLng}&dirflg=${appleMode}`;
+            const googleMapsUrl = `comgooglemaps://?q=${encodeURIComponent(label)}&center=${latLng}&zoom=15&daddr=${latLng}&directionsmode=${transportModeFinal?.externalMap.google || 'driving'}`;
 
             Linking.canOpenURL(googleMapsUrl).then((supported) => {
                 if (supported) {
-                    setLateMinutes(0);
-                    modalizeRef.current?.open();
+                    Linking.openURL(googleMapsUrl).catch(() => {
+                        setLateMinutes(0);
+                        modalizeRef.current?.open();
+                    });
                 } else {
-                    // Default to Apple Maps
                     Linking.openURL(appleMapsUrl).catch(() => {
                         setLateMinutes(0);
                         modalizeRef.current?.open();
@@ -269,18 +286,19 @@ const EventMap = ({
                 }
             });
         } else {
-            // Android
-            const geoUrl = `geo:0,0?q=${latLng}(${label})`;
-
-            const navigationUrl = `google.navigation:q=${latLng}&mode=${selectedTransportMode}`;
+            const googleMode = transportModeFinal?.externalMap.google || 'driving';
+            const geoUrl = `geo:0,0?q=${latLng}(${encodeURIComponent(label)})`;
+            const navigationUrl = `google.navigation:q=${latLng}&mode=${googleMode}`;
 
             Linking.canOpenURL(navigationUrl).then((supported) => {
                 if (supported) {
-                    setLateMinutes(0);
-                    modalizeRef.current?.open();
+                    Linking.openURL(navigationUrl).catch(() => {
+                        setLateMinutes(0);
+                        modalizeRef.current?.open();
+                    });
                 } else {
-                    // Fallback to web Google Maps
-                    const webUrl = `https://www.google.com/maps/dir/?api=1&destination=${latLng}&travelmode=${selectedTransportMode}`;
+                    const webUrl = `https://www.google.com/maps/dir/?api=1&destination=${latLng}&travelmode=${googleMode}`;
+
                     Linking.openURL(webUrl).catch(() => {
                         setLateMinutes(0);
                         modalizeRef.current?.open();
@@ -298,46 +316,52 @@ const EventMap = ({
         }
     };
 
-    // Compact transport mode selector
     const renderTransportOptions = () => {
         if (previewMode) return null;
 
         return (
             <View style={styles.transportOptionsContainer}>
-                <View style={styles.transportOptions}>
-                    {transportModes.map((mode) => (
-                        <TouchableOpacity
-                            key={mode.id}
-                            style={[
-                                styles.transportOption,
-                                selectedTransportMode === mode.id ? styles.transportOptionSelected : null,
-                            ]}
-                            onPress={() => {
-                                setSelectedTransportMode(mode.id);
-                                setCenterUserLocation(false);
-                            }}
-                        >
-                            <Ionicons
-                                //@ts-ignore
-                                name={mode.icon}
-                                size={20}
-                                color={selectedTransportMode === mode.id ? 'white' : '#4b5563'}
-                            />
-                            {selectedTransportMode === mode.id && travelTime && (
-                                <TextComponent
-                                    text={travelTime}
-                                    size={10}
-                                    className={`${selectedTransportMode === mode.id ? 'text-white' : 'text-gray-600'}`}
+                <View style={styles.transportOptionsHeader}>
+                    <View style={styles.transportIcons}>
+                        {transportModes.map((mode) => (
+                            <TouchableOpacity
+                                key={mode.id}
+                                style={[
+                                    styles.transportIcon,
+                                    selectedTransportMode === mode.id ? styles.transportIconSelected : null,
+                                ]}
+                                onPress={() => {
+                                    setSelectedTransportMode(mode.id);
+                                    setCenterUserLocation(false);
+                                }}
+                            >
+                                <Ionicons
+                                    // @ts-ignore
+                                    name={mode.icon}
+                                    size={20}
+                                    color={selectedTransportMode === mode.id ? 'white' : '#4b5563'}
                                 />
-                            )}
-                        </TouchableOpacity>
-                    ))}
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                    {travelTime && (
+                        <TextComponent
+                            style={{
+                                maxWidth: '50%',
+                            }}
+                            text={`${travelTime} ${travelDistance}`}
+                            size={12}
+                            className='text-gray-600 ml-2 font-medium'
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                        />
+                    )}
+                    <TouchableOpacity style={styles.transportOptionsToggle}></TouchableOpacity>
                 </View>
             </View>
         );
     };
 
-    // Compact bottom info panel with expandable details
     const renderBottomInfo = () => {
         if (previewMode) return null;
 
@@ -350,7 +374,7 @@ const EventMap = ({
                                 name={
                                     selectedTransportMode === 'walking'
                                         ? 'walk'
-                                        : selectedTransportMode === 'cycling'
+                                        : selectedTransportMode === 'driving'
                                           ? 'bicycle'
                                           : 'car'
                                 }
@@ -384,7 +408,6 @@ const EventMap = ({
         );
     };
 
-    // Reorganized map controls
     const renderMapControls = () => {
         return (
             <View style={styles.mapControls}>
@@ -409,11 +432,9 @@ const EventMap = ({
                                 color={centerUserLocation ? colors.primary400 : '#4b5563'}
                             />
                         </TouchableOpacity>
-
                         <TouchableOpacity style={styles.mapButton} onPress={toggleMapStyle}>
                             <Ionicons name='layers' size={20} color='#4b5563' />
                         </TouchableOpacity>
-
                         <TouchableOpacity
                             style={styles.mapButton}
                             onPress={() => {
@@ -433,7 +454,6 @@ const EventMap = ({
         );
     };
 
-    // Render modal cảnh báo
     const renderLateWarningModal = () => {
         return (
             <PortalizeComponent
@@ -449,7 +469,7 @@ const EventMap = ({
                     <TextComponent
                         text={
                             lateMinutes > 0
-                                ? t('map.late_warning', { minutes: lateMinutes })
+                                ? t('map.late_warning', { minutes: formatTime(lateMinutes) })
                                 : t('map.missing_location_info')
                         }
                         size={16}
@@ -481,6 +501,31 @@ const EventMap = ({
             </View>
         );
     }
+
+    const getBoundingBox = () => {
+        if (!userLocation || !eventLocation) return null;
+
+        // Increase padding for fullscreen mode
+        const padding = fullscreenMode ? 0.01 : 0.02;
+
+        const minLng = Math.min(userLocation.longitude, eventLocation.lng);
+        const maxLng = Math.max(userLocation.longitude, eventLocation.lng);
+        const minLat = Math.min(userLocation.latitude, eventLocation.lat);
+        const maxLat = Math.max(userLocation.latitude, eventLocation.lat);
+
+        // Make the bounding box a bit wider/taller for better visibility
+        const width = maxLng - minLng;
+        const height = maxLat - minLat;
+
+        return {
+            ne: [maxLng + padding * width, maxLat + padding * height],
+            sw: [minLng - padding * width, minLat - padding * height],
+            paddingTop: fullscreenMode ? 120 : 50,
+            paddingBottom: fullscreenMode ? 150 : 50,
+            paddingLeft: fullscreenMode ? 50 : 50,
+            paddingRight: fullscreenMode ? 50 : 50,
+        };
+    };
 
     const zoomLevel = calculateZoomLevel();
     const boundingBox = getBoundingBox();
@@ -541,7 +586,6 @@ const EventMap = ({
                     </Mapbox.PointAnnotation>
                 )}
 
-                {/* Route line if available */}
                 {route && (
                     <Mapbox.ShapeSource id='routeSource' shape={route}>
                         <Mapbox.LineLayer
@@ -664,6 +708,12 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: 'white',
     },
+    poiMarker: {
+        width: 24,
+        height: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     mapControls: {
         position: 'absolute',
         right: 16,
@@ -686,31 +736,67 @@ const styles = StyleSheet.create({
     },
     transportOptionsContainer: {
         position: 'absolute',
-        top: 20,
+        top: 60,
         alignSelf: 'center',
         zIndex: 5,
+        width: '90%',
+        maxWidth: 320,
     },
-    transportOptions: {
+    transportOptionsHeader: {
         flexDirection: 'row',
         backgroundColor: 'white',
         borderRadius: 16,
-        paddingVertical: 6,
-        paddingHorizontal: 6,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    transportIcons: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    transportIcon: {
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 2,
+    },
+    transportIconSelected: {
+        backgroundColor: '#3b82f6',
+    },
+    transportOptionsToggle: {
+        padding: 4,
+        marginLeft: 6,
+    },
+    expandedTransportOptions: {
+        backgroundColor: 'white',
+        borderRadius: 16,
+        marginTop: 8,
+        padding: 8,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
     },
-    transportOption: {
-        width: 45,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 12,
-        marginHorizontal: 2,
+    transportOptionExpanded: {
+        padding: 12,
+        borderRadius: 8,
+        marginVertical: 4,
     },
-    transportOptionSelected: {
+    transportOptionExpandedSelected: {
         backgroundColor: '#3b82f6',
+    },
+    transportOptionContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     bottomInfoContainer: {
         position: 'absolute',
